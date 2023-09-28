@@ -3,11 +3,11 @@ package leonardo.labutilities.labcontrol.main;
 import lombok.Getter;
 
 @Getter
-public class Validar {
-    private String validNormal;
-    private String obsNormal;
-    private String validHigh;
-    private String obsHigh;
+public class Validator {
+    private String normalValid;
+    private String normalObs;
+    private String highValid;
+    private String highObs;
 
     public void validacao(Double meanNormal, Double dpNormal, Double valueNormal, Double valueHigh) {
         var regra1sPositiva = meanNormal + (dpNormal * 1);
@@ -21,27 +21,33 @@ public class Validar {
 
         if(valueNormal >= regra1sPositiva || valueNormal <= regra1sNegativa) {
             if(valueNormal >= regra3sPositiva || valueNormal <= regra3sNegativa) {
-                this.validNormal = "Reprovado";
-                this.obsNormal = "3s";
+                this.normalValid = "Reprovado";
+                this.normalObs = "3s";
             } else if (valueNormal >= regra2sPositiva || valueNormal <= regra2sNegativa) {
-                this.validNormal = "Aprovado";
-                this.obsNormal = "2s";
+                this.normalValid = "Aprovado";
+                this.normalObs = "2s";
             } else {
-                this.validNormal = "Aprovado";
-                this.obsNormal = "1s";
+                this.normalValid = "Aprovado";
+                this.normalObs = "1s";
             }
+        } else {
+            this.normalValid = "Aprovado";
+            this.normalObs = "media";
         }
         if(valueHigh >= regra1sPositiva || valueHigh <= regra1sNegativa) {
             if(valueHigh >= regra3sPositiva || valueHigh <= regra3sNegativa) {
-                this.validHigh = "Reprovado";
-                this.obsHigh = "3s";
+                this.highValid = "Reprovado";
+                this.highObs = "3s";
             } else if (valueHigh >= regra2sPositiva || valueHigh <= regra2sNegativa) {
-                this.validHigh = "Aprovado";
-                this.obsHigh = "2s";
+                this.highValid = "Aprovado";
+                this.highObs = "2s";
             } else {
-                this.validHigh = "Aprovado";
-                this.obsHigh = "2s";
+                this.highValid = "Aprovado";
+                this.highObs = "1s";
             }
+        } else {
+            this.highValid = "Aprovado";
+            this.highObs = "media";
         }
     }
 }
