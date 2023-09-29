@@ -3,5 +3,7 @@ CREATE TABLE default_values (
     name VARCHAR(10),
     normal_mean DOUBLE,
     normal_dp DOUBLE,
+    high_mean DOUBLE,
+    high_dp DOUBLE,
     PRIMARY KEY (id)
 );

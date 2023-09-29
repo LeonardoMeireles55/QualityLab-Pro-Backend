@@ -9,21 +9,29 @@ public class Validator {
     private String highValid;
     private String highObs;
 
-    public void validacao(Double meanNormal, Double dpNormal, Double valueNormal, Double valueHigh) {
-        var regra1sPositiva = meanNormal + (dpNormal * 1);
-        var regra2sPositiva = meanNormal + (dpNormal * 2);
-        var regra3sPositiva = meanNormal + (dpNormal * 3);
+    public void validacao(Double normalMean, Double normalDp, Double highMean, Double highDp, Double normalValue, Double highValue) {
+        var regra1sPositivaNormal = normalMean + (normalDp * 1);
+        var regra2sPositivaNormal = normalMean + (normalDp * 2);
+        var regra3sPositivaNormal = normalMean + (normalDp * 3);
 
-        var regra1sNegativa = meanNormal - (dpNormal * 1);
-        var regra2sNegativa = meanNormal - (dpNormal * 2);
-        var regra3sNegativa = meanNormal - (dpNormal * 3);
+        var regra1sNegativaNormal = normalMean - (normalDp * 1);
+        var regra2sNegativaNormal = normalMean - (normalDp * 2);
+        var regra3sNegativaNormal = normalMean - (normalDp * 3);
+
+        var regra1sPositivaHigh = highMean + (highDp * 1);
+        var regra2sPositivaHigh = highMean + (highDp * 2);
+        var regra3sPositivaHigh = highMean + (highDp * 3);
+
+        var regra1sNegativaHigh = highMean - (highDp * 1);
+        var regra2sNegativaHigh = highMean - (highDp * 2);
+        var regra3sNegativaHigh = highMean - (highDp * 3);
 
 
-        if(valueNormal >= regra1sPositiva || valueNormal <= regra1sNegativa) {
-            if(valueNormal >= regra3sPositiva || valueNormal <= regra3sNegativa) {
+        if(normalValue >= regra1sPositivaNormal || normalValue <= regra1sNegativaNormal) {
+            if(normalValue >= regra3sPositivaNormal || normalValue <= regra3sNegativaNormal) {
                 this.normalValid = "Reprovado";
                 this.normalObs = "3s";
-            } else if (valueNormal >= regra2sPositiva || valueNormal <= regra2sNegativa) {
+            } else if (normalValue >= regra2sPositivaNormal || normalValue <= regra2sNegativaNormal) {
                 this.normalValid = "Aprovado";
                 this.normalObs = "2s";
             } else {
@@ -34,11 +42,11 @@ public class Validator {
             this.normalValid = "Aprovado";
             this.normalObs = "media";
         }
-        if(valueHigh >= regra1sPositiva || valueHigh <= regra1sNegativa) {
-            if(valueHigh >= regra3sPositiva || valueHigh <= regra3sNegativa) {
+        if(highValue >= regra1sPositivaHigh || highValue <= regra1sNegativaHigh) {
+            if(highValue >= regra3sPositivaHigh || highValue <= regra3sNegativaHigh) {
                 this.highValid = "Reprovado";
                 this.highObs = "3s";
-            } else if (valueHigh >= regra2sPositiva || valueHigh <= regra2sNegativa) {
+            } else if (highValue >= regra2sPositivaHigh || highValue <= regra2sNegativaHigh) {
                 this.highValid = "Aprovado";
                 this.highObs = "2s";
             } else {

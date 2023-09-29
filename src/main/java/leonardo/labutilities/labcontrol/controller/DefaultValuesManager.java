@@ -30,4 +30,11 @@ public class DefaultValuesManager extends DefaultValuesController {
         return defaultValuesMap.get(testName).getNormalMean();
     }
 
+    public static double getTestDefaultValuesDpHigh(String testName) {
+        return defaultValuesMap.get(testName).getHighDp();
+    }
+
+    public static double getTestDefaultValuesMeanHigh(String name) {
+        return defaultValuesMap.get(name).getHighMean();
+    }
 }

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static leonardo.labutilities.labcontrol.controller.DefaultValuesManager.defaultValuesMap;
 
 @RestController
@@ -30,6 +33,25 @@ public class DefaultValuesController {
         repository.save(new DefaultValues(values));
         defaultValuesMap.put(defaultValues.getName(), defaultValues);
     }
+    @PostMapping("/register2")
+    public void registerValues(@RequestBody List<ValuesOfRegister> valuesList) {
+        for(int i = 0; i <= 4; i++) {
+            var defaultValues = new DefaultValues(valuesList.get(i));
+            repository.save(new DefaultValues(valuesList.get(i)));
+            defaultValuesMap.put(defaultValues.getName(), defaultValues);
+        }
+    }
+
+    @PostMapping("/teste")
+    public String teste(@RequestBody List<ValuesOfRegister> valuesList) {
+        List<String> teste = new ArrayList<>();
+        for(int i = 0; i <= 4; i++) {
+            teste.add(valuesList.get(i).name());
+        }
+        return teste.toString();
+
+    }
+
     @PostConstruct
     public void getDefaultsValues() {
         Iterable<DefaultValues> defaultValuesList = repository.findAll();
