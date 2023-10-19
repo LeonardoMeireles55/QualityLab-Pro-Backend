@@ -1,4 +1,4 @@
-package leonardo.labutilities.labcontrol;
+package leonardo.labutilities.qualitylabpro;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

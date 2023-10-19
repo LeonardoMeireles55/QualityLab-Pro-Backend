@@ -1,6 +1,5 @@
-package leonardo.labutilities.labcontrol;
+package leonardo.labutilities.qualitylabpro;
 
-import leonardo.labutilities.labcontrol.controller.DefaultValuesController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

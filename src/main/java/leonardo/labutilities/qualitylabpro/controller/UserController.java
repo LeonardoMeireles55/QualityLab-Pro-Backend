@@ -1,0 +1,30 @@
+package leonardo.labutilities.qualitylabpro.controller;
+
+import jakarta.validation.Valid;
+import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
+import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    private final UserRepository userRepository;
+    private final UserService userService;
+    @Transactional
+    @PostMapping
+    @RequestMapping("/signup")
+    public ResponseEntity<String> signUp(@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
+       var user = userService.signUp(authData.login(), authData.password());
+       var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(uri).body("User created :)");
+    }
+}
