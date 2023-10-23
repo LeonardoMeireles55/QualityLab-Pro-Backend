@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 
@@ -45,14 +47,16 @@ public class AnalyticsController {
     @PostMapping
     @Transactional
     @RequestMapping("/sendvalues")
-    public ResponseEntity<Analytics> sendValues(@RequestBody @Valid ValuesOfLevels values) {
-        return ResponseEntity.ok().body(analyticsService.sendValues(values));
+    public ResponseEntity<Analytics> sendValues(@RequestBody @Valid ValuesOfLevels values, UriComponentsBuilder uriComponentsBuilder) {
+        URI uri = uriComponentsBuilder.path("/getresults/name").build().toUri();
+        return ResponseEntity.created(uri).body(analyticsService.sendValues(values));
     }
     @PostMapping
     @Transactional
     @RequestMapping("/sendvalueslist")
-    public ResponseEntity<List<Analytics>> sendValuesList(@RequestBody List<ValuesOfLevels> valuesOfLevelsList) {
-        return ResponseEntity.ok().body(analyticsService.sendValuesList(valuesOfLevelsList));
+    public ResponseEntity<List<Analytics>> sendValuesList(@RequestBody List<ValuesOfLevels> valuesOfLevelsList, UriComponentsBuilder uriComponentsBuilder) {
+        URI uri = uriComponentsBuilder.path("/getresults").build().toUri();
+        return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsList));
     }
     @Transactional
     @DeleteMapping("/deletevalues/{id}")

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DefaultValuesRepository extends JpaRepository<DefaultValues, Long> {
     void deleteByName(String name);
+    boolean existsByName(String name);
 }
