@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>leonardo.labutilities </groupId>
-	<artifactId>labcontrol</artifactId>
+	<artifactId>QualityLabPro</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>labcontrol</name>
 	<description>Tool to assist in internal quality control of the clinical analysis laboratory.</description>
