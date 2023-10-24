@@ -3,9 +3,9 @@ package leonardo.labutilities.qualitylabpro.analytics;
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevels;
 import leonardo.labutilities.qualitylabpro.services.ValidatorService;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.text.SimpleDateFormat;
@@ -17,8 +17,8 @@ import java.util.Objects;
 @Table(name = "analytics")
 @Entity(name = "analytics")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 public class Analytics {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class Analytics {
     private String highValid;
     private String highObs;
     @Transient
-    private ValidatorService validatorService;
+    private final ValidatorService validatorService;
 
     @Transient
     double normalMean;
@@ -44,21 +44,22 @@ public class Analytics {
 
     public static Map<String, Analytics> analyticsHashMap = new HashMap<>();
 
-    public Analytics(ValuesOfLevels values) {
+    public Analytics(ValuesOfLevels values, ValidatorService validatorService) {
         this.name = values.name().toUpperCase();
         this.normalValue = values.value1();
         this.highValue = values.value2();
+        this.validatorService = validatorService;
         this.data = new SimpleDateFormat("dd/MM/yy hh:mm").format(new Date());
         this.normalDp = DefaultValues.getTestDefaultValuesDp(this.name);
         this.normalMean = DefaultValues.getTestDefaultValuesMeanNormal(this.name);
         this.highDp = DefaultValues.getTestDefaultValuesDpHigh(this.name);
         this.highMean = DefaultValues.getTestDefaultValuesMeanHigh(this.name);
-        validatorService.validationOfControlsByLevels
+        this.validatorService.validationOfControlsByLevels
                 (normalMean, normalDp, highMean, highDp, this.normalValue, this.highValue);
-        this.normalValid = validatorService.getNormalValid();
-        this.highValid = validatorService.getHighValid();
-        this.normalObs = validatorService.getNormalObs();
-        this.highObs = validatorService.getHighObs();
+        this.normalValid = this.validatorService.getNormalValid();
+        this.highValid = this.validatorService.getHighValid();
+        this.normalObs = this.validatorService.getNormalObs();
+        this.highObs = this.validatorService.getHighObs();
     }
 
     @Override

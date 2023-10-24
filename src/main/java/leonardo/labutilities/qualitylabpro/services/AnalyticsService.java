@@ -16,15 +16,16 @@ import java.util.List;
 public class AnalyticsService {
 
     private final AnalyticRepository analyticRepository;
+    private final ValidatorService validatorService;
 
     public Analytics sendValues(ValuesOfLevels values) {
-        return analyticRepository.save(new Analytics(values));
+        return analyticRepository.save(new Analytics(values, validatorService));
     }
 
     public List<Analytics> sendValuesList(List<ValuesOfLevels> valuesOfLevelsList) {
         List<Analytics> analyticsList = new ArrayList<>();
         for (ValuesOfLevels value : valuesOfLevelsList) {
-            var analyticsLevels = new Analytics(value);
+            var analyticsLevels = new Analytics(value, validatorService);
             analyticRepository.save(analyticsLevels);
             analyticsList.add(analyticsLevels);
         }
@@ -61,7 +62,7 @@ public class AnalyticsService {
         if (analyticRepository.existsByName(name)) {
             var listByNameLevel1 = analyticRepository.findAllByName(name).stream().map(ValuesOfLevelsList::new).toList();
             return listByNameLevel1.stream()
-                    .map(analytic -> analytic.date() + "Level1: " + analytic.name() + " ---> "
+                    .map(analytic -> analytic.date() + " Level1: " + analytic.name() + " ---> "
                             + analytic.normalValue() + " : " + analytic.normalValid() + ", Regra: "
                             + analytic.normalObs()).toList().toString();
         }
