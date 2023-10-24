@@ -27,15 +27,17 @@ public class DefaultValuesController {
     @Transactional
     @PostMapping("/register")
     public ResponseEntity<DefaultValues> register(@RequestBody @Valid DefaultRegister values, UriComponentsBuilder uriComponentsBuilder) {
-        URI uri = uriComponentsBuilder.path("/defaultvalues/{id}").build().toUri();
-        return ResponseEntity.created(uri).body(defaultValuesService.register(values));
+        DefaultValues defaultValues = defaultValuesService.register(values);
+        URI uri = uriComponentsBuilder.path("/defaultsvalues/{id}").buildAndExpand(defaultValues.getId()).toUri();
+        return ResponseEntity.created(uri).body(defaultValues);
     }
     @Transactional
     @PostMapping("/listregister")
     public ResponseEntity<List<ValuesOfRegisted>> listRegister(@RequestBody @Valid List<DefaultRegister> defaultRegisters, UriComponentsBuilder uriComponentsBuilder) {
-        var registered = defaultValuesService.listRegister(defaultRegisters);
-        URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues").build().toUri();
-        return ResponseEntity.created(listUri).body(registered);
+
+        List<ValuesOfRegisted> defaultValues = defaultValuesService.listRegister(defaultRegisters);
+        URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues").buildAndExpand(defaultValues.stream().map(s -> s.id()).toList()).toUri();
+        return ResponseEntity.created(listUri).body(defaultValues);
     }
 
     @RequestMapping("/getdefaultsvalues")
@@ -56,21 +58,25 @@ public class DefaultValuesController {
     @Transactional
     @DeleteMapping("/deletevaluesbyname/{name}")
     public ResponseEntity<String> deleteValues(@PathVariable String name){
-        repository.deleteByName(name);
+        defaultValuesService.deleteValues(name);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("deleted default values by name");
     }
     @Transactional
     @DeleteMapping("/deletevalues/all")
-    public void deleteValuesAll( ){
+    public ResponseEntity<String> deleteValuesAll( ){
         repository.deleteAll();
+        return ResponseEntity.ok().body("All data deleted");
     }
     @Transactional
     @PutMapping("/patchvalues/{id}/{value}")
-    public void updateValues(@PathVariable Long id, Double value){
+    public void updateValues(@PathVariable Long id, Double value1, Double value2, Double value3, Double value4){
 
         var patch = repository.getReferenceById(id);
 
-        patch.setNormalDp(value);
+        patch.setNormalDp(value1);
+        patch.setHighDp(value2);
+        patch.setNormalMean(value3);
+        patch.setHighMean(value4);
     }
 }

@@ -1,6 +1,5 @@
 package leonardo.labutilities.qualitylabpro.infra.exception;
 
-import jakarta.persistence.EntityNotFoundException;
 import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,10 +18,15 @@ import java.util.List;
 
 @RestControllerAdvice
 public class ErrorHandling {
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> error404() {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(NoContentException.class)
+    public ResponseEntity<String> error201() {
+        return ResponseEntity.noContent().build();
     }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorOfValidation>> error400(MethodArgumentNotValidException exception) {
         var errors = exception.getFieldErrors();
@@ -63,6 +67,16 @@ public class ErrorHandling {
     private record ErrorValidation(String campo, String message) {
         public ErrorValidation(FieldError error) {
             this(error.getField(), error.getDefaultMessage());
+        }
+    }
+    public static class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
+    public static class NoContentException extends RuntimeException {
+        public NoContentException(String message) {
+            super(message);
         }
     }
 }
