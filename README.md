@@ -1,9 +1,44 @@
-# QualityLabPro
-frontend example with python and matplotlib:
+# QualityLabPro-API RESTful para controle interno de qualidade laboratorial.
 
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/0370ceea-4983-4e27-ba25-81065ef7dc34)
+<p align="center">
+<img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" alt="Em desenvolvimento"/>
+</p>
 
-Generated graph:
+## Tecnologias utilizadas
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/fa19ee25-ddb7-4030-b10e-5542d47a50a1)
+## Descrição
+A API RESTful para Controle Interno de Qualidade Laboratorial é projetada para auxiliar laboratórios clínicos e de pesquisa no monitoramento e controle de qualidade de seus processos. Esta API oferece endpoints para gerenciar informações relacionadas a padrões de controle, resultados de testes, análises estatísticas e outras atividades essenciais para garantir a precisão e a confiabilidade dos dados laboratoriais.
+
+## Confira o Deploy da aplicação
+ToDo
+
+## Funcionalidades já implementadas
+
+✔️ toDO
+
+## O que ainda será desenvolvido?
+
+📝 Adicionar funcionalidades relacionadas as regras de westgard.
+📝 Melhorar a documentação da API.
+
+#### Requisitos
+* [Java 11](https://www.oracle.com/br/java/technologies/javase/jdk11-archive-downloads.html)
+* [Maven](https://maven.apache.org/)
+* [Git](https://git-scm.com/)
+
+#### Passo 1. Clonar o repositório
+Rodar o comando abaixo no Git Bash para clonar o repositório:
+```
+git clone #######
+```
+#### Passo 2. Acessar a documentação da API
+```
+http://localhost:8080/swagger-ui.html
+```
+#### Além disso, também disponibilizei a Collection do insom para testes
+* [Collection]()
 
