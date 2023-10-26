@@ -6,7 +6,6 @@ import leonardo.labutilities.qualitylabpro.services.TokenService;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
 import leonardo.labutilities.qualitylabpro.records.auth.TokenJWT;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

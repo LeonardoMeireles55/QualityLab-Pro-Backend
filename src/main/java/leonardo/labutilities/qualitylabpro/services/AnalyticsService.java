@@ -75,7 +75,7 @@ public class AnalyticsService {
             List<String> analyticListByNameList = new ArrayList<>();
             for (ValuesOfLevelsList item : list) {
                 if (item.name().contains(name.toUpperCase())) {
-                    analyticListByNameList.add(item.date() + " Nível2: " + item.name() + " ---> "
+                    analyticListByNameList.add(item.date() + " Level2: " + item.name() + " ---> "
                             + item.highValue() + " : " +
                             item.highValid() + ", Regra: " + item.highObs());
                 }

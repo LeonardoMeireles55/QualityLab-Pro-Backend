@@ -2,9 +2,7 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.analytics.User;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

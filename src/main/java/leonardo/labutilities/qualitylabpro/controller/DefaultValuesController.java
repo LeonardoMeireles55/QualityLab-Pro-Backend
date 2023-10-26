@@ -1,5 +1,6 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterList;
 import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
@@ -19,6 +20,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
+@SecurityRequirement(name = "bearer-key")
 @RequestMapping("/defaultsvalues")
 public class DefaultValuesController {
     private final DefaultValuesRepository repository;
@@ -39,17 +41,18 @@ public class DefaultValuesController {
         URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues").buildAndExpand(defaultValues.stream().map(s -> s.id()).toList()).toUri();
         return ResponseEntity.created(listUri).body(defaultValues);
     }
-
-    @RequestMapping("/getdefaultsvalues")
+    @GetMapping
+    @RequestMapping(value = "/getdefaultsvalues", method = RequestMethod.GET)
     public ResponseEntity<List<DefaultValues>> getDefaultsValues() {
         return ResponseEntity.ok().body(defaultValuesService.getDefaultsValues());
     }
     @GetMapping
-    @RequestMapping("/getdefaultsbyname/{name}")
+    @RequestMapping(value = "/getdefaultsbyname/{name}", method = RequestMethod.GET)
     public ResponseEntity<List<DefaultRegisterList>> getValuesByName(@PathVariable String name) {
         return ResponseEntity.ok().body(defaultValuesService.getValuesByName(name));
     }
-    @GetMapping("/{id}")
+    @GetMapping()
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ValuesOfRegisted> getValuesById(@PathVariable Long id){
         var defaultValues = repository.getReferenceById(id);
 

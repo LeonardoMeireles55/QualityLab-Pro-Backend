@@ -5,7 +5,6 @@ import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +19,11 @@ public class UserController {
     private final UserService userService;
     @Transactional
     @PostMapping
-    @RequestMapping("/signup")
-    public ResponseEntity<String> signUp(@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ResponseEntity<AuthData> signUp(@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
        var user = userService.signUp(authData.login(), authData.password());
        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
-        return ResponseEntity.created(uri).body("User created :)");
+        return ResponseEntity.created(uri).body(authData);
     }
 }
