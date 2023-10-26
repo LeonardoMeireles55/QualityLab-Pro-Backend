@@ -17,8 +17,7 @@ A API RESTful para Controle Interno de Qualidade Laboratorial é projetada para 
 ToDo
 
 ## Funcionalidades já implementadas
-
-✔️ toDO
+A API faz o gerenciamento eficiente de valores de bula e valores de teste, oferecendo operações CRUD simples e intuitivas.
 
 ## O que ainda será desenvolvido?
 
@@ -33,7 +32,7 @@ ToDo
 #### Passo 1. Clonar o repositório
 Rodar o comando abaixo no Git Bash para clonar o repositório:
 ```
-git clone #######
+git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 ```
 #### Passo 2. Acessar a documentação da API
 ```
