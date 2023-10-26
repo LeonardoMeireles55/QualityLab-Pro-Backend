@@ -30,6 +30,7 @@ public class Analytics {
     private String normalObs;
     private String highValid;
     private String highObs;
+
     @Transient
     private final ValidatorService validatorService;
 

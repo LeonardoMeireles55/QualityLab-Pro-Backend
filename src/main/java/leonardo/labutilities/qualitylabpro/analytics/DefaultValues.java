@@ -41,6 +41,15 @@ public class DefaultValues {
         this.highMaxValue = Math.round(values.highmean() + (3 * values.highdp()) * 100 / 100.00);
     }
 
+    public DefaultValues(String name, double normalDp, double normalMean, double highDp, double highMean) {
+        this.name = name;
+        this.normalDp = normalDp;
+        this.normalMean = normalMean;
+        this.highDp = highDp;
+        this.highMean = highMean;
+        this.normalMaxValue = Math.round(this.normalMean + (3 * this.normalDp) * 100 / 100.00);
+        this.highMaxValue = Math.round(this.highMean + (3 * this.highDp) * 100 / 100.00);
+    }
 
     public static Map<String, DefaultValues> defaultValuesMap = new HashMap<String, DefaultValues>();
 
