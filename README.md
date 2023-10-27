@@ -1,7 +1,7 @@
 # QualityLabPro-API RESTful para controle interno de qualidade laboratorial.
 
 <p align="center">
-<img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" alt="Em desenvolvimento"/>
+<img src="https://img.shields.io/static/v1?label=STATUS&message=In%20progress&color=RED&style=for-the-badge" alt="Em desenvolvimento"/>
 </p>
 
 ## Tecnologias utilizadas
