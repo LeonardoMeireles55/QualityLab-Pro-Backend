@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>leonardo.labutilities </groupId>
 	<artifactId>QualityLabPro</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-beta</version>
 	<name>QualityLabPro</name>
 	<description>Tool to assist in internal quality control of the clinical analysis laboratory.</description>
 	<properties>
@@ -56,10 +56,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -101,7 +97,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.2.0</version>
+			<version>2.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -117,7 +113,7 @@
 				<configuration>
 					<excludes>
 						<exclude>
-							<groupId>org.projectlombok</groupId>
+							<groupId>org.project-lombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
