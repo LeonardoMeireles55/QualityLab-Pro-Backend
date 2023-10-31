@@ -36,7 +36,13 @@ Run the command below in Git Bash or Terminal to clone the repository:
 ```
 git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 ```
-#### Step 2. Access the API documentation
+#### Step 2. Upload the Docker container to create the MySQL database
+In the project root directory, run the command:
 ```
+docker-compose up -d
+```
+#### Step 3 (Optional). you can run the application and tests with the bank in memory. When compiling and running the .jar.
+
+#### Step 4. you can Access API documentation
 http://localhost:8080/swagger-ui.html
 ```
