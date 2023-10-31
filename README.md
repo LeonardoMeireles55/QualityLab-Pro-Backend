@@ -37,7 +37,7 @@ Run the command below in Git Bash or Terminal to clone the repository:
 ```
 git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 ```
-#### Step 2. Upload the Docker container to create the MySQL database
+#### Step 2. Upload the Docker container to create the mariaDB database
 In the project root directory, run the command:
 ```
 docker-compose up -d
