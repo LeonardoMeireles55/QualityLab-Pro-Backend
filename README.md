@@ -7,7 +7,8 @@
 ## Stacks
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
-![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 
 ## Description
@@ -21,12 +22,13 @@ The API efficiently manages package insert values and test values, offering simp
 
 ## Coming soon
 
-📝 Add functionality related to westgard rules.
-📝 Improve API documentation.
+* Add functionality related to westgard rules.
+* Improve API documentation.
 
 #### Requirements
-* [Java 20](https://www.oracle.com/br/java/technologies/javase/jdk20-archive-downloads.html)
+* [Java 17](https://www.oracle.com/br/java/technologies/javase/jdk17-archive-downloads.html)
 * [Maven](https://maven.apache.org/)
+* [Docker](https://www.docker.com/get-started/)
 * [Git](https://git-scm.com/)
 
 #### Step 1. Clone the repository
