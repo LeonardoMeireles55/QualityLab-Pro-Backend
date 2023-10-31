@@ -6,6 +6,7 @@
 
 ## Stacks
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
@@ -42,7 +43,9 @@ In the project root directory, run the command:
 docker-compose up -d
 ```
 #### Step 3 (Optional). you can run the application and tests with the bank in memory. When compiling and running the .jar.
-
+```
+java -jar QualityLabPro-0.0.1-beta.jar
+```
 #### Step 4. you can Access API documentation
 ```
 http://localhost:8080/swagger-ui.html
