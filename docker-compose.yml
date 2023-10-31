@@ -30,5 +30,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=$MYSQLDB_ROOT_PASSWORD
     stdin_open: true
     tty: true
+    expose:
+      - 8080:8080
 volumes:
     mysql-volume:
