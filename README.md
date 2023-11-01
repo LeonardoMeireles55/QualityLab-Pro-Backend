@@ -42,7 +42,7 @@ In the project root directory, run the command:
 ```
 docker-compose up -d
 ```
-#### Step 3 (Optional). you can run the application and tests with the bank in memory. When compiling and running the .jar.
+#### Step 3 (Optional). you can run the application and tests with the database in memory. When compiling and running the .jar.
 ```
 java -jar QualityLabPro-0.0.1-beta.jar
 ```
