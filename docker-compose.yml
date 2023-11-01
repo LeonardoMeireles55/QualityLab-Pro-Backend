@@ -8,8 +8,7 @@ services:
       MYSQL_DATABASE: ${MYSQLDB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQLDB_ROOT_PASSWORD}
     ports:
-      - "8082:8082"
-#      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+      - ${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
     volumes:
       - mysql-volume:/var/lib/mysql
   docker-app:

@@ -49,6 +49,7 @@ public class AnalyticsController {
         URI uri = uriComponentsBuilder.path("/getresults/name").build().toUri();
         return ResponseEntity.created(uri).body(analyticsService.sendValues(values));
     }
+
     @PostMapping
     @Transactional
     @RequestMapping(value = "/sendvalueslist", method = RequestMethod.POST)
