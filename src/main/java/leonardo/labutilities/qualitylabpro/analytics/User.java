@@ -2,8 +2,6 @@ package leonardo.labutilities.qualitylabpro.analytics;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
@@ -15,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-@Table(name = "users")
 @Entity(name = "users")
 @Getter
 @NoArgsConstructor

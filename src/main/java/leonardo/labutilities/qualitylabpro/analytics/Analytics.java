@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Table(name = "analytics")
 @Entity(name = "analytics")
 @Getter
 @NoArgsConstructor(force = true)

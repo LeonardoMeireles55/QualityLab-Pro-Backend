@@ -1,7 +1,9 @@
 package leonardo.labutilities.qualitylabpro.services;
 
+import com.sun.net.httpserver.Authenticator;
 import jakarta.annotation.PostConstruct;
 import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
+import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterList;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegisted;
@@ -50,27 +52,37 @@ public class DefaultValuesService {
     public List<DefaultValues> getDefaultsValues() {
         List<DefaultValues> defaultValuesList = defaultValuesRepository.findAll();
         if(defaultValuesList.isEmpty()) {
-            throw new RuntimeException("database is empty");
+            throw new ErrorHandling.ResourceNotFoundException();
         }
 
         return defaultValuesList;
     }
     public List<DefaultRegisterList> getValuesByName(String name) {
         if(!defaultValuesRepository.existsByName(name.toUpperCase())) {
-            throw new RuntimeException("values not exist");
+            throw new ErrorHandling.ResourceNotFoundException();
         }
         return defaultValuesRepository.findAll().stream()
                 .filter(s -> Objects.equals(s.getName(), name.toUpperCase()))
                 .map(DefaultRegisterList::new).toList();
     }
+    public void deleteValuesById(Long id){
+        if(!defaultValuesRepository.existsById(id)) {
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
+        defaultValuesRepository.deleteById(id);
+        defaultValuesMap.clear();
+    }
     public void deleteValues(String name){
         if(!defaultValuesRepository.existsByName(name)) {
-            throw new RuntimeException("values not exist");
+            throw new ErrorHandling.ResourceNotFoundException();
         }
         defaultValuesRepository.deleteByName(name);
         defaultValuesMap.clear();
     }
     public void deleteValuesAll(){
+        if(defaultValuesRepository.findAll().isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
         defaultValuesRepository.deleteAll();
         defaultValuesMap.clear();
     }

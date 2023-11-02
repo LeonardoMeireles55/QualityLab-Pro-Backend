@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 
 @Entity(name = "default_values")
-@Table(name = "default_values")
 @Getter
 @Setter
 @NoArgsConstructor

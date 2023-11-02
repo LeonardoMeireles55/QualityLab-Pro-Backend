@@ -13,86 +13,85 @@ public class ValidatorService {
 
     public void validationOfControlsByLevels(Double normalMean, Double normalDp,
                                              Double highMean, Double highDp,
-                                             Double normalValue, Double highValue)
-    {
-        var regra1sPositivaNormal = normalMean + (normalDp * 1);
-        var regra2sPositivaNormal = normalMean + (normalDp * 2);
-        var regra3sPositivaNormal = normalMean + (normalDp * 3);
+                                             Double normalValue, Double highValue) {
+        double positive1sRuleNormal = normalMean + (normalDp * 1);
+        double positive2sRuleNormal = normalMean + (normalDp * 2);
+        double positive3sRuleNormal = normalMean + (normalDp * 3);
 
-        var regra1sNegativaNormal = normalMean - (normalDp * 1);
-        var regra2sNegativaNormal = normalMean - (normalDp * 2);
-        var regra3sNegativaNormal = normalMean - (normalDp * 3);
+        double negative1sRuleNormal = normalMean - (normalDp * 1);
+        double negative2sRuleNormal = normalMean - (normalDp * 2);
+        double negative3sRuleNormal = normalMean - (normalDp * 3);
 
-        var regra1sPositivaHigh = highMean + (highDp * 1);
-        var regra2sPositivaHigh = highMean + (highDp * 2);
-        var regra3sPositivaHigh = highMean + (highDp * 3);
+        double positive1sRuleHigh = highMean + (highDp * 1);
+        double positive2sRuleHigh = highMean + (highDp * 2);
+        double positive3sRuleHigh = highMean + (highDp * 3);
 
-        var regra1sNegativaHigh = highMean - (highDp * 1);
-        var regra2sNegativaHigh = highMean - (highDp * 2);
-        var regra3sNegativaHigh = highMean - (highDp * 3);
+        double negative1sRuleHigh = highMean - (highDp * 1);
+        double negative2sRuleHigh = highMean - (highDp * 2);
+        double negative3sRuleHigh = highMean - (highDp * 3);
 
-
-        if(normalValue >= regra1sPositivaNormal || normalValue <= regra1sNegativaNormal) {
-            if(normalValue >= regra3sPositivaNormal || normalValue <= regra3sNegativaNormal) {
-                if(normalValue <= regra3sNegativaNormal) {
-                    this.normalValid = "Reprovado";
+        if (normalValue >= positive1sRuleNormal || normalValue <= negative1sRuleNormal) {
+            if (normalValue >= positive3sRuleNormal || normalValue <= negative3sRuleNormal) {
+                if (normalValue <= negative3sRuleNormal) {
+                    this.normalValid = "Failed";
                     this.normalObs = "-3s";
                 } else {
-                    this.normalValid = "Reprovado";
+                    this.normalValid = "Failed";
                     this.normalObs = "+3s";
                 }
 
-            } else if (normalValue >= regra2sPositivaNormal || normalValue <= regra2sNegativaNormal) {
-                if(normalValue <= regra2sNegativaNormal) {
-                    this.normalValid = "Aprovado";
+            } else if (normalValue >= positive2sRuleNormal || normalValue <= negative2sRuleNormal) {
+                if (normalValue <= negative2sRuleNormal) {
+                    this.normalValid = "Approved";
                     this.normalObs = "-2s";
                 } else {
-                    this.normalValid = "Aprovado";
+                    this.normalValid = "Approved";
                     this.normalObs = "+2s";
                 }
             } else {
-                if(normalValue >= regra1sPositivaNormal){
-                    this.normalValid = "Aprovado";
+                if (normalValue >= positive1sRuleNormal) {
+                    this.normalValid = "Approved";
                     this.normalObs = "+1s";
                 } else {
-                    this.normalValid = "Aprovado";
+                    this.normalValid = "Approved";
                     this.normalObs = "-1s";
                 }
             }
         } else {
-            this.normalValid = "Aprovado";
-            this.normalObs = "Média";
+            this.normalValid = "Approved";
+            this.normalObs = "Average";
         }
-        if(highValue >= regra1sPositivaHigh || highValue <= regra1sNegativaHigh) {
-            if(highValue >= regra3sPositivaHigh || highValue <= regra3sNegativaHigh) {
-                if(highValue <= regra3sNegativaHigh) {
-                    this.highValid = "Reprovado";
+
+        if (highValue >= positive1sRuleHigh || highValue <= negative1sRuleHigh) {
+            if (highValue >= positive3sRuleHigh || highValue <= negative3sRuleHigh) {
+                if (highValue <= negative3sRuleHigh) {
+                    this.highValid = "Failed";
                     this.highObs = "-3s";
                 } else {
-                    this.highValid = "Reprovado";
+                    this.highValid = "Failed";
                     this.highObs = "+3s";
                 }
 
-            } else if (highValue >= regra2sPositivaHigh || highValue <= regra2sNegativaHigh) {
-                if(highValue <= regra2sNegativaHigh) {
-                    this.highValid = "Aprovado";
+            } else if (highValue >= positive2sRuleHigh || highValue <= negative2sRuleHigh) {
+                if (highValue <= negative2sRuleHigh) {
+                    this.highValid = "Approved";
                     this.highObs = "-2s";
                 } else {
-                    this.highValid = "Aprovado";
+                    this.highValid = "Approved";
                     this.highObs = "+2s";
                 }
             } else {
-                if(highValue >= regra1sPositivaHigh) {
-                    this.highValid = "Aprovado";
+                if (highValue >= positive1sRuleHigh) {
+                    this.highValid = "Approved";
                     this.highObs = "+1s";
                 } else {
-                    this.highValid = "Aprovado";
+                    this.highValid = "Approved";
                     this.highObs = "-1s";
                 }
             }
         } else {
-            this.highValid = "Aprovado";
-            this.highObs = "Média";
+            this.highValid = "Approved";
+            this.highObs = "Average";
         }
     }
 }
