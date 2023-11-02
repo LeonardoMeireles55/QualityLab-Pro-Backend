@@ -14,7 +14,8 @@ services:
   docker-app:
     restart: on-failure
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_started
     build:
       context: ./
       dockerfile: Dockerfile

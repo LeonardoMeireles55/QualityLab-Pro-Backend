@@ -34,12 +34,15 @@ public class AnalyticsService {
 
     public void deleteValues(Long id) {
         if (!analyticRepository.existsById(id)) {
-            throw new RuntimeException("invalid values or not exists");
+            throw new ErrorHandling.ResourceNotFoundException();
         }
         analyticRepository.deleteById(id);
     }
 
     public void deleteValuesAll() {
+        if(analyticRepository.findAll().isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
         analyticRepository.deleteAll();
     }
 
@@ -47,41 +50,43 @@ public class AnalyticsService {
         if (!analyticRepository.findAll().isEmpty()) {
             return analyticRepository.findAll().stream().map(ValuesOfLevelsList::new).toList();
         }
-        throw new ErrorHandling.NoContentException("List is empty");
+        throw new ErrorHandling.ResourceNotFoundException();
     }
 
     public List<ValuesOfLevelsList> getResultsByName(String name) {
-        if (!analyticRepository.existsByName(name)) {
-            throw new RuntimeException("Test name not exist in Database");
-        }
-        return analyticRepository.findAllByName(name).stream()
+        var nameUpper = name.toUpperCase();
+        if (!analyticRepository.existsByName(nameUpper)) {
+            throw new ErrorHandling.ResourceNotFoundException();        }
+        return analyticRepository.findAllByName(nameUpper).stream()
                 .map(ValuesOfLevelsList::new).toList();
     }
 
     public String getResultsByNameLevel1(String name) {
-        if (analyticRepository.existsByName(name)) {
-            var listByNameLevel1 = analyticRepository.findAllByName(name).stream().map(ValuesOfLevelsList::new).toList();
+        var nameUpper = name.toUpperCase();
+        if (analyticRepository.existsByName(nameUpper)) {
+            var listByNameLevel1 = analyticRepository.findAllByName(nameUpper).stream().map(ValuesOfLevelsList::new).toList();
             return listByNameLevel1.stream()
                     .map(analytic -> analytic.date() + " Level1: " + analytic.name() + " ---> "
-                            + analytic.normalValue() + " : " + analytic.normalValid() + ", Regra: "
+                            + analytic.normalValue() + " : " + analytic.normalValid() + ", Rules: "
                             + analytic.normalObs()).toList().toString();
         }
-        throw new RuntimeException("Test name not exist in Database");
+        throw new ErrorHandling.ResourceNotFoundException();
     }
 
     public String getResultsByNameLevel2(String name) {
-        if (analyticRepository.existsByName(name)) {
+        var nameUpper = name.toUpperCase();
+        if (analyticRepository.existsByName(nameUpper)) {
             var list = analyticRepository.findAll().stream().map(ValuesOfLevelsList::new).toList();
             List<String> analyticListByNameList = new ArrayList<>();
             for (ValuesOfLevelsList item : list) {
-                if (item.name().contains(name.toUpperCase())) {
+                if (item.name().contains(nameUpper)) {
                     analyticListByNameList.add(item.date() + " Level2: " + item.name() + " ---> "
                             + item.highValue() + " : " +
-                            item.highValid() + ", Regra: " + item.highObs());
+                            item.highValid() + ", Rules: " + item.highObs());
                 }
             }
             return analyticListByNameList.toString();
         }
-        throw new RuntimeException("Test name not exist in Database");
+        throw new ErrorHandling.ResourceNotFoundException();
     }
 }
