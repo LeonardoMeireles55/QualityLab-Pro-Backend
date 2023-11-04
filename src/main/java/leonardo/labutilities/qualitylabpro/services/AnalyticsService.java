@@ -64,7 +64,8 @@ public class AnalyticsService {
     public String getResultsByNameLevel1(String name) {
         var nameUpper = name.toUpperCase();
         if (analyticRepository.existsByName(nameUpper)) {
-            var listByNameLevel1 = analyticRepository.findAllByName(nameUpper).stream().map(ValuesOfLevelsList::new).toList();
+            var listByNameLevel1 = analyticRepository.findAllByName(nameUpper).stream()
+                    .map(ValuesOfLevelsList::new).toList();
             return listByNameLevel1.stream()
                     .map(analytic -> analytic.date() + " Level1: " + analytic.name() + " ---> "
                             + analytic.normalValue() + " : " + analytic.normalValid() + ", Rules: "

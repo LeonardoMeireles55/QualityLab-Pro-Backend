@@ -2,6 +2,8 @@ package leonardo.labutilities.qualitylabpro.controller;
 import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +39,13 @@ class DefaultValuesControllerTest {
     @MockBean
     private DefaultValuesRepository defaultValuesRepository;
 
+    @Autowired
+    DefaultValuesController defaultValuesController;
+
+    @Autowired
+    DefaultValuesService defaultValuesService;
+
+
     @Test
     @DisplayName("It should return the http code 400 when the information is invalid")
     void registerTest1() throws Exception {
@@ -48,7 +59,7 @@ class DefaultValuesControllerTest {
     @Test
     @DisplayName("Should return http code 201 when information is valid")
     void registerTest2() throws Exception {
-        var data = new DefaultRegister("albumina",0.2,3.4, 5.4, 0.3);
+        var data = new DefaultRegister("albumine",0.2,3.4, 5.4, 0.3);
         DefaultValues defaultValues = new DefaultValues(data);
 
         when(defaultValuesRepository.save(any())).thenReturn(defaultValues);
@@ -64,5 +75,4 @@ class DefaultValuesControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.getContentAsString()).isEqualTo(jsonOfResponse);
     }
-
 }

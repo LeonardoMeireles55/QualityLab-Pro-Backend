@@ -1,6 +1,7 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.analytics.User;
+import leonardo.labutilities.qualitylabpro.analytics.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -12,8 +13,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User signUp(String login, String password) {
-        var user = new User(login, encrypt(password));
+    public User signUp(String login, String password, UserRoles userRoles) {
+        var user = new User(login, encrypt(password), userRoles);
 
         return userRepository.save(user);
     }

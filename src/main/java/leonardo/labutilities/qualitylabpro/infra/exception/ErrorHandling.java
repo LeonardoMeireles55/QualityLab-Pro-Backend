@@ -31,6 +31,12 @@ public class ErrorHandling {
         }
     }
 
+    public static class DataIntegrityViolationException extends RuntimeException {
+        public DataIntegrityViolationException() {
+            super();
+        }
+    }
+
     @ExceptionHandler(NoContentException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> error201() {
