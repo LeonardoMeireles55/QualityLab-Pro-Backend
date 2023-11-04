@@ -14,6 +14,7 @@ public class ValidatorService {
     public void validationOfControlsByLevels(Double normalMean, Double normalDp,
                                              Double highMean, Double highDp,
                                              Double normalValue, Double highValue) {
+
         double positive1sRuleNormal = normalMean + (normalDp * 1);
         double positive2sRuleNormal = normalMean + (normalDp * 2);
         double positive3sRuleNormal = normalMean + (normalDp * 3);

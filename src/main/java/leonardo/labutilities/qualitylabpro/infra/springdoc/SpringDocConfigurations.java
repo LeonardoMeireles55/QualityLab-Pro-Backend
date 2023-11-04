@@ -22,7 +22,10 @@ public class SpringDocConfigurations {
                                         .bearerFormat("JWT")))
                 .info(new Info()
                         .title("QualityLabPro API")
-                        .description("REST API for CRUD operations on analytical test specifications and internal control data, generating validations according to Westgard rules.")
+                        .description
+                                ("REST API for CRUD operations on analytical test" +
+                                        " specifications and internal control" +
+                                        " data, generating validations according to Westgard rules.")
                         .contact(new Contact()
                                 .name("Time Backend")
                                 .email("leomeireles55@hotmail.com"))

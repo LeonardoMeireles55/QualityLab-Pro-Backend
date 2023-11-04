@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import leonardo.labutilities.qualitylabpro.analytics.User;
+import leonardo.labutilities.qualitylabpro.analytics.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -49,8 +50,8 @@ class UserControllerTest {
     @DisplayName("Should return http code 201 when information is valid")
     @WithMockUser
     void register_scenario2() throws Exception {
-        var authData = new AuthData("Medico",
-                "249195@");
+        var authData = new AuthData("Pharmacist",
+                "249195@", UserRoles.USER);
 
         when(repository.save(any())).thenReturn(new User(authData.login(), authData.password()));
 

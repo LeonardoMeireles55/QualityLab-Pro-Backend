@@ -9,7 +9,9 @@ import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegisted;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +32,12 @@ public class DefaultValuesService {
     }
     public DefaultValues register(DefaultRegister values) {
         var defaultValues = new DefaultValues(values);
-        defaultValuesMap.put(defaultValues.getName(), defaultValues);
-        loadDefaultsValues();
-        return defaultValuesRepository.save(defaultValues);
+        if(!defaultValuesRepository.existsByName(values.name())){
+            defaultValuesMap.put(defaultValues.getName(), defaultValues);
+            loadDefaultsValues();
+            return defaultValuesRepository.save(defaultValues);
+        }
+        throw new ErrorHandling.DataIntegrityViolationException();
     }
     public List<ValuesOfRegisted> listRegister(List<DefaultRegister> defaultRegisters) {
         try {
@@ -79,7 +84,7 @@ public class DefaultValuesService {
         defaultValuesRepository.deleteByName(name);
         defaultValuesMap.clear();
     }
-    public void deleteValuesAll(){
+    public void deleteValuesAll() {
         if(defaultValuesRepository.findAll().isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException();
         }

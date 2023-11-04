@@ -10,18 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
     private final UserService userService;
     @Transactional
     @PostMapping
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<AuthData> signUp(@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
-       var user = userService.signUp(authData.login(), authData.password());
+    public ResponseEntity<AuthData> signUp
+            (@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
+       var user = userService.signUp(authData.login(), authData.password(), authData.roles());
        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(uri).body(authData);

@@ -45,7 +45,8 @@ public class AnalyticsController {
     @PostMapping
     @Transactional
     @RequestMapping(value = "/sendvalues", method = RequestMethod.POST)
-    public ResponseEntity<Analytics> sendValues(@RequestBody @Valid ValuesOfLevels values, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<Analytics> sendValues
+            (@RequestBody @Valid ValuesOfLevels values, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults/name").build().toUri();
         return ResponseEntity.created(uri).body(analyticsService.sendValues(values));
     }
@@ -53,7 +54,8 @@ public class AnalyticsController {
     @PostMapping
     @Transactional
     @RequestMapping(value = "/sendvalueslist", method = RequestMethod.POST)
-    public ResponseEntity<List<Analytics>> sendValuesList(@RequestBody List<ValuesOfLevels> valuesOfLevelsList, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<List<Analytics>> sendValuesList
+            (@RequestBody List<ValuesOfLevels> valuesOfLevelsList, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults").build().toUri();
         return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsList));
     }
