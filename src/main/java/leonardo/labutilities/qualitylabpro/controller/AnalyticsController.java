@@ -28,7 +28,7 @@ public class AnalyticsController {
         return ResponseEntity.ok().body(analyticsService.getResultsAll());
     }
     @GetMapping
-    @RequestMapping(value = "/getresults/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getresultsbyname/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsList>> getResults(@PathVariable String name) {
         return ResponseEntity.ok().body(analyticsService.getResultsByName(name));
     }
