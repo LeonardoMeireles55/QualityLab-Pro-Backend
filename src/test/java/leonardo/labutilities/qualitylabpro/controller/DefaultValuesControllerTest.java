@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.controller;
-import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
+import leonardo.labutilities.qualitylabpro.main.DefaultValues;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 
@@ -14,8 +14,6 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +29,7 @@ class DefaultValuesControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<DefaultRegister> authDataJacksonTesterDefaultRegister;
+    private JacksonTester<DefaultRegisterDTO> authDataJacksonTesterDefaultRegister;
 
     @Autowired
     private JacksonTester<DefaultValues> authDataJacksonTesterDefaultValues;
@@ -59,7 +57,7 @@ class DefaultValuesControllerTest {
     @Test
     @DisplayName("Should return http code 201 when information is valid")
     void registerTest2() throws Exception {
-        var data = new DefaultRegister("albumine",0.2,3.4, 5.4, 0.3);
+        var data = new DefaultRegisterDTO("albumine",0.2,3.4, 5.4, 0.3, 1L, 1L);
         DefaultValues defaultValues = new DefaultValues(data);
 
         when(defaultValuesRepository.save(any())).thenReturn(defaultValues);

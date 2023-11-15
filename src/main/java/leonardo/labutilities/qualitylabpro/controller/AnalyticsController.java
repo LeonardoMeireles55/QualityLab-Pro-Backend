@@ -1,9 +1,9 @@
 package leonardo.labutilities.qualitylabpro.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.analytics.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsList;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevels;
+import leonardo.labutilities.qualitylabpro.main.Analytics;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.services.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +24,12 @@ public class AnalyticsController {
 
     @GetMapping
     @RequestMapping(value = "/getresults/" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsList>> getResultsAll() {
+    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsAll() {
         return ResponseEntity.ok().body(analyticsService.getResultsAll());
     }
     @GetMapping
     @RequestMapping(value = "/getresultsbyname/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsList>> getResults(@PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResults(@PathVariable String name) {
         return ResponseEntity.ok().body(analyticsService.getResultsByName(name));
     }
     @GetMapping
@@ -46,7 +46,7 @@ public class AnalyticsController {
     @Transactional
     @RequestMapping(value = "/sendvalues", method = RequestMethod.POST)
     public ResponseEntity<Analytics> sendValues
-            (@RequestBody @Valid ValuesOfLevels values, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody @Valid ValuesOfLevelsDTO values, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults/name").build().toUri();
         return ResponseEntity.created(uri).body(analyticsService.sendValues(values));
     }
@@ -55,9 +55,9 @@ public class AnalyticsController {
     @Transactional
     @RequestMapping(value = "/sendvalueslist", method = RequestMethod.POST)
     public ResponseEntity<List<Analytics>> sendValuesList
-            (@RequestBody List<ValuesOfLevels> valuesOfLevelsList, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody List<ValuesOfLevelsDTO> valuesOfLevelsDTOList, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults").build().toUri();
-        return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsList));
+        return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsDTOList));
     }
     @Transactional
     @DeleteMapping("/deletevalues/{id}")

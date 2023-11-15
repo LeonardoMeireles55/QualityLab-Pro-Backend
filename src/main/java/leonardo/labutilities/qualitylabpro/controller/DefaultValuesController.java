@@ -2,11 +2,11 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterList;
-import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterListDTO;
+import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegisted;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +29,17 @@ public class DefaultValuesController {
     @Transactional
     @PostMapping("/register")
     public ResponseEntity<DefaultValues> registerDefaultValues
-            (@RequestBody @Valid DefaultRegister values, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody @Valid DefaultRegisterDTO values, UriComponentsBuilder uriComponentsBuilder) {
         DefaultValues defaultValues = defaultValuesService.register(values);
         URI uri = uriComponentsBuilder.path("/defaultsvalues/{id}").buildAndExpand(defaultValues.getId()).toUri();
         return ResponseEntity.created(uri).body(defaultValues);
     }
     @Transactional
     @PostMapping("/listregister")
-    public ResponseEntity<List<ValuesOfRegisted>> listRegisterDefaultValues
-            (@RequestBody @Valid List<DefaultRegister> defaultRegisters, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<List<ValuesOfRegistedDTO>> listRegisterDefaultValues
+            (@RequestBody @Valid List<DefaultRegisterDTO> defaultRegisterDTOS, UriComponentsBuilder uriComponentsBuilder) {
 
-        List<ValuesOfRegisted> defaultValues = defaultValuesService.listRegister(defaultRegisters);
+        List<ValuesOfRegistedDTO> defaultValues = defaultValuesService.listRegister(defaultRegisterDTOS);
         URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues")
                 .buildAndExpand(defaultValues.stream().map(s -> s.id()).toList()).toUri();
         return ResponseEntity.created(listUri).body(defaultValues);
@@ -51,15 +51,15 @@ public class DefaultValuesController {
     }
     @GetMapping
     @RequestMapping(value = "/getdefaultsbyname/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List<DefaultRegisterList>> getValuesByName(@PathVariable String name) {
+    public ResponseEntity<List<DefaultRegisterListDTO>> getValuesByName(@PathVariable String name) {
         return ResponseEntity.ok().body(defaultValuesService.getValuesByName(name));
     }
     @GetMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ValuesOfRegisted> getValuesById(@PathVariable Long id){
+    public ResponseEntity<ValuesOfRegistedDTO> getValuesById(@PathVariable Long id){
         var defaultValues = repository.getReferenceById(id);
 
-        return ResponseEntity.ok(new ValuesOfRegisted(defaultValues));
+        return ResponseEntity.ok(new ValuesOfRegistedDTO(defaultValues));
     }
     @Transactional
     @DeleteMapping("/deletevaluesbyid/{id}")
@@ -88,8 +88,8 @@ public class DefaultValuesController {
 
         var patch = repository.getReferenceById(id);
 
-        patch.setNormalDp(value1);
-        patch.setHighDp(value2);
+        patch.setNormalSd(value1);
+        patch.setHighSd(value2);
         patch.setNormalMean(value3);
         patch.setHighMean(value4);
     }

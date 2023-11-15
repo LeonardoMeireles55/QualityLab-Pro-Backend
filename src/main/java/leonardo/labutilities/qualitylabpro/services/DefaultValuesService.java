@@ -1,28 +1,27 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import com.sun.net.httpserver.Authenticator;
 import jakarta.annotation.PostConstruct;
-import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterList;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegisted;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterListDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.Objects;
 
-import static leonardo.labutilities.qualitylabpro.analytics.DefaultValues.defaultValuesMap;
+import static leonardo.labutilities.qualitylabpro.main.DefaultValues.defaultValuesMap;
 
 @RequiredArgsConstructor
 @Service
 public class DefaultValuesService {
 
     private final DefaultValuesRepository defaultValuesRepository;
+    private final LotRepository lotRepository;
     @PostConstruct
     public void loadDefaultsValues() {
         Iterable<DefaultValues> defaultValuesList = defaultValuesRepository.findAll();
@@ -30,23 +29,28 @@ public class DefaultValuesService {
             defaultValuesMap.put(defaultValue.getName(), defaultValue);
         }
     }
-    public DefaultValues register(DefaultRegister values) {
-        var defaultValues = new DefaultValues(values);
-        if(!defaultValuesRepository.existsByName(values.name())){
-            defaultValuesMap.put(defaultValues.getName(), defaultValues);
-            loadDefaultsValues();
-            return defaultValuesRepository.save(defaultValues);
+    public DefaultValues register(DefaultRegisterDTO values) {
+        if(lotRepository.existsById(values.lotId())) {
+            var defaultValues = new DefaultValues(values);
+            if(!defaultValuesRepository.existsByName(values.name())){
+
+                defaultValuesMap.put(defaultValues.getName(), defaultValues);
+                loadDefaultsValues();
+                return defaultValuesRepository.save(defaultValues);
+            }
+            throw new ErrorHandling.DataIntegrityViolationException();
         }
-        throw new ErrorHandling.DataIntegrityViolationException();
-    }
-    public List<ValuesOfRegisted> listRegister(List<DefaultRegister> defaultRegisters) {
+        throw new ErrorHandling.ResourceNotFoundException();
+        }
+
+    public List<ValuesOfRegistedDTO> listRegister(List<DefaultRegisterDTO> defaultRegisterDTOS) {
         try {
-            return defaultRegisters.stream()
-                    .map(defaultRegister -> {
-                        DefaultValues defaultValues = new DefaultValues(defaultRegister);
-                        defaultValuesMap.put(defaultRegister.name(), defaultValues);
+            return defaultRegisterDTOS.stream()
+                    .map(defaultRegisterDTO -> {
+                        DefaultValues defaultValues = new DefaultValues(defaultRegisterDTO);
+                        defaultValuesMap.put(defaultRegisterDTO.name(), defaultValues);
                         defaultValuesRepository.save(defaultValues);
-                        return new ValuesOfRegisted(defaultValues);
+                        return new ValuesOfRegistedDTO(defaultValues);
                     }).toList();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -59,16 +63,15 @@ public class DefaultValuesService {
         if(defaultValuesList.isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException();
         }
-
         return defaultValuesList;
     }
-    public List<DefaultRegisterList> getValuesByName(String name) {
+    public List<DefaultRegisterListDTO> getValuesByName(String name) {
         if(!defaultValuesRepository.existsByName(name.toUpperCase())) {
             throw new ErrorHandling.ResourceNotFoundException();
         }
         return defaultValuesRepository.findAll().stream()
                 .filter(s -> Objects.equals(s.getName(), name.toUpperCase()))
-                .map(DefaultRegisterList::new).toList();
+                .map(DefaultRegisterListDTO::new).toList();
     }
     public void deleteValuesById(Long id){
         if(!defaultValuesRepository.existsById(id)) {

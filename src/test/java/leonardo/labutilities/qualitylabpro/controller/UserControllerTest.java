@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-import leonardo.labutilities.qualitylabpro.analytics.User;
-import leonardo.labutilities.qualitylabpro.analytics.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
+import leonardo.labutilities.qualitylabpro.main.User;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class UserControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<AuthData> authDataJacksonTester;
+    private JacksonTester<AuthDataDTO> authDataJacksonTester;
 
     @MockBean
     private UserRepository repository;
@@ -50,8 +50,8 @@ class UserControllerTest {
     @DisplayName("Should return http code 201 when information is valid")
     @WithMockUser
     void register_scenario2() throws Exception {
-        var authData = new AuthData("Pharmacist",
-                "249195@", UserRoles.USER);
+        var authData = new AuthDataDTO("Pharmacist",
+                "249195@", "leonardo@email.com", UserRoles.USER);
 
         when(repository.save(any())).thenReturn(new User(authData.login(), authData.password()));
 

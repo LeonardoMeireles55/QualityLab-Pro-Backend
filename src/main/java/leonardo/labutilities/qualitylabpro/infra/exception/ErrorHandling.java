@@ -1,7 +1,6 @@
 package leonardo.labutilities.qualitylabpro.infra.exception;
 
-import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidation;
-import org.springframework.dao.DataIntegrityViolationException;
+import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,7 +8,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,9 +48,9 @@ public class ErrorHandling {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<List<ErrorOfValidation>> error400(MethodArgumentNotValidException exception) {
+    public ResponseEntity<List<ErrorOfValidationDTO>> error400(MethodArgumentNotValidException exception) {
         var errors = exception.getFieldErrors();
-        return ResponseEntity.badRequest().body(errors.stream().map(ErrorOfValidation::new).toList());
+        return ResponseEntity.badRequest().body(errors.stream().map(ErrorOfValidationDTO::new).toList());
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -93,10 +91,4 @@ public class ErrorHandling {
 
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    //Todo:
-//    private record ErrorValidation(String campo, String message) {
-//        public ErrorValidation(FieldError error) {
-//            this(error.getField(), error.getDefaultMessage());
-//        }
-//    }
 }

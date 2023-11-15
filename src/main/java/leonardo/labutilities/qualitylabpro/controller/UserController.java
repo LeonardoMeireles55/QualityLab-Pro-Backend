@@ -1,8 +1,7 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
-import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,11 @@ public class UserController {
     @Transactional
     @PostMapping
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<AuthData> signUp
-            (@Valid @RequestBody AuthData authData, UriComponentsBuilder uriComponentsBuilder) {
-       var user = userService.signUp(authData.login(), authData.password(), authData.roles());
+    public ResponseEntity<AuthDataDTO> signUp
+            (@Valid @RequestBody AuthDataDTO authDataDTO, UriComponentsBuilder uriComponentsBuilder) {
+       var user = userService.signUp(authDataDTO.login(), authDataDTO.password(), authDataDTO.email(), authDataDTO.roles());
        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(authData);
+        return ResponseEntity.created(uri).body(authDataDTO);
     }
 }

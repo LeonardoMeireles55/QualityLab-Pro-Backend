@@ -1,9 +1,9 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.analytics.Analytics;
+import leonardo.labutilities.qualitylabpro.main.Analytics;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevels;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsList;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,14 +18,14 @@ public class AnalyticsService {
     private final AnalyticRepository analyticRepository;
     private final ValidatorService validatorService;
 
-    public Analytics sendValues(ValuesOfLevels values) {
+    public Analytics sendValues(ValuesOfLevelsDTO values) {
         return analyticRepository.save(new Analytics(values, validatorService));
     }
 
-    public List<Analytics> sendValuesList(List<ValuesOfLevels> valuesOfLevelsList) {
+    public List<Analytics> sendValuesList(List<ValuesOfLevelsDTO> valuesOfLevelsDTOList) {
         List<Analytics> analyticsList = new ArrayList<>();
-        for (ValuesOfLevels value : valuesOfLevelsList) {
-            var analyticsLevels = new Analytics(value, validatorService);
+        for (ValuesOfLevelsDTO values : valuesOfLevelsDTOList) {
+            var analyticsLevels = new Analytics(values, validatorService);
             analyticRepository.save(analyticsLevels);
             analyticsList.add(analyticsLevels);
         }
@@ -46,26 +46,26 @@ public class AnalyticsService {
         analyticRepository.deleteAll();
     }
 
-    public List<ValuesOfLevelsList> getResultsAll() {
+    public List<ValuesOfLevelsListDTO> getResultsAll() {
         if (!analyticRepository.findAll().isEmpty()) {
-            return analyticRepository.findAll().stream().map(ValuesOfLevelsList::new).toList();
+            return analyticRepository.findAll().stream().map(ValuesOfLevelsListDTO::new).toList();
         }
         throw new ErrorHandling.ResourceNotFoundException();
     }
 
-    public List<ValuesOfLevelsList> getResultsByName(String name) {
+    public List<ValuesOfLevelsListDTO> getResultsByName(String name) {
         var nameUpper = name.toUpperCase();
         if (!analyticRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();        }
         return analyticRepository.findAllByName(nameUpper).stream()
-                .map(ValuesOfLevelsList::new).toList();
+                .map(ValuesOfLevelsListDTO::new).toList();
     }
 
     public String getResultsByNameLevel1(String name) {
         var nameUpper = name.toUpperCase();
         if (analyticRepository.existsByName(nameUpper)) {
             var listByNameLevel1 = analyticRepository.findAllByName(nameUpper).stream()
-                    .map(ValuesOfLevelsList::new).toList();
+                    .map(ValuesOfLevelsListDTO::new).toList();
             return listByNameLevel1.stream()
                     .map(analytic -> analytic.date() + " Level1: " + analytic.name() + " ---> "
                             + analytic.normalValue() + " : " + analytic.normalValid() + ", Rules: "
@@ -77,9 +77,9 @@ public class AnalyticsService {
     public String getResultsByNameLevel2(String name) {
         var nameUpper = name.toUpperCase();
         if (analyticRepository.existsByName(nameUpper)) {
-            var list = analyticRepository.findAll().stream().map(ValuesOfLevelsList::new).toList();
+            var list = analyticRepository.findAll().stream().map(ValuesOfLevelsListDTO::new).toList();
             List<String> analyticListByNameList = new ArrayList<>();
-            for (ValuesOfLevelsList item : list) {
+            for (ValuesOfLevelsListDTO item : list) {
                 if (item.name().contains(nameUpper)) {
                     analyticListByNameList.add(item.date() + " Level2: " + item.name() + " ---> "
                             + item.highValue() + " : " +

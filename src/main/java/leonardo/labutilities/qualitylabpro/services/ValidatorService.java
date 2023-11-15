@@ -11,25 +11,25 @@ public class ValidatorService {
     private String highValid;
     private String highObs;
 
-    public void validationOfControlsByLevels(Double normalMean, Double normalDp,
-                                             Double highMean, Double highDp,
+    public void validationOfControlsByLevels(Double normalMean, Double normalSd,
+                                             Double highMean, Double highSd,
                                              Double normalValue, Double highValue) {
 
-        double positive1sRuleNormal = normalMean + (normalDp * 1);
-        double positive2sRuleNormal = normalMean + (normalDp * 2);
-        double positive3sRuleNormal = normalMean + (normalDp * 3);
+        double positive1sRuleNormal = normalMean + (normalSd * 1);
+        double positive2sRuleNormal = normalMean + (normalSd * 2);
+        double positive3sRuleNormal = normalMean + (normalSd * 3);
 
-        double negative1sRuleNormal = normalMean - (normalDp * 1);
-        double negative2sRuleNormal = normalMean - (normalDp * 2);
-        double negative3sRuleNormal = normalMean - (normalDp * 3);
+        double negative1sRuleNormal = normalMean - (normalSd * 1);
+        double negative2sRuleNormal = normalMean - (normalSd * 2);
+        double negative3sRuleNormal = normalMean - (normalSd * 3);
 
-        double positive1sRuleHigh = highMean + (highDp * 1);
-        double positive2sRuleHigh = highMean + (highDp * 2);
-        double positive3sRuleHigh = highMean + (highDp * 3);
+        double positive1sRuleHigh = highMean + (highSd * 1);
+        double positive2sRuleHigh = highMean + (highSd * 2);
+        double positive3sRuleHigh = highMean + (highSd * 3);
 
-        double negative1sRuleHigh = highMean - (highDp * 1);
-        double negative2sRuleHigh = highMean - (highDp * 2);
-        double negative3sRuleHigh = highMean - (highDp * 3);
+        double negative1sRuleHigh = highMean - (highSd * 1);
+        double negative2sRuleHigh = highMean - (highSd * 2);
+        double negative3sRuleHigh = highMean - (highSd * 3);
 
         if (normalValue >= positive1sRuleNormal || normalValue <= negative1sRuleNormal) {
             if (normalValue >= positive3sRuleNormal || normalValue <= negative3sRuleNormal) {

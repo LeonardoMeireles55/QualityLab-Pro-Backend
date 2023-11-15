@@ -2,8 +2,8 @@ package leonardo.labutilities.qualitylabpro.records.auth;
 
 import org.springframework.validation.FieldError;
 
-public record ErrorOfValidation(String Field, String Message) {
-    public ErrorOfValidation(FieldError error) {
+public record ErrorOfValidationDTO(String Field, String Message) {
+    public ErrorOfValidationDTO(FieldError error) {
         this(error.getField(), error.getDefaultMessage());
     }
 }

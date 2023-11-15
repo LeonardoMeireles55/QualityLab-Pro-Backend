@@ -1,11 +1,12 @@
-package leonardo.labutilities.qualitylabpro.analytics;
+package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegister;
+import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,53 +15,56 @@ import java.util.Objects;
 @Entity(name = "default_values")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 public class DefaultValues {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Long fk_lot;
+    private Long fk_user;
     private String name;
-    private double normalDp;
+    private double normalSd;
     private double normalMean;
-    private double highDp;
+    private double highSd;
     private double highMean;
-    private double normalMaxValue;
 
+    private double normalMaxValue;
     private double highMaxValue;
 
-    public DefaultValues(DefaultRegister values) {
+    public DefaultValues(DefaultRegisterDTO values) {
         this.name = values.name().toUpperCase();
-        this.normalDp = values.normaldp();
+        this.normalSd = values.normalsd();
         this.normalMean = values.normalmean();
-        this.highDp = values.highdp();
+        this.highSd = values.highsd();
         this.highMean = values.highmean();
-        this.normalMaxValue = Math.round(values.normalmean() + (3 * values.normaldp()) * 100 / 100.00);
-        this.highMaxValue = Math.round(values.highmean() + (3 * values.highdp()) * 100 / 100.00);
-    }
+        this.normalMaxValue = Math.round(values.normalmean() + (3 * values.normalsd()) * 100 / 100.00);
+        this.highMaxValue = Math.round(values.highmean() + (3 * values.highsd()) * 100 / 100.00);
+        this.fk_lot = values.lotId();
+        this.fk_user = values.user_id();
+        }
 
-    public DefaultValues(String name, double normalDp, double normalMean, double highDp, double highMean) {
+    public DefaultValues(String name, double normalSd, double normalMean, double highSd, double highMean) {
         this.name = name;
-        this.normalDp = normalDp;
+        this.normalSd = normalSd;
         this.normalMean = normalMean;
-        this.highDp = highDp;
+        this.highSd = highSd;
         this.highMean = highMean;
-        this.normalMaxValue = Math.round(this.normalMean + (3 * this.normalDp) * 100 / 100.00);
-        this.highMaxValue = Math.round(this.highMean + (3 * this.highDp) * 100 / 100.00);
+        this.normalMaxValue = Math.round(this.normalMean + (3 * this.normalSd) * 100 / 100.00);
+        this.highMaxValue = Math.round(this.highMean + (3 * this.highSd) * 100 / 100.00);
     }
 
     public static Map<String, DefaultValues> defaultValuesMap = new HashMap<String, DefaultValues>();
 
-    public static double getTestDefaultValuesDp(String testName) {
-        return defaultValuesMap.get(testName).getNormalDp();
+    public static double getTestDefaultValuesNormalSp(String testName) {
+        return defaultValuesMap.get(testName).getNormalSd();
     }
 
     public static double getTestDefaultValuesMeanNormal(String testName) {
         return defaultValuesMap.get(testName).getNormalMean();
     }
 
-    public static double getTestDefaultValuesDpHigh(String testName) {
-        return defaultValuesMap.get(testName).getHighDp();
+    public static double getTestDefaultValuesHighSd(String testName) {
+        return defaultValuesMap.get(testName).getHighSd();
     }
 
     public static double getTestDefaultValuesMeanHigh(String name) {
