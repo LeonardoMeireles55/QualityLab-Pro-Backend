@@ -1,0 +1,6 @@
+CREATE TABLE lot (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    lot VARCHAR(36),
+    PRIMARY KEY(id),
+    UNIQUE (lot)
+)

@@ -1,0 +1,5 @@
+ALTER TABLE analytics
+ADD COLUMN fk_default_values BIGINT NOT NULL,
+ADD COLUMN fk_user BIGINT NOT NULL,
+ADD CONSTRAINT FOREIGN KEY (fk_default_values) REFERENCES default_values(fk_lot) ON UPDATE CASCADE,
+ADD CONSTRAINT FOREIGN KEY (fk_user) REFERENCES users(id)

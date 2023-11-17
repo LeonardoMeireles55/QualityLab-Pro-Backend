@@ -1,15 +1,13 @@
-package leonardo.labutilities.qualitylabpro.analytics;
+package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import leonardo.labutilities.qualitylabpro.analytics.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,9 +19,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
     private String login;
     private String password;
+    private String email;
     private UserRoles userRoles;
 
     public User(String login, String password) {
@@ -32,9 +30,10 @@ public class User implements UserDetails {
         this.userRoles =  UserRoles.USER;
     }
 
-    public User(String login, String password, UserRoles roles) {
+    public User(String login, String password, String email, UserRoles roles) {
         this.login = login;
         this.password = password;
+        this.email = email;
         this.userRoles = roles;
     }
 

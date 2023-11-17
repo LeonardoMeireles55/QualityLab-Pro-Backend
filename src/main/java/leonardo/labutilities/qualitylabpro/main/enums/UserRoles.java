@@ -1,7 +1,6 @@
-package leonardo.labutilities.qualitylabpro.analytics.enums;
+package leonardo.labutilities.qualitylabpro.main.enums;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum UserRoles {

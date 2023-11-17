@@ -1,7 +1,7 @@
-package leonardo.labutilities.qualitylabpro.analytics;
+package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevels;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.services.ValidatorService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +21,9 @@ import java.util.Objects;
 public class Analytics {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "fk_default_values")
+    private Long fk_default_values;
+    private Long fk_user;
     private String name;
     private String data;
     private Double normalValue;
@@ -44,15 +47,15 @@ public class Analytics {
 
     public static Map<String, Analytics> analyticsHashMap = new HashMap<>();
 
-    public Analytics(ValuesOfLevels values, ValidatorService validatorService) {
+    public Analytics(ValuesOfLevelsDTO values, ValidatorService validatorService) {
         this.name = values.name().toUpperCase();
         this.normalValue = values.value1();
         this.highValue = values.value2();
         this.validatorService = validatorService;
         this.data = new SimpleDateFormat("dd/MM/yy hh:mm").format(new Date());
-        this.normalDp = DefaultValues.getTestDefaultValuesDp(this.name);
+        this.normalDp = DefaultValues.getTestDefaultValuesNormalSp(this.name);
         this.normalMean = DefaultValues.getTestDefaultValuesMeanNormal(this.name);
-        this.highDp = DefaultValues.getTestDefaultValuesDpHigh(this.name);
+        this.highDp = DefaultValues.getTestDefaultValuesHighSd(this.name);
         this.highMean = DefaultValues.getTestDefaultValuesMeanHigh(this.name);
         this.validatorService.validationOfControlsByLevels
                 (normalMean, normalDp, highMean, highDp, this.normalValue, this.highValue);
@@ -60,6 +63,8 @@ public class Analytics {
         this.highValid = this.validatorService.getHighValid();
         this.normalObs = this.validatorService.getNormalObs();
         this.highObs = this.validatorService.getHighObs();
+        this.fk_default_values = values.defaultId();
+        this.fk_user = values.userId();
     }
 
     @Override

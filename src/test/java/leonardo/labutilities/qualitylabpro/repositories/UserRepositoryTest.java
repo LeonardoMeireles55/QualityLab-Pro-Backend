@@ -1,6 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
-import leonardo.labutilities.qualitylabpro.analytics.User;
+import leonardo.labutilities.qualitylabpro.main.User;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,20 +20,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
-    @Test
-    @DisplayName("return null when user is empty")
-    void findByLoginUserDataBaseIsEmpty() {
-        var createUser = signUp();
-        var userEmpty = userRepository.findByLogin("");
-        assertThat(userEmpty).isNull();
-    }
     private static String encrypt(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(password);
     }
     private User signUp() {
-        var user = new User("garotoTeste", encrypt("12345"));
+        var user = new User("UserTest", encrypt("12345"), "safdasdas", UserRoles.USER);
 
         return userRepository.save(user);
+    }
+    @Test
+    @DisplayName("return 200 when user is exists")
+    void findByLoginUserDataBaseIsUserExists() {
+        signUp();
+        var userNotNull = userRepository.findByLogin("UserTest");
+        assertThat(userNotNull).isNotNull();
+    }
+    @Test
+    @DisplayName("return null when user is empty")
+    void findByLoginUserDataBaseIsUserNotExists() {
+        var userEmpty = userRepository.findByLogin("");
+        assertThat(userEmpty).isNull();
     }
 }

@@ -1,4 +1,4 @@
 package leonardo.labutilities.qualitylabpro.records.auth;
 
-public record TokenJWT(String tokenJWT) {
+public record TokenJwtDTO(String tokenJWT) {
 }

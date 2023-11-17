@@ -2,9 +2,9 @@ package leonardo.labutilities.qualitylabpro.records.valuesOf;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import leonardo.labutilities.qualitylabpro.analytics.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 
-public record ValuesOfRegisted(
+public record ValuesOfRegistedDTO(
         Long id,
         @NotBlank @Pattern(regexp = "^[^0-9]+$", message = "test name must contain only letters.")
         String name,
@@ -12,8 +12,8 @@ public record ValuesOfRegisted(
         Double normalmean,
         Double highdp,
         Double highmean) {
-    public ValuesOfRegisted(DefaultValues defaultValues) {
-        this(defaultValues.getId(), defaultValues.getName(), defaultValues.getNormalDp(), defaultValues.getNormalMean(),
-                defaultValues.getHighDp(), defaultValues.getHighMean());
+    public ValuesOfRegistedDTO(DefaultValues defaultValues) {
+        this(defaultValues.getId(), defaultValues.getName(), defaultValues.getNormalSd(), defaultValues.getNormalMean(),
+                defaultValues.getHighSd(), defaultValues.getHighMean());
     }
 }

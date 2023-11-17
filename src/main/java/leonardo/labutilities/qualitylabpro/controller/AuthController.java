@@ -1,10 +1,10 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.analytics.User;
+import leonardo.labutilities.qualitylabpro.main.User;
 import leonardo.labutilities.qualitylabpro.services.TokenService;
-import leonardo.labutilities.qualitylabpro.records.auth.AuthData;
-import leonardo.labutilities.qualitylabpro.records.auth.TokenJWT;
+import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
+import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,15 +21,14 @@ public class AuthController {
     private final AuthenticationManager manager;
     private final TokenService tokenService;
     @PostMapping
-    public ResponseEntity<?> singIn(@RequestBody @Valid AuthData authData) {
+    public ResponseEntity<?> singIn(@RequestBody @Valid AuthDataDTO authDataDTO) {
         try {
-            var authToken = new UsernamePasswordAuthenticationToken(authData.login(), authData.password());
+            var authToken = new UsernamePasswordAuthenticationToken(authDataDTO.login(), authDataDTO.password());
             var auth =  manager.authenticate(authToken);
             var token = tokenService.generateToken((User) auth.getPrincipal());
 
-            return ResponseEntity.ok(new TokenJWT(token));
+            return ResponseEntity.ok(new TokenJwtDTO(token));
         } catch (RuntimeException e) {
-            e.getMessage();
             return ResponseEntity.badRequest().body(e + "User or Password is invalid");
         }
 

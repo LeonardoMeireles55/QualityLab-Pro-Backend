@@ -5,16 +5,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 
-public record DefaultRegister(
+public record DefaultRegisterDTO(
         @NotBlank @Pattern(regexp = "^[^0-9]+$", message = "test name must contain only letters.")
         String name,
         @Digits(integer=3, fraction=2)
-        Double normaldp,
+        Double normalsd,
         @Digits(integer=3, fraction=2)
         Double normalmean,
         @Digits(integer=3, fraction=2)
-        Double highdp,
+        Double highsd,
         @Digits(integer=3, fraction=2)
-        Double highmean
+        Double highmean,
+        Long lotId,
+
+        Long user_id
 ) {
 }
