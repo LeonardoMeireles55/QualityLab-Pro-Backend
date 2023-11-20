@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class IntegraController {
     @Transactional
     @RequestMapping(value = "/sendvalues", method = RequestMethod.POST)
     public ResponseEntity<List<Integra400>> sendValues
-            (@RequestBody @Valid List<ValuesOfLevelsIntegra> values) {
+            (@RequestBody @Valid List<ValuesOfLevelsIntegra> values) throws ParseException {
         List<Integra400> valuesOfLevelsIntegras = integra400Service.sendValues(values);
         return ResponseEntity.ok().body(valuesOfLevelsIntegras);
     }
