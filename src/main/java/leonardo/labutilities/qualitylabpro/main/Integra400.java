@@ -1,12 +1,11 @@
 package leonardo.labutilities.qualitylabpro.main;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.records.integra.ValuesOfLevelsIntegra;
+import leonardo.labutilities.qualitylabpro.services.DateFormatService;
 import leonardo.labutilities.qualitylabpro.services.ValidatorServiceIntegra;
 import lombok.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -17,8 +16,7 @@ import java.util.Date;
 public class Integra400 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    Date date;
+    String date;
     String level_lot;
     String test_lot;
     String name;
@@ -32,10 +30,9 @@ public class Integra400 {
 
     @Transient
     private final ValidatorServiceIntegra validatorServiceIntegra;
-//    String format = "dd-MM-yyyy HH:mm:ss";
-//    SimpleDateFormat sdf = new SimpleDateFormat(format);
 
-    public Integra400(ValuesOfLevelsIntegra values, ValidatorServiceIntegra validatorServiceIntegra) {
+    public Integra400(ValuesOfLevelsIntegra values, ValidatorServiceIntegra validatorServiceIntegra, DateFormatService dateFormatService) {
+//        this.date = dateFormatService.parseDate(values.date());
         this.date = values.date();
         this.level_lot = values.level_lot();
         this.test_lot = values.test_lot();

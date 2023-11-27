@@ -15,11 +15,12 @@ import java.util.List;
 public class Integra400Service {
     private final Integra400Repository integra400Repository;
     private final ValidatorServiceIntegra validatorServiceIntegra;
+    private final DateFormatService dateFormatService;
 
     public List<Integra400> sendValues(List<ValuesOfLevelsIntegra> valuesOfLevelsList) {
         List<Integra400> analyticsList = new ArrayList<>();
         for (ValuesOfLevelsIntegra values : valuesOfLevelsList) {
-            var analyticsLevels = new Integra400(values, validatorServiceIntegra);
+            var analyticsLevels = new Integra400(values, validatorServiceIntegra, dateFormatService);
             integra400Repository.save(analyticsLevels);
             analyticsList.add(analyticsLevels);
         }

@@ -1,7 +1,7 @@
 CREATE TABLE integra_400 (
                            id BIGINT NOT NULL AUTO_INCREMENT,
                            PRIMARY KEY (id),
-                           date DATETIME,
+                           date VARCHAR(50),
                            level_lot VARCHAR(25),
                            test_lot VARCHAR(25),
                            name VARCHAR(20),
@@ -12,6 +12,4 @@ CREATE TABLE integra_400 (
                            unit_value VARCHAR(10),
                            rules VARCHAR(10),
                            description VARCHAR(10)
-#                           validated_by VARCHAR(10),
-#                           user_description VARCHAR(50)
 );
