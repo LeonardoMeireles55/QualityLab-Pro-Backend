@@ -1,7 +1,7 @@
 CREATE TABLE integra_400 (
                            id BIGINT NOT NULL AUTO_INCREMENT,
                            PRIMARY KEY (id),
-                           date VARCHAR(50),
+                           date TIMESTAMP,
                            level_lot VARCHAR(25),
                            test_lot VARCHAR(25),
                            name VARCHAR(20),

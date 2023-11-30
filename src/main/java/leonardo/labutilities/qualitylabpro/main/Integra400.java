@@ -2,16 +2,13 @@ package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.records.integra.ValuesOfLevelsIntegra;
-import leonardo.labutilities.qualitylabpro.services.DateFormatService;
 import leonardo.labutilities.qualitylabpro.services.ValidatorServiceIntegra;
 import lombok.*;
 
-import java.util.Date;
 
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @Getter
-@Setter
 @Entity(name = "integra_400")
 public class Integra400 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +28,7 @@ public class Integra400 {
     @Transient
     private final ValidatorServiceIntegra validatorServiceIntegra;
 
-    public Integra400(ValuesOfLevelsIntegra values, ValidatorServiceIntegra validatorServiceIntegra, DateFormatService dateFormatService) {
-//        this.date = dateFormatService.parseDate(values.date());
+    public Integra400(ValuesOfLevelsIntegra values, ValidatorServiceIntegra validatorServiceIntegra) {
         this.date = values.date();
         this.level_lot = values.level_lot();
         this.test_lot = values.test_lot();
