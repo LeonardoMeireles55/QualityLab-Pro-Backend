@@ -1,0 +1,1 @@
+CREATE INDEX integra_400_name_IDX USING BTREE ON integra_400 (name,`level`,description);

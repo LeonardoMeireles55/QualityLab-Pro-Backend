@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +56,23 @@ public class Integra400Service {
         return integra400Repository.findAllByName(nameUpper).stream()
                 .map(ValuesOfLevelsIntegra::new).toList();
     }
+
+    public List<ValuesOfLevelsIntegra> getResultsByNameAndLevel(String name, String level) {
+        var nameUpper = name.toUpperCase();
+        if (!integra400Repository.existsByName(nameUpper)) {
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
+        if (Objects.equals(level, "1")) {
+            level = "PCCC1";
+        } else if (Objects.equals(level, "2")) {
+            level = "PCCC2";
+        } else {
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
+        return integra400Repository.findAllByNameAndLevel(nameUpper, level).stream()
+                .map(ValuesOfLevelsIntegra::new).toList();
+    }
+
     public List<ValuesOfLevelsIntegra> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
         if (!integra400Repository.existsByName(nameUpper)) {

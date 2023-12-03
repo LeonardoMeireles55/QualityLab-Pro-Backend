@@ -18,4 +18,6 @@ public interface Integra400Repository extends JpaRepository<Integra400, Long> {
     List<Integra400> findAllByNameOrderByDateDesc(String name);
 
     List<Integra400> findAllByLevel(String level);
+
+    List<Integra400> findAllByNameAndLevel(String name, String Level);
 }

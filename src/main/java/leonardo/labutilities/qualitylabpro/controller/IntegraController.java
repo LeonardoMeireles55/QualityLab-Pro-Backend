@@ -51,10 +51,10 @@ public class IntegraController {
     }
 
     @GetMapping
-    @RequestMapping(value = "/getresultsbylevel/{name}/{level}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getresultsbyname-level/{name}/{level}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsIntegra>> getResultsByLevel
             (@PathVariable String name, @PathVariable String level) {
-        return ResponseEntity.ok().body(integra400Service.getResultsByLevel(name, level));
+        return ResponseEntity.ok().body(integra400Service.getResultsByNameAndLevel(name, level));
     }
 
 
