@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 
 public record AuthDataDTO
-        (@NotNull String login,
+        (@NotNull String username,
          @NotNull
          @Pattern(regexp = "^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?])(?=.*\\d{4,}).+$",
                  message = "Password must contain at least 4 characters and one special character.")

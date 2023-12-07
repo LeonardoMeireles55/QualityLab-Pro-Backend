@@ -23,7 +23,7 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<?> singIn(@RequestBody @Valid AuthDataDTO authDataDTO) {
         try {
-            var authToken = new UsernamePasswordAuthenticationToken(authDataDTO.login(), authDataDTO.password());
+            var authToken = new UsernamePasswordAuthenticationToken(authDataDTO.username(), authDataDTO.password());
             var auth =  manager.authenticate(authToken);
             var token = tokenService.generateToken((User) auth.getPrincipal());
 
