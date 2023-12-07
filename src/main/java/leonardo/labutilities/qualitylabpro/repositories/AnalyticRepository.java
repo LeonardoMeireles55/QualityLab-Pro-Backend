@@ -11,5 +11,4 @@ import java.util.List;
 public interface AnalyticRepository extends JpaRepository<Analytics, Long> {
     boolean existsByName(String name);
     List<Analytics> findAllByName(Pageable pageable, String name);
-    List<Analytics> findAllByNameLevel(Pageable pageable, String name, String level);
 }

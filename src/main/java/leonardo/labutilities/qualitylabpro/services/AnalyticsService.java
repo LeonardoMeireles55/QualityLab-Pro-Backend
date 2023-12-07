@@ -61,13 +61,4 @@ public class AnalyticsService {
         return analyticRepository.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsListDTO::new).toList();
     }
-
-    public List<ValuesOfLevelsListDTO> getResultsByNameLevel(Pageable pageable, String name, String level) {
-        var nameUpper = name.toUpperCase();
-        if (analyticRepository.existsByName(nameUpper)) {
-            return analyticRepository.findAllByNameLevel(pageable, nameUpper, level).stream()
-                    .map(ValuesOfLevelsListDTO::new).toList();
-        }
-        throw new ErrorHandling.ResourceNotFoundException();
-    }
 }

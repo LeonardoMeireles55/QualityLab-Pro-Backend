@@ -34,12 +34,6 @@ public class AnalyticsController {
     public ResponseEntity<List<ValuesOfLevelsListDTO>> getResults(Pageable pageable, @PathVariable String name) {
         return ResponseEntity.ok().body(analyticsService.getResultsByName(pageable, name));
     }
-    @GetMapping
-    @RequestMapping(value = "/getresultsbynamelevel/{name}", method = RequestMethod.GET)
-        public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsByNameLevel
-            (Pageable pageable, @PathVariable String name, @PathVariable String level) {
-            return ResponseEntity.ok().body(analyticsService.getResultsByNameLevel(pageable, name, level));
-        }
 
     @PostMapping
     @Transactional
