@@ -1,14 +1,13 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.main.Integra400;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
+import leonardo.labutilities.qualitylabpro.main.Integra400;
 import leonardo.labutilities.qualitylabpro.records.integra.ValuesOfLevelsIntegra;
 import leonardo.labutilities.qualitylabpro.repositories.Integra400Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,24 +39,15 @@ public class Integra400Service {
         return integra400Repository.findAll(pageable).map(ValuesOfLevelsIntegra::new);
     }
 
-    public List<ValuesOfLevelsIntegra> getResultsByLevel(String name, String level) {
-        var nameUpper = name.toUpperCase();
-        if (!integra400Repository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();
-        }
-        return integra400Repository.findAllByName(nameUpper).stream()
-                .map(ValuesOfLevelsIntegra::new).filter(f -> f.level().contains(level)).toList();
-    }
-
-    public List<ValuesOfLevelsIntegra> getResultsByName(String name) {
+    public List<ValuesOfLevelsIntegra> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!integra400Repository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();        }
-        return integra400Repository.findAllByName(nameUpper).stream()
+        return integra400Repository.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsIntegra::new).toList();
     }
 
-    public List<ValuesOfLevelsIntegra> getResultsByNameAndLevel(String name, String level) {
+    public List<ValuesOfLevelsIntegra> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
         if (!integra400Repository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();
@@ -69,7 +59,7 @@ public class Integra400Service {
         } else {
             throw new ErrorHandling.ResourceNotFoundException();
         }
-        return integra400Repository.findAllByNameAndLevel(nameUpper, level).stream()
+        return integra400Repository.findAllByNameAndLevel(pageable, nameUpper, level).stream()
                 .map(ValuesOfLevelsIntegra::new).toList();
     }
 

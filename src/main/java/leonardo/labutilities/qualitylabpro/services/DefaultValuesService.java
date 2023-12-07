@@ -1,8 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import jakarta.annotation.PostConstruct;
-import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
+import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;

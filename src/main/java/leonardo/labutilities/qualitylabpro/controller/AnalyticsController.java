@@ -1,11 +1,13 @@
 package leonardo.labutilities.qualitylabpro.controller;
+
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.main.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.services.AnalyticsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -24,24 +26,21 @@ public class AnalyticsController {
 
     @GetMapping
     @RequestMapping(value = "/getresults/" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsAll() {
-        return ResponseEntity.ok().body(analyticsService.getResultsAll());
+    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsAll(Pageable pageable) {
+        return ResponseEntity.ok().body(analyticsService.getResultsAll(pageable));
     }
     @GetMapping
     @RequestMapping(value = "/getresultsbyname/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResults(@PathVariable String name) {
-        return ResponseEntity.ok().body(analyticsService.getResultsByName(name));
+    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResults(Pageable pageable, @PathVariable String name) {
+        return ResponseEntity.ok().body(analyticsService.getResultsByName(pageable, name));
     }
     @GetMapping
-    @RequestMapping(value = "/getresultsbynamelevel1/{name}", method = RequestMethod.GET)
-        public ResponseEntity<String> getResultsByNameLevel1(@PathVariable String name) {
-            return ResponseEntity.ok().body(analyticsService.getResultsByNameLevel1(name));
+    @RequestMapping(value = "/getresultsbynamelevel/{name}", method = RequestMethod.GET)
+        public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsByNameLevel
+            (Pageable pageable, @PathVariable String name, @PathVariable String level) {
+            return ResponseEntity.ok().body(analyticsService.getResultsByNameLevel(pageable, name, level));
         }
-    @GetMapping
-    @RequestMapping(value = "/getresultsbynamelevel2/{name}", method = RequestMethod.GET)
-    public ResponseEntity<String> getResultsByNameLevel2(@PathVariable String name) {
-        return ResponseEntity.ok().body(analyticsService.getResultsByNameLevel2(name));
-    }
+
     @PostMapping
     @Transactional
     @RequestMapping(value = "/sendvalues", method = RequestMethod.POST)

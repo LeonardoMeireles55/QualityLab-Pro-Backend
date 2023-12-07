@@ -1,11 +1,12 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.main.Analytics;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
+import leonardo.labutilities.qualitylabpro.main.Analytics;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,47 +47,26 @@ public class AnalyticsService {
         analyticRepository.deleteAll();
     }
 
-    public List<ValuesOfLevelsListDTO> getResultsAll() {
+    public List<ValuesOfLevelsListDTO> getResultsAll(Pageable pageable) {
         if (!analyticRepository.findAll().isEmpty()) {
-            return analyticRepository.findAll().stream().map(ValuesOfLevelsListDTO::new).toList();
+            return analyticRepository.findAll(pageable).stream().map(ValuesOfLevelsListDTO::new).toList();
         }
         throw new ErrorHandling.ResourceNotFoundException();
     }
 
-    public List<ValuesOfLevelsListDTO> getResultsByName(String name) {
+    public List<ValuesOfLevelsListDTO> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!analyticRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();        }
-        return analyticRepository.findAllByName(nameUpper).stream()
+        return analyticRepository.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsListDTO::new).toList();
     }
 
-    public String getResultsByNameLevel1(String name) {
+    public List<ValuesOfLevelsListDTO> getResultsByNameLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
         if (analyticRepository.existsByName(nameUpper)) {
-            var listByNameLevel1 = analyticRepository.findAllByName(nameUpper).stream()
+            return analyticRepository.findAllByNameLevel(pageable, nameUpper, level).stream()
                     .map(ValuesOfLevelsListDTO::new).toList();
-            return listByNameLevel1.stream()
-                    .map(analytic -> analytic.date() + " Level1: " + analytic.name() + " ---> "
-                            + analytic.normalValue() + " : " + analytic.normalValid() + ", Rules: "
-                            + analytic.normalObs()).toList().toString();
-        }
-        throw new ErrorHandling.ResourceNotFoundException();
-    }
-
-    public String getResultsByNameLevel2(String name) {
-        var nameUpper = name.toUpperCase();
-        if (analyticRepository.existsByName(nameUpper)) {
-            var list = analyticRepository.findAll().stream().map(ValuesOfLevelsListDTO::new).toList();
-            List<String> analyticListByNameList = new ArrayList<>();
-            for (ValuesOfLevelsListDTO item : list) {
-                if (item.name().contains(nameUpper)) {
-                    analyticListByNameList.add(item.date() + " Level2: " + item.name() + " ---> "
-                            + item.highValue() + " : " +
-                            item.highValid() + ", Rules: " + item.highObs());
-                }
-            }
-            return analyticListByNameList.toString();
         }
         throw new ErrorHandling.ResourceNotFoundException();
     }

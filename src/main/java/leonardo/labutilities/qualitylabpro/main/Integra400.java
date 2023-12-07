@@ -3,7 +3,9 @@ package leonardo.labutilities.qualitylabpro.main;
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.records.integra.ValuesOfLevelsIntegra;
 import leonardo.labutilities.qualitylabpro.services.ValidatorServiceIntegra;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor

@@ -2,9 +2,9 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.main.User;
-import leonardo.labutilities.qualitylabpro.services.TokenService;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtDTO;
+import leonardo.labutilities.qualitylabpro.services.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import java.text.ParseException;
+
 import java.util.List;
 
 @RestController
@@ -23,7 +23,7 @@ public class IntegraController {
     @Transactional
     @RequestMapping(value = "/sendvalues", method = RequestMethod.POST)
     public ResponseEntity<List<Integra400>> sendValues
-            (@RequestBody @Valid List<ValuesOfLevelsIntegra> values) throws ParseException {
+            (@RequestBody @Valid List<ValuesOfLevelsIntegra> values) {
         List<Integra400> valuesOfLevelsIntegras = integra400Service.sendValues(values);
         return ResponseEntity.ok().body(valuesOfLevelsIntegras);
     }
@@ -34,8 +34,8 @@ public class IntegraController {
     }
     @GetMapping
     @RequestMapping(value = "/getresultsbyname/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsIntegra>> getResultsByName(@PathVariable String name) {
-        return ResponseEntity.ok().body(integra400Service.getResultsByName(name));
+    public ResponseEntity<List<ValuesOfLevelsIntegra>> getResultsByName(Pageable pageable, @PathVariable String name) {
+        return ResponseEntity.ok().body(integra400Service.getResultsByName(pageable, name));
     }
 
     @GetMapping
@@ -53,8 +53,8 @@ public class IntegraController {
     @GetMapping
     @RequestMapping(value = "/getresultsbyname-level/{name}/{level}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsIntegra>> getResultsByLevel
-            (@PathVariable String name, @PathVariable String level) {
-        return ResponseEntity.ok().body(integra400Service.getResultsByNameAndLevel(name, level));
+            (Pageable pageable, @PathVariable String name, @PathVariable String level) {
+        return ResponseEntity.ok().body(integra400Service.getResultsByNameAndLevel(pageable, name, level));
     }
 
 

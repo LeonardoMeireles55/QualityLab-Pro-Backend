@@ -4,7 +4,6 @@ import leonardo.labutilities.qualitylabpro.main.User;
 import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
