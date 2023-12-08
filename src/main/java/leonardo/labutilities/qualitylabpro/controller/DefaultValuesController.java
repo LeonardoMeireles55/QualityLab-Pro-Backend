@@ -37,7 +37,8 @@ public class DefaultValuesController {
     @Transactional
     @PostMapping("/listregister")
     public ResponseEntity<List<ValuesOfRegistedDTO>> listRegisterDefaultValues
-            (@RequestBody @Valid List<DefaultRegisterDTO> defaultRegisterDTOS, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody @Valid List<DefaultRegisterDTO> defaultRegisterDTOS,
+             UriComponentsBuilder uriComponentsBuilder) {
 
         List<ValuesOfRegistedDTO> defaultValues = defaultValuesService.listRegister(defaultRegisterDTOS);
         URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues")

@@ -53,7 +53,7 @@ class UserControllerTest {
         var authData = new AuthDataDTO("Pharmacist",
                 "249195@", "leonardo@email.com", UserRoles.USER);
 
-        when(repository.save(any())).thenReturn(new User(authData.login(), authData.password()));
+        when(repository.save(any())).thenReturn(new User(authData.username(), authData.password()));
 
         var response = mvc
                 .perform(post("/user/signup")

@@ -1,18 +1,17 @@
 package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.integra.ValuesOfLevelsIntegra;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGeneric;
 import leonardo.labutilities.qualitylabpro.services.ValidatorServiceIntegra;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @Getter
-@Entity(name = "integra_400")
-public class Integra400 {
+@Entity(name = "generic_analytics")
+public class GenericAnalytics {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     String date;
@@ -30,7 +29,7 @@ public class Integra400 {
     @Transient
     private final ValidatorServiceIntegra validatorServiceIntegra;
 
-    public Integra400(ValuesOfLevelsIntegra values, ValidatorServiceIntegra validatorServiceIntegra) {
+    public GenericAnalytics(ValuesOfLevelsGeneric values, ValidatorServiceIntegra validatorServiceIntegra) {
         this.date = values.date();
         this.level_lot = values.level_lot();
         this.test_lot = values.test_lot();
@@ -44,6 +43,5 @@ public class Integra400 {
         this.validatorServiceIntegra.validator(value, mean, sd);
         this.rules = validatorServiceIntegra.getRules();
         this.description = validatorServiceIntegra.getDescription();
-
     }
 }

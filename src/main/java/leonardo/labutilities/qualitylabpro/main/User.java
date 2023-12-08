@@ -23,19 +23,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String login;
+    private String username;
     private String password;
     private String email;
     private UserRoles userRoles;
 
-    public User(String login, String password) {
-        this.login = login;
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
         this.userRoles =  UserRoles.USER;
     }
 
-    public User(String login, String password, String email, UserRoles roles) {
-        this.login = login;
+    public User(String username, String password, String email, UserRoles roles) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.userRoles = roles;
@@ -51,7 +51,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override

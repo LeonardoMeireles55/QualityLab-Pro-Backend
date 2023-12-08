@@ -1,2 +1,2 @@
 ALTER TABLE users
-ADD COLUMN user_roles VARCHAR(6);
+ADD COLUMN user_roles BOOLEAN;

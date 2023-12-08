@@ -1,7 +1,7 @@
 CREATE TABLE analytics (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(20),
-    data VARCHAR(25),
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     normal_value DOUBLE,
     high_value DOUBLE,
     normal_valid VARCHAR(10),

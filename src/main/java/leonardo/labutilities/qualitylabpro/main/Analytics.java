@@ -25,7 +25,7 @@ public class Analytics {
     private Long fk_default_values;
     private Long fk_user;
     private String name;
-    private String data;
+    private Date date;
     private Double normalValue;
     private Double highValue;
     private String normalValid;
@@ -52,7 +52,6 @@ public class Analytics {
         this.normalValue = values.value1();
         this.highValue = values.value2();
         this.validatorService = validatorService;
-        this.data = new SimpleDateFormat("dd/MM/yy hh:mm").format(new Date());
         this.normalDp = DefaultValues.getTestDefaultValuesNormalSp(this.name);
         this.normalMean = DefaultValues.getTestDefaultValuesMeanNormal(this.name);
         this.highDp = DefaultValues.getTestDefaultValuesHighSd(this.name);

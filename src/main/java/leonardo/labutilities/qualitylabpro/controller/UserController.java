@@ -1,6 +1,7 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<AuthDataDTO> signUp
             (@Valid @RequestBody AuthDataDTO authDataDTO, UriComponentsBuilder uriComponentsBuilder) {
-       var user = userService.signUp(authDataDTO.username(), authDataDTO.password(), authDataDTO.email(), authDataDTO.roles());
+       var user = userService.signUp(authDataDTO.username(), authDataDTO.password(),
+               authDataDTO.email(), UserRoles.USER);
        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(uri).body(authDataDTO);

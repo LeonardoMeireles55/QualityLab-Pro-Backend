@@ -1,8 +1,8 @@
-package leonardo.labutilities.qualitylabpro.records.integra;
-import leonardo.labutilities.qualitylabpro.main.Integra400;
+package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
+import leonardo.labutilities.qualitylabpro.main.GenericAnalytics;
 
 
-public record ValuesOfLevelsIntegra(
+public record ValuesOfLevelsGeneric(
         String date,
         String level_lot,
         String test_lot,
@@ -15,7 +15,7 @@ public record ValuesOfLevelsIntegra(
         String rules,
         String description
 ) {
-    public ValuesOfLevelsIntegra(Integra400 analytics) {
+    public ValuesOfLevelsGeneric(GenericAnalytics analytics) {
         this(analytics.getDate(), analytics.getLevel_lot(), analytics.getTest_lot(),
                 analytics.getName(), analytics.getLevel(),
                 analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnit_value(),

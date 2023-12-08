@@ -23,7 +23,7 @@ public class TokenService {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer(ISSUER)
-                    .withSubject(user.getLogin())
+                    .withSubject(user.getUsername())
                     .withExpiresAt(dateExp())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
