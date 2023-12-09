@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @SecurityRequirement(name = "bearer-key")
-@RequestMapping("/lot")
+@RequestMapping("/lotValues")
 public class LotController {
     private final LotService lotService;
 

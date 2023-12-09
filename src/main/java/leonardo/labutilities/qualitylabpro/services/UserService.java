@@ -1,7 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
+import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.main.User;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,14 +22,12 @@ public class UserService {
     }
 
     public void updUser(String name, String email, String password, String newPassword, UserRoles userRoles) {
-        var updUser = userRepository.getReferenceByUsernameAndEmail(name, email);
+        var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
 
-        if(!decrypt(password, updUser.getPassword())) {
-            throw  new RuntimeException("Passwords not matches");
+        if(!decrypt(password, oldPass.getPassword()) || decrypt(newPassword, oldPass.getPassword())) {
+            throw new ErrorHandling.PasswordNotMatchesException();
         } else {
-            var user = new User(updUser.getUsername(), encrypt(newPassword), email, UserRoles.USER);
-
-            userRepository.setPasswordWhereByUsername(updUser.getUsername(), user.getPassword());
+            userRepository.setPasswordWhereByUsername(oldPass.getUsername(), encrypt(newPassword));
         }
     }
 

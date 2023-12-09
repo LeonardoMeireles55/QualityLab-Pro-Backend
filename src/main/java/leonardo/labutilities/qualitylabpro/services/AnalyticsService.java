@@ -2,8 +2,8 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.main.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsListDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

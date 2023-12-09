@@ -5,7 +5,7 @@ import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import lombok.RequiredArgsConstructor;

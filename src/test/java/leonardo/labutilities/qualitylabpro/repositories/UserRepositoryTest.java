@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
 import leonardo.labutilities.qualitylabpro.main.User;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

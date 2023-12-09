@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.main.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @SecurityRequirement(name = "bearer-key")
-@RequestMapping("/defaultsvalues")
+@RequestMapping("/defaultsValues")
 public class DefaultValuesController {
     private final DefaultValuesRepository repository;
     private final DefaultValuesService defaultValuesService;
@@ -31,27 +31,27 @@ public class DefaultValuesController {
     public ResponseEntity<DefaultValues> registerDefaultValues
             (@RequestBody @Valid DefaultRegisterDTO values, UriComponentsBuilder uriComponentsBuilder) {
         DefaultValues defaultValues = defaultValuesService.register(values);
-        URI uri = uriComponentsBuilder.path("/defaultsvalues/{id}").buildAndExpand(defaultValues.getId()).toUri();
+        URI uri = uriComponentsBuilder.path("/defaultsValues/{id}").buildAndExpand(defaultValues.getId()).toUri();
         return ResponseEntity.created(uri).body(defaultValues);
     }
     @Transactional
-    @PostMapping("/listregister")
+    @PostMapping("/listRegister")
     public ResponseEntity<List<ValuesOfRegistedDTO>> listRegisterDefaultValues
             (@RequestBody @Valid List<DefaultRegisterDTO> defaultRegisterDTOS,
              UriComponentsBuilder uriComponentsBuilder) {
 
         List<ValuesOfRegistedDTO> defaultValues = defaultValuesService.listRegister(defaultRegisterDTOS);
-        URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues")
+        URI listUri = uriComponentsBuilder.path("/defaultValues/getDefaultsValues")
                 .buildAndExpand(defaultValues.stream().map(ValuesOfRegistedDTO::id).toList()).toUri();
         return ResponseEntity.created(listUri).body(defaultValues);
     }
     @GetMapping
-    @RequestMapping(value = "/getdefaultsvalues", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDefaultsValues", method = RequestMethod.GET)
     public ResponseEntity<List<DefaultValues>> getDefaultsValues() {
         return ResponseEntity.ok().body(defaultValuesService.getDefaultsValues());
     }
     @GetMapping
-    @RequestMapping(value = "/getdefaultsbyname/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getDefaultsByName/{name}", method = RequestMethod.GET)
     public ResponseEntity<List<DefaultRegisterListDTO>> getValuesByName(@PathVariable String name) {
         return ResponseEntity.ok().body(defaultValuesService.getValuesByName(name));
     }
@@ -63,28 +63,28 @@ public class DefaultValuesController {
         return ResponseEntity.ok(new ValuesOfRegistedDTO(defaultValues));
     }
     @Transactional
-    @DeleteMapping("/deletevaluesbyid/{id}")
+    @DeleteMapping("/deleteValuesById/{id}")
     public ResponseEntity<String> deleteValuesById(@PathVariable Long id){
         defaultValuesService.deleteValuesById(id);
 
         return ResponseEntity.ok().body("deleted default values by ID. " + id);
     }
     @Transactional
-    @DeleteMapping("/deletevaluesbyname/{name}")
+    @DeleteMapping("/deleteValuesByName/{name}")
     public ResponseEntity<String> deleteValuesByName(@PathVariable String name){
         defaultValuesService.deleteValues(name);
 
         return ResponseEntity.ok().body("deleted default values by name. " + name);
     }
     @Transactional
-    @DeleteMapping("/deletevalues/all")
+    @DeleteMapping("/deleteValues/all")
     public ResponseEntity<String> deleteValuesAll( ){
         defaultValuesService.deleteValuesAll();
 
         return ResponseEntity.ok().body("deleted all default values.");
     }
     @Transactional
-    @PutMapping("/patchvalues/{id}/{value}")
+    @PutMapping("/patchValues/{id}/{value}")
     public void updateValuesById(@PathVariable Long id, Double value1, Double value2, Double value3, Double value4){
 
         var patch = repository.getReferenceById(id);

@@ -1,14 +1,13 @@
 package leonardo.labutilities.qualitylabpro.main;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfLevelsDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.services.ValidatorService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

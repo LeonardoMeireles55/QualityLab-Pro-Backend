@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.records.valuesOf;
+package leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;

@@ -34,6 +34,11 @@ public class ErrorHandling {
             super();
         }
     }
+    public static class PasswordNotMatchesException extends RuntimeException {
+        public PasswordNotMatchesException() {
+            super();
+        }
+    }
 
     @ExceptionHandler(NoContentException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -64,7 +69,7 @@ public class ErrorHandling {
     }
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<String> ErroAuthentication() {
+    public ResponseEntity<String> ErrorAuthentication() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Auth failed");
     }
     @ExceptionHandler(AccessDeniedException.class)
@@ -80,13 +85,23 @@ public class ErrorHandling {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        String ErrorMessage = "An error occurred while processing your request. The provided value already exists in the database.\n";
+        String ErrorMessage =
+                "An error occurred while processing your request. The provided value already exists in the database.\n";
+
+        return new ResponseEntity<>(ErrorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordNotMatchesException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> PasswordNotMatchesException(PasswordNotMatchesException exception) {
+        String ErrorMessage = "Passwords not matches or Passwords is invalid.";
 
         return new ResponseEntity<>(ErrorMessage, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException exception) {
+    public ResponseEntity<String> handleInternalAuthenticationServiceException
+            (InternalAuthenticationServiceException exception) {
         String errorMessage = "An error occurred while authenticating the user. Please try again later.";
 
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);

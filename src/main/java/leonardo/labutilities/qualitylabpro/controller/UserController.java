@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
     @Transactional
     @PostMapping
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public ResponseEntity<AuthDataDTO> signUp
             (@Valid @RequestBody AuthDataDTO authDataDTO, UriComponentsBuilder uriComponentsBuilder) {
        var user = userService.signUp(authDataDTO.username(), authDataDTO.password(),
@@ -30,9 +30,10 @@ public class UserController {
     @Transactional
     @PatchMapping
     @RequestMapping(value = "/update/password", method = RequestMethod.PATCH)
-    public void updPassword
+    public ResponseEntity<?> updPassword
             (@Valid @RequestBody AuthDataDTO authDataDTO, String newPass) {
                 userService.updUser(authDataDTO.username(), authDataDTO.email(), authDataDTO.password(),
                         newPass, UserRoles.USER);
+        return ResponseEntity.noContent().build();
     }
 }
