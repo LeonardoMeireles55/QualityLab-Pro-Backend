@@ -25,7 +25,7 @@ class UserRepositoryTest {
         return passwordEncoder.encode(password);
     }
     private User signUp() {
-        var user = new User("UserTest", encrypt("12345"), "safdasdas", UserRoles.USER);
+        var user = new User("UserTest", encrypt("12345"), "leo@hotmail.com", UserRoles.USER);
 
         return userRepository.save(user);
     }
@@ -33,13 +33,13 @@ class UserRepositoryTest {
     @DisplayName("return 200 when user is exists")
     void findByLoginUserDataBaseIsUserExists() {
         signUp();
-        var userNotNull = userRepository.findByLogin("UserTest");
+        var userNotNull = userRepository.findByUsername("UserTest");
         assertThat(userNotNull).isNotNull();
     }
     @Test
     @DisplayName("return null when user is empty")
     void findByLoginUserDataBaseIsUserNotExists() {
-        var userEmpty = userRepository.findByLogin("");
+        var userEmpty = userRepository.findByUsername("");
         assertThat(userEmpty).isNull();
     }
 }

@@ -11,7 +11,7 @@ CREATE TABLE default_values (
     normal_max_value DOUBLE,
     high_max_value DOUBLE,
     PRIMARY KEY (id),
-    CONSTRAINT default_values_lot FOREIGN KEY (fk_lot) REFERENCES lot(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT default_values_lot FOREIGN KEY (fk_lot) REFERENCES lot(id),
     CONSTRAINT default_values_users FOREIGN KEY (fk_user) REFERENCES users(id),
     UNIQUE (name)
 );
