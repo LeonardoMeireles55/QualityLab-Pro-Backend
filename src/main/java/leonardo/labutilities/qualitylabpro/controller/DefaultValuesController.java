@@ -3,8 +3,8 @@ package leonardo.labutilities.qualitylabpro.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.main.DefaultValues;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterListDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOf.ValuesOfRegistedDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
@@ -42,7 +42,7 @@ public class DefaultValuesController {
 
         List<ValuesOfRegistedDTO> defaultValues = defaultValuesService.listRegister(defaultRegisterDTOS);
         URI listUri = uriComponentsBuilder.path("/defaultvalues/getdefaultsvalues")
-                .buildAndExpand(defaultValues.stream().map(s -> s.id()).toList()).toUri();
+                .buildAndExpand(defaultValues.stream().map(ValuesOfRegistedDTO::id).toList()).toUri();
         return ResponseEntity.created(listUri).body(defaultValues);
     }
     @GetMapping
@@ -93,5 +93,7 @@ public class DefaultValuesController {
         patch.setHighSd(value2);
         patch.setNormalMean(value3);
         patch.setHighMean(value4);
+
+        repository.save(patch);
     }
 }

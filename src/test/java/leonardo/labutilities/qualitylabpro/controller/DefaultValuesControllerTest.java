@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.controller;
 import leonardo.labutilities.qualitylabpro.main.DefaultValues;
-import leonardo.labutilities.qualitylabpro.records.defaultvalues.DefaultRegisterDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 

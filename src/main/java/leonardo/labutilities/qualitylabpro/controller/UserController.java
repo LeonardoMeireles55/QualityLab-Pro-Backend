@@ -27,4 +27,12 @@ public class UserController {
 
         return ResponseEntity.created(uri).body(authDataDTO);
     }
+    @Transactional
+    @PatchMapping
+    @RequestMapping(value = "/update/password", method = RequestMethod.PATCH)
+    public void updPassword
+            (@Valid @RequestBody AuthDataDTO authDataDTO, String newPass) {
+                userService.updUser(authDataDTO.username(), authDataDTO.email(), authDataDTO.password(),
+                        newPass, UserRoles.USER);
+    }
 }

@@ -53,13 +53,13 @@ public class AnalyticsController {
         return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsDTOList));
     }
     @Transactional
-    @DeleteMapping("/deletevalues/{id}")
+    @DeleteMapping(value = "/deletevalues/{id}")
     public ResponseEntity<String> deleteValues(@PathVariable Long id){
         analyticsService.deleteValues(id);
         return ResponseEntity.ok().body("data deleted by id");
     }
     @Transactional
-    @DeleteMapping("/deletevalues/all")
+    @DeleteMapping(value = "/deletevalues/all")
     public ResponseEntity<String> deleteValuesAll(){
         analyticsService.deleteValuesAll();
         return ResponseEntity.ok().body("All data deleted with successful");
