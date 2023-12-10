@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import leonardo.labutilities.qualitylabpro.main.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.records.UserDTO;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ class UserControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<AuthDataDTO> authDataJacksonTester;
+    private JacksonTester<UserDTO> authDataJacksonTester;
 
     @MockBean
     private UserRepository repository;
@@ -50,18 +51,18 @@ class UserControllerTest {
     @DisplayName("Should return http code 201 when information is valid")
     @WithMockUser
     void register_scenario2() throws Exception {
-        var authData = new AuthDataDTO("Pharmacist",
+        var userDTO = new UserDTO("Pharmacist",
                 "249195@", "leonardo@email.com", UserRoles.USER);
 
-        when(repository.save(any())).thenReturn(new User(authData.username(), authData.password()));
+        when(repository.save(any())).thenReturn(new User(userDTO.username(), userDTO.password()));
 
         var response = mvc
                 .perform(post("/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(authDataJacksonTester.write(authData).getJson()))
+                        .content(authDataJacksonTester.write(userDTO).getJson()))
                 .andReturn().getResponse();
 
-        var jsonOfResponse = authDataJacksonTester.write(authData).getJson();
+        var jsonOfResponse = authDataJacksonTester.write(userDTO).getJson();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
          assertThat(response.getContentAsString()).isEqualTo(jsonOfResponse);

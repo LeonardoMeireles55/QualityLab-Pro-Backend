@@ -25,13 +25,11 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/user/login", "/user/signup").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/defaultsvalues/listregister").permitAll();
-//                            .hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.POST, "/user/signIn", "/user/signUp").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
+                    req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
                     req.requestMatchers
                             ("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**","/swagger-ui").permitAll();
-
-                    req.anyRequest().permitAll();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
