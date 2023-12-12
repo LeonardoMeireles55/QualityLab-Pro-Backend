@@ -14,6 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -25,11 +31,14 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/user/signIn", "/user/signUp").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
                     req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
                     req.requestMatchers
                             ("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**","/swagger-ui").permitAll();
+                    req.anyRequest().permitAll();
+
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -42,4 +51,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

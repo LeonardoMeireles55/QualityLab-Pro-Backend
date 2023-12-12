@@ -41,7 +41,7 @@ class UserControllerTest {
     @WithMockUser
     void register_scenario1() throws Exception {
         var response = mvc
-                .perform(post("/user/signup"))
+                .perform(post("/user/signUp"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus())
@@ -57,7 +57,7 @@ class UserControllerTest {
         when(repository.save(any())).thenReturn(new User(userDTO.username(), userDTO.password()));
 
         var response = mvc
-                .perform(post("/user/signup")
+                .perform(post("/user/signUp")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authDataJacksonTester.write(userDTO).getJson()))
                 .andReturn().getResponse();

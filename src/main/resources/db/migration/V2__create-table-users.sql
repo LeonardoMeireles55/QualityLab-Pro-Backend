@@ -4,6 +4,7 @@ CREATE TABLE users (
     email varchar(25) NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT username_email UNIQUE (username, email),
+    UNIQUE(username),
+    UNIQUE(email),
     INDEX(username, email)
 );

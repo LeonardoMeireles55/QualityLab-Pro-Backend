@@ -45,7 +45,7 @@ class DefaultValuesControllerTest {
     @DisplayName("It should return the http code 400 when the information is invalid")
     void registerTest1() throws Exception {
         var response = mvc
-                .perform(post("/defaultsvalues/register"))
+                .perform(post("/defaultsValues/register"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus())
