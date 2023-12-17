@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.main.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;

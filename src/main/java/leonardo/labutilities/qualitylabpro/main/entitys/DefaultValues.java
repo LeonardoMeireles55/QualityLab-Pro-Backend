@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.main;
+package leonardo.labutilities.qualitylabpro.main.entitys;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

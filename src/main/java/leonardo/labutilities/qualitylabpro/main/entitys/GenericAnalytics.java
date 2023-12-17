@@ -1,8 +1,8 @@
-package leonardo.labutilities.qualitylabpro.main;
+package leonardo.labutilities.qualitylabpro.main.entitys;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGeneric;
-import leonardo.labutilities.qualitylabpro.services.ValidatorServiceIntegra;
+import leonardo.labutilities.qualitylabpro.services.GenericValidatorService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,9 @@ public class GenericAnalytics {
     String description;
 
     @Transient
-    private final ValidatorServiceIntegra validatorServiceIntegra;
+    private final GenericValidatorService genericValidatorService;
 
-    public GenericAnalytics(ValuesOfLevelsGeneric values, ValidatorServiceIntegra validatorServiceIntegra) {
+    public GenericAnalytics(ValuesOfLevelsGeneric values, GenericValidatorService genericValidatorService) {
         this.date = values.date();
         this.level_lot = values.level_lot();
         this.test_lot = values.test_lot();
@@ -39,9 +39,9 @@ public class GenericAnalytics {
         this.mean = values.mean();
         this.sd = values.sd();
         this.unit_value = values.unit_value();
-        this.validatorServiceIntegra = validatorServiceIntegra;
-        this.validatorServiceIntegra.validator(value, mean, sd);
-        this.rules = validatorServiceIntegra.getRules();
-        this.description = validatorServiceIntegra.getDescription();
+        this.genericValidatorService = genericValidatorService;
+        this.genericValidatorService.validator(value, mean, sd);
+        this.rules = genericValidatorService.getRules();
+        this.description = genericValidatorService.getDescription();
     }
 }

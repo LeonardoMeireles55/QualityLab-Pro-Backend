@@ -1,10 +1,10 @@
-package leonardo.labutilities.qualitylabpro.main;
+package leonardo.labutilities.qualitylabpro.main.entitys;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;

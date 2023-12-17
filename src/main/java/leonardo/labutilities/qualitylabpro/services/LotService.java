@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.main.Lot;
+import leonardo.labutilities.qualitylabpro.main.entitys.Lot;
 import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import lombok.RequiredArgsConstructor;

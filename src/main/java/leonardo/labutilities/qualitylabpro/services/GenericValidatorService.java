@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Getter
-public class ValidatorServiceIntegra {
+public class GenericValidatorService {
     String description;
     String rules;
 

@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.records.UserDTO;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;

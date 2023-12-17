@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import leonardo.labutilities.qualitylabpro.main.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
 
 public record ValuesOfRegistedDTO(
         Long id,

@@ -1,11 +1,12 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.main.Analytics;
+import leonardo.labutilities.qualitylabpro.main.entitys.Analytics;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,16 @@ import java.util.List;
 public class AnalyticsService {
 
     private final AnalyticRepository analyticRepository;
-    private final ValidatorService validatorService;
+    private final AnalyticsValidatorService analyticsValidatorService;
 
     public Analytics sendValues(ValuesOfLevelsDTO values) {
-        return analyticRepository.save(new Analytics(values, validatorService));
+        return analyticRepository.save(new Analytics(values, analyticsValidatorService));
     }
 
     public List<Analytics> sendValuesList(List<ValuesOfLevelsDTO> valuesOfLevelsDTOList) {
         List<Analytics> analyticsList = new ArrayList<>();
         for (ValuesOfLevelsDTO values : valuesOfLevelsDTOList) {
-            var analyticsLevels = new Analytics(values, validatorService);
+            var analyticsLevels = new Analytics(values, analyticsValidatorService);
             analyticRepository.save(analyticsLevels);
             analyticsList.add(analyticsLevels);
         }
@@ -53,7 +54,7 @@ public class AnalyticsService {
         }
         throw new ErrorHandling.ResourceNotFoundException();
     }
-
+    @Cacheable(value = "name")
     public List<ValuesOfLevelsListDTO> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!analyticRepository.existsByName(nameUpper)) {

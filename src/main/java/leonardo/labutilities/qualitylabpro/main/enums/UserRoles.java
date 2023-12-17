@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.enums;
+package leonardo.labutilities.qualitylabpro.main.enums;
 
 import lombok.Getter;
 

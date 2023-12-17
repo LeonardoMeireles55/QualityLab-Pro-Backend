@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.records;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 
 public record UserDTO
                 (@NotNull String username,

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Getter
 @Service
-public class ValidatorService {
+public class AnalyticsValidatorService {
     private String normalValid;
     private String normalObs;
     private String highValid;

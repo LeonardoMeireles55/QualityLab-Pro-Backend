@@ -1,5 +1,5 @@
 package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
-import leonardo.labutilities.qualitylabpro.main.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.main.entitys.GenericAnalytics;
 
 
 public record ValuesOfLevelsGeneric(

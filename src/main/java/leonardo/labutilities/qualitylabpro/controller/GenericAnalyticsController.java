@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.main.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.main.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGeneric;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;

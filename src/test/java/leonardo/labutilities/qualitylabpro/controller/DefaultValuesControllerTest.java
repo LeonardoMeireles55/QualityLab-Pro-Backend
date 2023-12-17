@@ -1,12 +1,12 @@
 package leonardo.labutilities.qualitylabpro.controller;
-import leonardo.labutilities.qualitylabpro.main.DefaultValues;
-import leonardo.labutilities.qualitylabpro.main.Lot;
+import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.entitys.Lot;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
-import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 
+import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +19,6 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,19 +2,20 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import jakarta.annotation.PostConstruct;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.main.DefaultValues;
+import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
-import static leonardo.labutilities.qualitylabpro.main.DefaultValues.defaultValuesMap;
+import static leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues.defaultValuesMap;
 
 @RequiredArgsConstructor
 @Service
@@ -65,6 +66,7 @@ public class DefaultValuesService {
         }
         return defaultValuesList;
     }
+    @Cacheable(value = "name")
     public List<DefaultRegisterListDTO> getValuesByName(String name) {
         if(!defaultValuesRepository.existsByName(name.toUpperCase())) {
             throw new ErrorHandling.ResourceNotFoundException();
