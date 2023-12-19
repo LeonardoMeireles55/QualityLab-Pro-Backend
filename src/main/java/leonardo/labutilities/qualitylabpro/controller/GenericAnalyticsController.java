@@ -6,6 +6,9 @@ import leonardo.labutilities.qualitylabpro.main.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGeneric;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,19 +16,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
+@Slf4j
 @RequestMapping("/bio")
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
+
     @PostMapping
     @Transactional
     @RequestMapping(value = "/sendValues", method = RequestMethod.POST)
     public ResponseEntity<List<GenericAnalytics>> sendValues
             (@RequestBody @Valid List<ValuesOfLevelsGeneric> values) {
-        List<GenericAnalytics> valuesOfLevelsIntegras = genericAnalyticsService.sendValues(values);
-        return ResponseEntity.ok().body(valuesOfLevelsIntegras);
+       log.info("Sending json objects: {}", values);
+        List<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
+        return ResponseEntity.ok().body(valuesOfGenericsList);
     }
     @GetMapping
     @RequestMapping(value = "/getResults" , method = RequestMethod.GET)
@@ -39,19 +46,19 @@ public class GenericAnalyticsController {
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName/order-asc/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGeneric>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateAsc(name));
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName/order-desc/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGeneric>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateDesc(name));
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName-level/{name}/{level}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGeneric>> getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
