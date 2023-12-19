@@ -5,6 +5,7 @@ import leonardo.labutilities.qualitylabpro.main.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGeneric;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GenericAnalyticsService {
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final GenericValidatorService genericValidatorService;
@@ -36,14 +38,18 @@ public class GenericAnalyticsService {
         }
         return analyticsList;
     }
+    @Cacheable(value = "name")
     public Page<ValuesOfLevelsGeneric> getResults(Pageable pageable) {
+        log.info("Retrieve all results...");
         return genericAnalyticsRepository.findAll(pageable).map(ValuesOfLevelsGeneric::new);
     }
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGeneric> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();        }
+            throw new ErrorHandling.ResourceNotFoundException();
+        }
+        log.info("Retrieve results by name...");
         return genericAnalyticsRepository.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsGeneric::new).toList();
     }
@@ -60,6 +66,7 @@ public class GenericAnalyticsService {
         } else {
             throw new ErrorHandling.ResourceNotFoundException();
         }
+        log.info("Retrieve results by name and level...");
         return genericAnalyticsRepository.findAllByNameAndLevel(pageable, nameUpper, level).stream()
                 .map(ValuesOfLevelsGeneric::new).toList();
     }
@@ -69,6 +76,7 @@ public class GenericAnalyticsService {
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();
         }
+        log.info("Retrieve results by dateAsc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateAsc(nameUpper).stream()
                 .map(ValuesOfLevelsGeneric::new).toList();
     }
@@ -78,6 +86,7 @@ public class GenericAnalyticsService {
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException();
         }
+        log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateDesc(nameUpper).stream()
                 .map(ValuesOfLevelsGeneric::new).toList();
     }

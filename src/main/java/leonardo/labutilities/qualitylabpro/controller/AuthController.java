@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user/signIn")
 public class AuthController {
-
     private final AuthenticationManager manager;
     private final TokenService tokenService;
+
     @PostMapping
     public ResponseEntity<?> singIn(@RequestBody @Valid AuthDataDTO authDataDTO) {
         try {

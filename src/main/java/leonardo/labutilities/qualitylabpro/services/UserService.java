@@ -5,12 +5,14 @@ import leonardo.labutilities.qualitylabpro.main.entitys.User;
 import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -25,6 +27,7 @@ public class UserService {
         var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
 
         if(!decrypt(password, oldPass.getPassword()) || decrypt(newPassword, oldPass.getPassword())) {
+            log.error("PasswordNotMatches. {}, {}", name, email);
             throw new ErrorHandling.PasswordNotMatchesException();
         } else {
             userRepository.setPasswordWhereByUsername(oldPass.getUsername(), encrypt(newPassword));

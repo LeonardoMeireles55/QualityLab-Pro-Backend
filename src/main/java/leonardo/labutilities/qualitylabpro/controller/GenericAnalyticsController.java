@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
-@Slf4j
 @RequestMapping("/bio")
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
@@ -30,7 +29,7 @@ public class GenericAnalyticsController {
     @RequestMapping(value = "/sendValues", method = RequestMethod.POST)
     public ResponseEntity<List<GenericAnalytics>> sendValues
             (@RequestBody @Valid List<ValuesOfLevelsGeneric> values) {
-       log.info("Sending json objects: {}", values);
+
         List<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
         return ResponseEntity.ok().body(valuesOfGenericsList);
     }
