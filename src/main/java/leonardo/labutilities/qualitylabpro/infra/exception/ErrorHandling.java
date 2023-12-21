@@ -22,9 +22,10 @@ import java.util.List;
 public class ErrorHandling {
 
     public static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException() {
-            super();
+        public ResourceNotFoundException(String message) {
+            super(message);
         }
+
     }
     public static class NoContentException extends RuntimeException {
         public NoContentException() {
@@ -53,13 +54,12 @@ public class ErrorHandling {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> Error404(ResourceNotFoundException exception) {
-        log.error("BAD_REQUEST: MethodArgumentNotValidException.");
+        log.error("NOT_FOUND:  No found!? {}.", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<List<ErrorOfValidationDTO>> error400(MethodArgumentNotValidException exception) {
-
         var errors = exception.getFieldErrors();
         var ResponseEntityError = ResponseEntity.badRequest()
                 .body(errors.stream().map(ErrorOfValidationDTO::new).toList());
@@ -119,9 +119,9 @@ public class ErrorHandling {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleInternalAuthenticationServiceException
             (InternalAuthenticationServiceException exception) {
-        String errorMessage = "An error occurred while authenticating the user, Please try again later";
-        log.error("INTERNAL_SERVER_ERROR: {}", errorMessage);
+        String ErrorMessage = "An error occurred while authenticating the user, Please try again later";
+        log.error("INTERNAL_SERVER_ERROR: {}", ErrorMessage);
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ErrorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
