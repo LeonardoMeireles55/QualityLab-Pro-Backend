@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
 import jakarta.transaction.Transactional;
-import leonardo.labutilities.qualitylabpro.main.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

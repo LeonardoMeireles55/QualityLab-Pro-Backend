@@ -1,14 +1,14 @@
-package leonardo.labutilities.qualitylabpro.services;
+package leonardo.labutilities.qualitylabpro.components;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
 @Getter
-public class GenericValidatorService {
+@Component
+public class GenericValidatorComponent {
     String description;
     String rules;
-
     public void validator(Double value, Double mean, Double sd) {
         double positive1sRuleNormal = mean + (sd * 1);
         double positive2sRuleNormal = mean + (sd * 2);

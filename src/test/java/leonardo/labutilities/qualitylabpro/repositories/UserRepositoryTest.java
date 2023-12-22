@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
-import leonardo.labutilities.qualitylabpro.main.entitys.User;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.domain.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,8 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.main.entitys.User;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.domain.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

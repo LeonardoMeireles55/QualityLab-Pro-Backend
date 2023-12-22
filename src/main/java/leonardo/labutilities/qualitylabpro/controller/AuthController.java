@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.main.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.records.auth.AuthDataDTO;
 import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtDTO;
 import leonardo.labutilities.qualitylabpro.services.TokenService;

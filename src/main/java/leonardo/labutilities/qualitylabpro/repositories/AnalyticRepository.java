@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
-import leonardo.labutilities.qualitylabpro.main.entitys.Analytics;
+import leonardo.labutilities.qualitylabpro.domain.entitys.Analytics;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

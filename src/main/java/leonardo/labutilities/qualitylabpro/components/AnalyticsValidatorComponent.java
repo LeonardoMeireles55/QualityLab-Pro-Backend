@@ -1,11 +1,12 @@
-package leonardo.labutilities.qualitylabpro.services;
+package leonardo.labutilities.qualitylabpro.components;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Getter
-@Service
-public class AnalyticsValidatorService {
+@Component
+public class AnalyticsValidatorComponent {
     private String normalValid;
     private String normalObs;
     private String highValid;

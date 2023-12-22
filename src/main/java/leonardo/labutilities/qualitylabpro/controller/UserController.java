@@ -2,8 +2,8 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.main.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.UserDTO;
+import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.records.user.UserDTO;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class UserController {
     @Transactional
     @PostMapping
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public ResponseEntity<leonardo.labutilities.qualitylabpro.records.UserDTO> signUp
-            (@Valid @RequestBody leonardo.labutilities.qualitylabpro.records.UserDTO UserDTO, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<UserDTO> signUp
+            (@Valid @RequestBody UserDTO UserDTO, UriComponentsBuilder uriComponentsBuilder) {
        var user = userService.signUp(UserDTO.username(), UserDTO.password(),
                UserDTO.email(), UserRoles.USER);
        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();

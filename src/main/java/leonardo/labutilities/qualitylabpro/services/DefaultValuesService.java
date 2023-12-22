@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import jakarta.annotation.PostConstruct;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
+import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues.defaultValuesMap;
+import static leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues.defaultValuesMap;
 
 @RequiredArgsConstructor
 @Service

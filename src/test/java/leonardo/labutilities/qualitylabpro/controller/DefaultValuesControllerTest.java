@@ -1,11 +1,14 @@
 package leonardo.labutilities.qualitylabpro.controller;
-import leonardo.labutilities.qualitylabpro.main.entitys.DefaultValues;
-import leonardo.labutilities.qualitylabpro.main.entitys.Lot;
+import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
+import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
+import leonardo.labutilities.qualitylabpro.domain.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
 import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 
+import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +63,8 @@ class DefaultValuesControllerTest {
 
     @Autowired
     LotRepository lotRepository;
+    @Autowired
+    UserRepository userRepository;
 
 
 
@@ -79,6 +84,9 @@ class DefaultValuesControllerTest {
     void registerTest2() throws Exception {
 
         lotRepository.save(new Lot(new ValueOfLotDTO("abc123")));
+        var user = new User
+                ("Leonardo", "Leonardo123@", "leo@email.com", UserRoles.USER);
+        userRepository.save(user);
         var data = new DefaultRegisterDTO
                 ("albumin",0.2,3.4, 5.4, 0.3, 1L, 1L);
         DefaultValues defaultValues = new DefaultValues(data);

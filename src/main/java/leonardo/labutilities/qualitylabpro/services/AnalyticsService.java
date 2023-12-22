@@ -1,7 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
+import leonardo.labutilities.qualitylabpro.components.AnalyticsValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.main.entitys.Analytics;
+import leonardo.labutilities.qualitylabpro.domain.entitys.Analytics;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
 import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListDTO;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
@@ -10,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
 public class AnalyticsService {
 
     private final AnalyticRepository analyticRepository;
-    private final AnalyticsValidatorService analyticsValidatorService;
+    private final AnalyticsValidatorComponent analyticsValidatorComponent;
 
     public Analytics sendValues(ValuesOfLevelsDTO values) {
-        return analyticRepository.save(new Analytics(values, analyticsValidatorService));
+        return analyticRepository.save(new Analytics(values, analyticsValidatorComponent));
     }
 
     public List<Analytics> sendValuesList(List<ValuesOfLevelsDTO> valuesOfLevelsDTOList) {
         return valuesOfLevelsDTOList.stream()
                 .map(values -> {
-                    Analytics analyticsLevels = new Analytics(values, analyticsValidatorService);
+                    Analytics analyticsLevels = new Analytics(values, analyticsValidatorComponent);
                     analyticRepository.save(analyticsLevels);
                     return analyticsLevels;
                 })
