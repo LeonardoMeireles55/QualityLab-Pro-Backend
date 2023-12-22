@@ -42,7 +42,7 @@ public class GenericAnalyticsService {
     public Stream<ValuesOfLevelsGeneric> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by name...");
         return genericAnalyticsRepository.findAllByName(pageable, nameUpper).stream()
@@ -52,14 +52,14 @@ public class GenericAnalyticsService {
     public Stream<ValuesOfLevelsGeneric> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         if (Objects.equals(level, "1")) {
             level = "PCCC1";
         } else if (Objects.equals(level, "2")) {
             level = "PCCC2";
         } else {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
         }
         log.info("Retrieve results by name and level...");
         return genericAnalyticsRepository.findAllByNameAndLevel(pageable, nameUpper, level).stream()
@@ -69,7 +69,7 @@ public class GenericAnalyticsService {
     public Stream<ValuesOfLevelsGeneric> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateAsc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateAsc(nameUpper).stream()
@@ -79,7 +79,7 @@ public class GenericAnalyticsService {
     public Stream<ValuesOfLevelsGeneric> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateDesc(nameUpper).stream()

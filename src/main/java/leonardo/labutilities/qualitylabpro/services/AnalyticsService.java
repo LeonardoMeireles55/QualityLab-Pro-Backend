@@ -38,14 +38,14 @@ public class AnalyticsService {
 
     public void deleteValues(Long id) {
         if (!analyticRepository.existsById(id)) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("values by id not found");
         }
         analyticRepository.deleteById(id);
     }
 
     public void deleteValuesAll() {
         if(analyticRepository.findAll().isEmpty()) {
-            throw new ErrorHandling.ResourceNotFoundException();
+            throw new ErrorHandling.ResourceNotFoundException("already empty");
         }
         analyticRepository.deleteAll();
     }
@@ -54,13 +54,13 @@ public class AnalyticsService {
         if (!analyticRepository.findAll().isEmpty()) {
             return analyticRepository.findAll(pageable).stream().map(ValuesOfLevelsListDTO::new).toList();
         }
-        throw new ErrorHandling.ResourceNotFoundException();
+        throw new ErrorHandling.ResourceNotFoundException("Results is empty");
     }
     @Cacheable(value = "name")
     public List<ValuesOfLevelsListDTO> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!analyticRepository.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException();        }
+            throw new ErrorHandling.ResourceNotFoundException("Results by name not found");        }
         return analyticRepository.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsListDTO::new).toList();
     }
