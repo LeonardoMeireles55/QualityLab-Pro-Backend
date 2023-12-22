@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,14 +26,15 @@ public class AnalyticsService {
     }
 
     public List<Analytics> sendValuesList(List<ValuesOfLevelsDTO> valuesOfLevelsDTOList) {
-        List<Analytics> analyticsList = new ArrayList<>();
-        for (ValuesOfLevelsDTO values : valuesOfLevelsDTOList) {
-            var analyticsLevels = new Analytics(values, analyticsValidatorService);
-            analyticRepository.save(analyticsLevels);
-            analyticsList.add(analyticsLevels);
-        }
-        return analyticsList;
+        return valuesOfLevelsDTOList.stream()
+                .map(values -> {
+                    Analytics analyticsLevels = new Analytics(values, analyticsValidatorService);
+                    analyticRepository.save(analyticsLevels);
+                    return analyticsLevels;
+                })
+                .collect(Collectors.toList());
     }
+
 
     public void deleteValues(Long id) {
         if (!analyticRepository.existsById(id)) {

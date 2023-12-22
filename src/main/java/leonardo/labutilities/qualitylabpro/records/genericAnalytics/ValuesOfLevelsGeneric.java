@@ -1,16 +1,28 @@
 package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.main.entitys.GenericAnalytics;
 
 
 public record ValuesOfLevelsGeneric(
+        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}",
+                message = "Date format invalid.")
         String date,
+        @NotNull
         String level_lot,
+        @NotNull
         String test_lot,
+        @NotNull
         String name,
+        @NotNull
         String level,
+        @NotNull
         Double value,
+        @NotNull
         Double mean,
+        @NotNull
         Double sd,
+        @NotNull
         String unit_value,
         String rules,
         String description
