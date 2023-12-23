@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
+import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class LotService {
     private final LotRepository lotRepository;
 
-    public Lot addLots(ValueOfLotDTO valueOfLotDTO) {
-        return lotRepository.save(new Lot(valueOfLotDTO));
+    public Lot addLots(ValueOfLotRecord valueOfLotRecord) {
+        return lotRepository.save(new Lot(valueOfLotRecord));
     }
 }

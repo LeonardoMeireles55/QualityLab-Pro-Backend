@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 
-public record UserDTO
+public record UserRecord
                 (@NotNull String username,
                 @NotNull
                 @Pattern(regexp = "^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?])(?=.*\\d{4,}).+$",

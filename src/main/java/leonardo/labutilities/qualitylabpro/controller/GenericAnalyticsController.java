@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericDTO;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,7 @@ public class GenericAnalyticsController {
     @Transactional
     @RequestMapping(value = "/sendValues", method = RequestMethod.POST)
     public ResponseEntity<List<GenericAnalytics>> sendValues
-            (@RequestBody List<@Valid ValuesOfLevelsGenericDTO> values) {
+            (@RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
         Stream<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
         var response = ResponseEntity.ok().body(valuesOfGenericsList.toList());
         if(!response.getBody().isEmpty()) {
@@ -39,30 +39,30 @@ public class GenericAnalyticsController {
     }
     @GetMapping
     @RequestMapping(value = "/getResults" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericDTO>> getResults(Pageable pageable) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResults(Pageable pageable) {
         return ResponseEntity.ok().body(genericAnalyticsService.getAllResults(pageable).getContent());
     }
     @GetMapping
     @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericDTO>> getResultsByName(Pageable pageable, @PathVariable String name) {
+    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByName(pageable, name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericDTO>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
+    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateAsc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericDTO>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
+    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateDesc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericDTO>> getResultsByLevel
+    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
     }

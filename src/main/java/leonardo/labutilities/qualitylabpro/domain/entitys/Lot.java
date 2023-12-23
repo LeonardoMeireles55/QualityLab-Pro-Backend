@@ -3,7 +3,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
+import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class Lot {
     private Long id;
     private String lot;
 
-    public Lot(ValueOfLotDTO valueOfLotDTO) {
-        this.lot = valueOfLotDTO.valueLot();
+    public Lot(ValueOfLotRecord valueOfLotRecord) {
+        this.lot = valueOfLotRecord.valueLot();
     }
 }

@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.domain.entitys;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericDTO;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class GenericAnalytics {
     @Transient
     private final GenericValidatorComponent genericValidatorComponent;
 
-    public GenericAnalytics(ValuesOfLevelsGenericDTO values, GenericValidatorComponent genericValidatorComponent) {
+    public GenericAnalytics(ValuesOfLevelsGenericRecord values, GenericValidatorComponent genericValidatorComponent) {
         this.date = values.date();
         this.level_lot = values.level_lot();
         this.test_lot = values.test_lot();

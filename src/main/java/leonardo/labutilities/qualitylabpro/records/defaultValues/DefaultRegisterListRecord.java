@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 
-public record DefaultRegisterListDTO(
+public record DefaultRegisterListRecord(
          @NotBlank @Pattern(regexp = "^[^0-9]+$", message = "test name must contain only letters.")
          String name,
 //         @Digits(integer=6, fraction=2)
@@ -17,7 +17,7 @@ public record DefaultRegisterListDTO(
          @Digits(integer=6, fraction=2)
          Double highmean,
          Double normalmaxvalue) {
-    public DefaultRegisterListDTO(DefaultValues defaultValues) {
+    public DefaultRegisterListRecord(DefaultValues defaultValues) {
         this(defaultValues.getName(), defaultValues.getNormalSd(),
                 defaultValues.getNormalMean(), defaultValues.getHighSd(),
                 defaultValues.getHighMean(), defaultValues.getNormalMaxValue());

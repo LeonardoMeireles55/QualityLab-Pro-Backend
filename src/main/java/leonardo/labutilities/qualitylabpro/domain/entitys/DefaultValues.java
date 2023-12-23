@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterRecord;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,7 @@ public class DefaultValues {
     private double normalMaxValue;
     private double highMaxValue;
 
-    public DefaultValues(DefaultRegisterDTO values) {
+    public DefaultValues(DefaultRegisterRecord values) {
         this.name = values.name().toUpperCase();
         this.normalSd = values.normalsd();
         this.normalMean = values.normalmean();

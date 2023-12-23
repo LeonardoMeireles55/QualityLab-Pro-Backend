@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
+import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
 import leonardo.labutilities.qualitylabpro.services.LotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +18,9 @@ public class LotController {
     @PostMapping
     @Transactional
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Lot addLot(@RequestBody ValueOfLotDTO valueOfLotDTO) {
+    public Lot addLot(@RequestBody ValueOfLotRecord valueOfLotRecord) {
 
-        return lotService.addLots(valueOfLotDTO);
+        return lotService.addLots(valueOfLotRecord);
     }
 
 }

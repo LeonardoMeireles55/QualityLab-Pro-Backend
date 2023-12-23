@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.domain.entitys;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsRecord;
 import leonardo.labutilities.qualitylabpro.components.AnalyticsValidatorComponent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,7 +46,7 @@ public class Analytics {
 
     public static Map<String, Analytics> analyticsHashMap = new HashMap<>();
 
-    public Analytics(ValuesOfLevelsDTO values, AnalyticsValidatorComponent analyticsValidatorComponent) {
+    public Analytics(ValuesOfLevelsRecord values, AnalyticsValidatorComponent analyticsValidatorComponent) {
         this.name = values.name().toUpperCase();
         this.normalValue = values.value1();
         this.highValue = values.value2();

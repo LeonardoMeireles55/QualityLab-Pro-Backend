@@ -3,8 +3,8 @@ package leonardo.labutilities.qualitylabpro.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsRecord;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListRecord;
 import leonardo.labutilities.qualitylabpro.services.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +26,12 @@ public class AnalyticsController {
 
     @GetMapping
     @RequestMapping(value = "/getResults/" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsAll(Pageable pageable) {
+    public ResponseEntity<List<ValuesOfLevelsListRecord>> getResultsAll(Pageable pageable) {
         return ResponseEntity.ok().body(analyticsService.getResultsAll(pageable));
     }
     @GetMapping
     @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsListDTO>> getResultsByName(Pageable pageable, @PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsListRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
         return ResponseEntity.ok().body(analyticsService.getResultsByName(pageable, name));
     }
 
@@ -39,7 +39,7 @@ public class AnalyticsController {
     @Transactional
     @RequestMapping(value = "/sendValues", method = RequestMethod.POST)
     public ResponseEntity<Analytics> sendValues
-            (@RequestBody @Valid ValuesOfLevelsDTO values, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody @Valid ValuesOfLevelsRecord values, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults/name").build().toUri();
         return ResponseEntity.created(uri).body(analyticsService.sendValues(values));
     }
@@ -48,9 +48,9 @@ public class AnalyticsController {
     @Transactional
     @RequestMapping(value = "/sendValuesList", method = RequestMethod.POST)
     public ResponseEntity<List<Analytics>> sendValuesList
-            (@RequestBody List<ValuesOfLevelsDTO> valuesOfLevelsDTOList, UriComponentsBuilder uriComponentsBuilder) {
+            (@RequestBody List<ValuesOfLevelsRecord> valuesOfLevelsRecordList, UriComponentsBuilder uriComponentsBuilder) {
         URI uri = uriComponentsBuilder.path("/getresults").build().toUri();
-        return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsDTOList));
+        return ResponseEntity.created(uri).body(analyticsService.sendValuesList(valuesOfLevelsRecordList));
     }
     @Transactional
     @DeleteMapping(value = "/deleteValues/{id}")

@@ -3,9 +3,9 @@ package leonardo.labutilities.qualitylabpro.services;
 import jakarta.annotation.PostConstruct;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterRecord;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterListRecord;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfRegistedRecord;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
@@ -34,7 +34,7 @@ public class DefaultValuesService {
         }
     }
 
-    public DefaultValues register(DefaultRegisterDTO values) {
+    public DefaultValues register(DefaultRegisterRecord values) {
         if (lotRepository.existsById(values.lotId()) && userRepository.existsById(values.user_id())) {
             var defaultValues = new DefaultValues(values);
             if (!defaultValuesRepository.existsByName(values.name())) {
@@ -47,17 +47,17 @@ public class DefaultValuesService {
         throw new ErrorHandling.ResourceNotFoundException("User or Lot not Found.");
     }
 
-    public List<ValuesOfRegistedDTO> listRegister(List<DefaultRegisterDTO> defaultRegisterDTOS) {
+    public List<ValuesOfRegistedRecord> listRegister(List<DefaultRegisterRecord> defaultRegisterRecords) {
         try {
-            System.out.printf(defaultRegisterDTOS.get(0).user_id().toString());
-            if (lotRepository.existsById(defaultRegisterDTOS.get(0).lotId()) ||
-                    userRepository.existsById(defaultRegisterDTOS.get(0).user_id())) {
-                return defaultRegisterDTOS.stream()
-                        .map(defaultRegisterDTO -> {
-                            DefaultValues defaultValues = new DefaultValues(defaultRegisterDTO);
-                            defaultValuesMap.put(defaultRegisterDTO.name(), defaultValues);
+            System.out.printf(defaultRegisterRecords.get(0).user_id().toString());
+            if (lotRepository.existsById(defaultRegisterRecords.get(0).lotId()) ||
+                    userRepository.existsById(defaultRegisterRecords.get(0).user_id())) {
+                return defaultRegisterRecords.stream()
+                        .map(defaultRegisterRecord -> {
+                            DefaultValues defaultValues = new DefaultValues(defaultRegisterRecord);
+                            defaultValuesMap.put(defaultRegisterRecord.name(), defaultValues);
                             defaultValuesRepository.save(defaultValues);
-                            return new ValuesOfRegistedDTO(defaultValues);
+                            return new ValuesOfRegistedRecord(defaultValues);
                         }).toList();
             } throw new ErrorHandling.ResourceNotFoundException("User or Lot not Found.");
         } catch (Exception e) {
@@ -74,13 +74,13 @@ public class DefaultValuesService {
         return defaultValuesList;
     }
     @Cacheable(value = "name")
-    public List<DefaultRegisterListDTO> getValuesByName(String name) {
+    public List<DefaultRegisterListRecord> getValuesByName(String name) {
         if(!defaultValuesRepository.existsByName(name.toUpperCase())) {
             throw new ErrorHandling.ResourceNotFoundException("DefaultValues not exists");
         }
         return defaultValuesRepository.findAll().stream()
                 .filter(s -> Objects.equals(s.getName(), name.toUpperCase()))
-                .map(DefaultRegisterListDTO::new).toList();
+                .map(DefaultRegisterListRecord::new).toList();
     }
     public void deleteValuesById(Long id){
         if(!defaultValuesRepository.existsById(id)) {

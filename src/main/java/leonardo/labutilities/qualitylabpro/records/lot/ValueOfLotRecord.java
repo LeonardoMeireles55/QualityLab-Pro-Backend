@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.records.lot;
 
-public record ValueOfLotDTO(
+public record ValueOfLotRecord(
         String valueLot
 ) {
 }

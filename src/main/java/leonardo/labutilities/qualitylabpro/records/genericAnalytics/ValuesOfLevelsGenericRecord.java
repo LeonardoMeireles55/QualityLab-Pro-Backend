@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
 
 
-public record ValuesOfLevelsGenericDTO(
+public record ValuesOfLevelsGenericRecord(
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}",
                 message = "Date format invalid.")
         String date,
@@ -27,7 +27,7 @@ public record ValuesOfLevelsGenericDTO(
         String rules,
         String description
 ) {
-    public ValuesOfLevelsGenericDTO(GenericAnalytics analytics) {
+    public ValuesOfLevelsGenericRecord(GenericAnalytics analytics) {
         this(analytics.getDate(), analytics.getLevel_lot(), analytics.getTest_lot(),
                 analytics.getName(), analytics.getLevel(),
                 analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnit_value(),

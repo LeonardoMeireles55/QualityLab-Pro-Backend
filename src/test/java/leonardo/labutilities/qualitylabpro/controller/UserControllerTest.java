@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.user.UserDTO;
+import leonardo.labutilities.qualitylabpro.records.user.UserRecord;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class UserControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<UserDTO> authDataJacksonTester;
+    private JacksonTester<UserRecord> authDataJacksonTester;
 
     @MockBean
     private UserRepository repository;
@@ -63,7 +63,7 @@ class UserControllerTest {
     @Transactional
     @WithMockUser
     void register_scenario2() throws Exception {
-        var userDTO = new UserDTO("Pharmacist",
+        var userDTO = new UserRecord("Pharmacist",
                 "249195@", "leonardo@email.com", UserRoles.USER);
 
         when(repository.save(any())).thenReturn(new User(userDTO.username(), userDTO.password()));

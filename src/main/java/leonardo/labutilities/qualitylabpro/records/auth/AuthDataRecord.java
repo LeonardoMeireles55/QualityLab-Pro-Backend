@@ -3,7 +3,7 @@ package leonardo.labutilities.qualitylabpro.records.auth;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record AuthDataDTO
+public record AuthDataRecord
         (@NotNull String username,
          @NotNull
          @Pattern(regexp = "^(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\|,.<>\\/?])(?=.*\\d{4,}).+$",

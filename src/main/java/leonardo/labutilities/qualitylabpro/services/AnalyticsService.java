@@ -3,8 +3,8 @@ package leonardo.labutilities.qualitylabpro.services;
 import leonardo.labutilities.qualitylabpro.components.AnalyticsValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsDTO;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListDTO;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsRecord;
+import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListRecord;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,12 +21,12 @@ public class AnalyticsService {
     private final AnalyticRepository analyticRepository;
     private final AnalyticsValidatorComponent analyticsValidatorComponent;
 
-    public Analytics sendValues(ValuesOfLevelsDTO values) {
+    public Analytics sendValues(ValuesOfLevelsRecord values) {
         return analyticRepository.save(new Analytics(values, analyticsValidatorComponent));
     }
 
-    public List<Analytics> sendValuesList(List<ValuesOfLevelsDTO> valuesOfLevelsDTOList) {
-        return valuesOfLevelsDTOList.stream()
+    public List<Analytics> sendValuesList(List<ValuesOfLevelsRecord> valuesOfLevelsRecordList) {
+        return valuesOfLevelsRecordList.stream()
                 .map(values -> {
                     Analytics analyticsLevels = new Analytics(values, analyticsValidatorComponent);
                     analyticRepository.save(analyticsLevels);
@@ -50,18 +50,18 @@ public class AnalyticsService {
         analyticRepository.deleteAll();
     }
 
-    public List<ValuesOfLevelsListDTO> getResultsAll(Pageable pageable) {
+    public List<ValuesOfLevelsListRecord> getResultsAll(Pageable pageable) {
         if (!analyticRepository.findAll().isEmpty()) {
-            return analyticRepository.findAll(pageable).stream().map(ValuesOfLevelsListDTO::new).toList();
+            return analyticRepository.findAll(pageable).stream().map(ValuesOfLevelsListRecord::new).toList();
         }
         throw new ErrorHandling.ResourceNotFoundException("Results is empty");
     }
     @Cacheable(value = "name")
-    public List<ValuesOfLevelsListDTO> getResultsByName(Pageable pageable, String name) {
+    public List<ValuesOfLevelsListRecord> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!analyticRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results by name not found");        }
         return analyticRepository.findAllByName(pageable, nameUpper).stream()
-                .map(ValuesOfLevelsListDTO::new).toList();
+                .map(ValuesOfLevelsListRecord::new).toList();
     }
 }

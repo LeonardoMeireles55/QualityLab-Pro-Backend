@@ -1,8 +1,7 @@
 package leonardo.labutilities.qualitylabpro.infra.exception;
 
-import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidationDTO;
+import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidationRecord;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -60,10 +58,10 @@ public class ErrorHandling {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<List<ErrorOfValidationDTO>> error400(MethodArgumentNotValidException exception) {
+    public ResponseEntity<List<ErrorOfValidationRecord>> error400(MethodArgumentNotValidException exception) {
         var errors = exception.getFieldErrors();
         var ResponseEntityError = ResponseEntity.badRequest()
-                .body(errors.stream().map(ErrorOfValidationDTO::new).toList());
+                .body(errors.stream().map(ErrorOfValidationRecord::new).toList());
         log.error("BAD_REQUEST: MethodArgumentNotValidException {}.", errors);
         return ResponseEntityError;
     }

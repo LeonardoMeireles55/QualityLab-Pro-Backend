@@ -3,8 +3,8 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterDTO;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotDTO;
+import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterRecord;
+import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
 import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
 import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
 
@@ -47,7 +47,7 @@ class DefaultValuesControllerTest {
     }
 
     @Autowired
-    private JacksonTester<DefaultRegisterDTO> authDataJacksonTesterDefaultRegister;
+    private JacksonTester<DefaultRegisterRecord> authDataJacksonTesterDefaultRegister;
 
     @Autowired
     private JacksonTester<DefaultValues> authDataJacksonTesterDefaultValues;
@@ -83,11 +83,11 @@ class DefaultValuesControllerTest {
     @DisplayName("Should return http code 201 when information is valid")
     void registerTest2() throws Exception {
 
-        lotRepository.save(new Lot(new ValueOfLotDTO("abc123")));
+        lotRepository.save(new Lot(new ValueOfLotRecord("abc123")));
         var user = new User
                 ("Leonardo", "Leonardo123@", "leo@email.com", UserRoles.USER);
         userRepository.save(user);
-        var data = new DefaultRegisterDTO
+        var data = new DefaultRegisterRecord
                 ("albumin",0.2,3.4, 5.4, 0.3, 1L, 1L);
         DefaultValues defaultValues = new DefaultValues(data);
 

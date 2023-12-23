@@ -3,7 +3,7 @@ package leonardo.labutilities.qualitylabpro.services;
 import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericDTO;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class GenericAnalyticsService {
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final GenericValidatorComponent genericValidatorComponent;
 
-    public Stream<GenericAnalytics> sendValues(List<ValuesOfLevelsGenericDTO> valuesOfLevelsList) {
+    public Stream<GenericAnalytics> sendValues(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
         var valuesFilter = valuesOfLevelsList.stream()
                 .filter(values -> !genericAnalyticsRepository.existsByDateAndLevelAndName(values.date(), values.level(),
                         values.name()));
@@ -34,22 +34,22 @@ public class GenericAnalyticsService {
     }
 
     @Cacheable(value = "name")
-    public Page<ValuesOfLevelsGenericDTO> getAllResults(Pageable pageable) {
+    public Page<ValuesOfLevelsGenericRecord> getAllResults(Pageable pageable) {
         log.info("Retrieve all results...");
-        return genericAnalyticsRepository.findAll(pageable).map(ValuesOfLevelsGenericDTO::new);
+        return genericAnalyticsRepository.findAll(pageable).map(ValuesOfLevelsGenericRecord::new);
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericDTO> getResultsByName(Pageable pageable, String name) {
+    public Stream<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by name...");
         return genericAnalyticsRepository.findAllByName(pageable, nameUpper).stream()
-                .map(ValuesOfLevelsGenericDTO::new);
+                .map(ValuesOfLevelsGenericRecord::new);
     }
     @Cacheable(value ={"name", "level"})
-    public Stream<ValuesOfLevelsGenericDTO> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+    public Stream<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
@@ -63,26 +63,26 @@ public class GenericAnalyticsService {
         }
         log.info("Retrieve results by name and level...");
         return genericAnalyticsRepository.findAllByNameAndLevel(pageable, nameUpper, level).stream()
-                .map(ValuesOfLevelsGenericDTO::new);
+                .map(ValuesOfLevelsGenericRecord::new);
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericDTO> getResultsByDateAsc(String name) {
+    public Stream<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateAsc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateAsc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericDTO::new);
+                .map(ValuesOfLevelsGenericRecord::new);
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericDTO> getResultsByDateDesc(String name) {
+    public Stream<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateDesc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericDTO::new);
+                .map(ValuesOfLevelsGenericRecord::new);
     }
 }
