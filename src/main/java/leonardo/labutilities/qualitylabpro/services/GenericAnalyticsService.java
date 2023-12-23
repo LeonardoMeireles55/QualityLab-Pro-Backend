@@ -39,17 +39,17 @@ public class GenericAnalyticsService {
         return genericAnalyticsRepository.findAll(pageable).map(ValuesOfLevelsGenericRecord::new);
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
+    public List<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by name...");
         return genericAnalyticsRepository.findAllByName(pageable, nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new);
+                .map(ValuesOfLevelsGenericRecord::new).toList();
     }
     @Cacheable(value ={"name", "level"})
-    public Stream<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
@@ -63,26 +63,26 @@ public class GenericAnalyticsService {
         }
         log.info("Retrieve results by name and level...");
         return genericAnalyticsRepository.findAllByNameAndLevel(pageable, nameUpper, level).stream()
-                .map(ValuesOfLevelsGenericRecord::new);
+                .map(ValuesOfLevelsGenericRecord::new).toList();
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
+    public List<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateAsc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateAsc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new);
+                .map(ValuesOfLevelsGenericRecord::new).toList();
     }
     @Cacheable(value = "name")
-    public Stream<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
+    public List<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
         if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
         log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepository.findAllByNameOrderByDateDesc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new);
+                .map(ValuesOfLevelsGenericRecord::new).toList();
     }
 }

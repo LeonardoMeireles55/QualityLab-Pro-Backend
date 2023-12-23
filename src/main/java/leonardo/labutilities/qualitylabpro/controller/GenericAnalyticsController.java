@@ -44,25 +44,25 @@ public class GenericAnalyticsController {
     }
     @GetMapping
     @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByName(pageable, name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateAsc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateDesc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
-    public ResponseEntity<Stream<ValuesOfLevelsGenericRecord>> getResultsByLevel
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
     }
