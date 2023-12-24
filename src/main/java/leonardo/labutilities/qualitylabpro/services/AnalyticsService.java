@@ -35,7 +35,6 @@ public class AnalyticsService {
                 .collect(Collectors.toList());
     }
 
-
     public void deleteValues(Long id) {
         if (!analyticRepository.existsById(id)) {
             throw new ErrorHandling.ResourceNotFoundException("values by id not found");
