@@ -1,8 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
-import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
+import leonardo.labutilities.qualitylabpro.record.lot.ValueOfLotRecord;
+import leonardo.labutilities.qualitylabpro.repository.LotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

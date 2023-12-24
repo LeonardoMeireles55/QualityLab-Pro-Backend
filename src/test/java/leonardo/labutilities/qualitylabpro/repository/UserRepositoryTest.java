@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.repositories;
+package leonardo.labutilities.qualitylabpro.repository;
 
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;

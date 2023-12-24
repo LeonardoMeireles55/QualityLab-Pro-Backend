@@ -1,8 +1,8 @@
 package leonardo.labutilities.qualitylabpro.domain.entitys;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
+import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.component.GenericValidatorComponent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;

@@ -3,12 +3,12 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterRecord;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
-import leonardo.labutilities.qualitylabpro.repositories.DefaultValuesRepository;
-import leonardo.labutilities.qualitylabpro.repositories.LotRepository;
+import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
+import leonardo.labutilities.qualitylabpro.record.lot.ValueOfLotRecord;
+import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.repository.LotRepository;
 
-import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,11 +1,11 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.components.AnalyticsValidatorComponent;
+import leonardo.labutilities.qualitylabpro.component.AnalyticsValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Analytics;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsRecord;
-import leonardo.labutilities.qualitylabpro.records.valuesOfAnalytics.ValuesOfLevelsListRecord;
-import leonardo.labutilities.qualitylabpro.repositories.AnalyticRepository;
+import leonardo.labutilities.qualitylabpro.record.valuesOfAnalytics.ValuesOfLevelsRecord;
+import leonardo.labutilities.qualitylabpro.record.valuesOfAnalytics.ValuesOfLevelsListRecord;
+import leonardo.labutilities.qualitylabpro.repository.AnalyticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;

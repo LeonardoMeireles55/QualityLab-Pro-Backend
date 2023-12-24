@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.records.lot;
+package leonardo.labutilities.qualitylabpro.record.lot;
 
 public record ValueOfLotRecord(
         String valueLot

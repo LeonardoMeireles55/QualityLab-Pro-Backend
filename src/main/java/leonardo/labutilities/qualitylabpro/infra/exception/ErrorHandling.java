@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.infra.exception;
 
-import leonardo.labutilities.qualitylabpro.records.auth.ErrorOfValidationRecord;
+import leonardo.labutilities.qualitylabpro.record.auth.ErrorOfValidationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

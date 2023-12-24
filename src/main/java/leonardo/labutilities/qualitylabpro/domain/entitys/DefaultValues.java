@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import leonardo.labutilities.qualitylabpro.records.defaultValues.DefaultRegisterRecord;
+import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

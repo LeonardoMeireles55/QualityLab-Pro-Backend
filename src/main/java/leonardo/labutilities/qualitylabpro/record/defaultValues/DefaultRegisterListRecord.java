@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.records.defaultValues;
+package leonardo.labutilities.qualitylabpro.record.defaultValues;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;

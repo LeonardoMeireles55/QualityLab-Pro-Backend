@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.domain.entitys.Lot;
-import leonardo.labutilities.qualitylabpro.records.lot.ValueOfLotRecord;
+import leonardo.labutilities.qualitylabpro.record.lot.ValueOfLotRecord;
 import leonardo.labutilities.qualitylabpro.services.LotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
