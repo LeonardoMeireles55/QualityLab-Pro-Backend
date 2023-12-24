@@ -2,7 +2,6 @@ package leonardo.labutilities.qualitylabpro.components;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Getter
 @Component

@@ -15,18 +15,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final SecurityFilter securityFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
@@ -37,18 +32,20 @@ public class SecurityConfiguration {
                     req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
                     req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
-                    req.requestMatchers
-                            ("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**","/swagger-ui").permitAll();
+                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui")
+                            .permitAll();
                     req.anyRequest().permitAll();
 
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
     @Bean
     public AuthenticationManager authMenager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
