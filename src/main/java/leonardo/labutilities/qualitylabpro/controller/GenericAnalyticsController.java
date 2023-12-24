@@ -32,7 +32,7 @@ public class GenericAnalyticsController {
             (@RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
         Stream<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
         var response = ResponseEntity.ok().body(valuesOfGenericsList.toList());
-        if(!response.getBody().isEmpty()) {
+        if(!response.toString().isEmpty()) {
             return response;
         }
         throw new ErrorHandling.DataIntegrityViolationException();
