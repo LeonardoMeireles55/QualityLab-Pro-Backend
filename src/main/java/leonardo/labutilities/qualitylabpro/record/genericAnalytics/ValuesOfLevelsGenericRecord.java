@@ -9,9 +9,9 @@ public record ValuesOfLevelsGenericRecord(
                 message = "Date format invalid.")
         String date,
         @NotNull
-        String levelLot,
+        String level_lot,
         @NotNull
-        String testLot,
+        String test_lot,
         @NotNull
         String name,
         @NotNull
@@ -23,7 +23,7 @@ public record ValuesOfLevelsGenericRecord(
         @NotNull
         Double sd,
         @NotNull
-        String unitValue,
+        String unit_value,
         String rules,
         String description
 ) {
