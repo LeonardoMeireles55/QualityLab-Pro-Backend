@@ -9,15 +9,14 @@ public record DefaultRegisterRecord(
         @NotBlank @Pattern(regexp = "^[^0-9]+$", message = "test name must contain only letters.")
         String name,
         @Digits(integer=3, fraction=2)
-        Double normalsd,
+        Double normalSd,
         @Digits(integer=3, fraction=2)
-        Double normalmean,
+        Double normalMean,
         @Digits(integer=3, fraction=2)
-        Double highsd,
+        Double highSd,
         @Digits(integer=3, fraction=2)
-        Double highmean,
+        Double highMean,
         Long lotId,
-
         Long user_id
 ) {
 }

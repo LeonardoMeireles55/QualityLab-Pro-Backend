@@ -21,15 +21,22 @@ public class Analytics {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "fk_default_values")
-    private Long fk_default_values;
-    private Long fk_user;
+    private Long fkDefaultValues;
+    @Column(name = "fk_user")
+    private Long fkUser;
     private String name;
     private Date date;
+    @Column(name = "normal_value")
     private Double normalValue;
+    @Column(name = "high_value")
     private Double highValue;
+    @Column(name = "normal_valid")
     private String normalValid;
+    @Column(name = "normal_obs")
     private String normalObs;
+    @Column(name = "high_valid")
     private String highValid;
+    @Column(name = "high_obs")
     private String highObs;
 
     @Transient
@@ -61,8 +68,8 @@ public class Analytics {
         this.highValid = this.analyticsValidatorComponent.getHighValid();
         this.normalObs = this.analyticsValidatorComponent.getNormalObs();
         this.highObs = this.analyticsValidatorComponent.getHighObs();
-        this.fk_default_values = values.defaultId();
-        this.fk_user = values.userId();
+        this.fkDefaultValues = values.defaultId();
+        this.fkUser = values.userId();
     }
 
     @Override

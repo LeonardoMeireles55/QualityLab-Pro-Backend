@@ -15,14 +15,17 @@ public class GenericAnalytics {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     String date;
-    String level_lot;
-    String test_lot;
+    @Column(name = "levelLot")
+    String levelLot;
+    @Column(name = "testLot")
+    String testLot;
     String name;
     String level;
     double value;
     double mean;
     double sd;
-    String unit_value;
+    @Column(name = "unitValue")
+    String unitValue;
     String rules;
     String description;
 
@@ -31,14 +34,14 @@ public class GenericAnalytics {
 
     public GenericAnalytics(ValuesOfLevelsGenericRecord values, GenericValidatorComponent genericValidatorComponent) {
         this.date = values.date();
-        this.level_lot = values.level_lot();
-        this.test_lot = values.test_lot();
+        this.levelLot = values.levelLot();
+        this.testLot = values.testLot();
         this.name = values.name();
         this.level = values.level();
         this.value = values.value();
         this.mean = values.mean();
         this.sd = values.sd();
-        this.unit_value = values.unit_value();
+        this.unitValue = values.unitValue();
         this.genericValidatorComponent = genericValidatorComponent;
         genericValidatorComponent.validator(value, mean, sd);
         this.rules = genericValidatorComponent.getRules();

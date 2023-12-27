@@ -1,9 +1,6 @@
 package leonardo.labutilities.qualitylabpro.domain.entitys;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +19,10 @@ public class DefaultValues {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long fk_lot;
-    private Long fk_user;
+    @Column(name = "fk_lot")
+    private Long fkLot;
+    @Column(name = "fk_user")
+    private Long fkUser;
     private String name;
     private double normalSd;
     private double normalMean;
@@ -35,14 +34,14 @@ public class DefaultValues {
 
     public DefaultValues(DefaultRegisterRecord values) {
         this.name = values.name().toUpperCase();
-        this.normalSd = values.normalsd();
-        this.normalMean = values.normalmean();
-        this.highSd = values.highsd();
-        this.highMean = values.highmean();
-        this.normalMaxValue = Math.round(values.normalmean() + (3 * values.normalsd()) * 100 / 100.00);
-        this.highMaxValue = Math.round(values.highmean() + (3 * values.highsd()) * 100 / 100.00);
-        this.fk_lot = values.lotId();
-        this.fk_user = values.user_id();
+        this.normalSd = values.normalSd();
+        this.normalMean = values.normalMean();
+        this.highSd = values.highSd();
+        this.highMean = values.highMean();
+        this.normalMaxValue = Math.round(values.normalMean() + (3 * values.normalSd()) * 100 / 100.00);
+        this.highMaxValue = Math.round(values.highMean() + (3 * values.highSd()) * 100 / 100.00);
+        this.fkLot = values.lotId();
+        this.fkUser = values.user_id();
         }
 
     public DefaultValues(String name, double normalSd, double normalMean, double highSd, double highMean) {

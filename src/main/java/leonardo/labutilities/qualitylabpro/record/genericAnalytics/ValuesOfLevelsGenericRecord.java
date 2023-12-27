@@ -9,9 +9,9 @@ public record ValuesOfLevelsGenericRecord(
                 message = "Date format invalid.")
         String date,
         @NotNull
-        String level_lot,
+        String levelLot,
         @NotNull
-        String test_lot,
+        String testLot,
         @NotNull
         String name,
         @NotNull
@@ -23,14 +23,14 @@ public record ValuesOfLevelsGenericRecord(
         @NotNull
         Double sd,
         @NotNull
-        String unit_value,
+        String unitValue,
         String rules,
         String description
 ) {
     public ValuesOfLevelsGenericRecord(GenericAnalytics analytics) {
-        this(analytics.getDate(), analytics.getLevel_lot(), analytics.getTest_lot(),
+        this(analytics.getDate(), analytics.getLevelLot(), analytics.getTestLot(),
                 analytics.getName(), analytics.getLevel(),
-                analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnit_value(),
+                analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnitValue(),
                 analytics.getRules(), analytics.getDescription());
     }
 }

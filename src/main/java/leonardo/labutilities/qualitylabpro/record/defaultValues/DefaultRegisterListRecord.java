@@ -9,14 +9,14 @@ public record DefaultRegisterListRecord(
          @NotBlank @Pattern(regexp = "^[^0-9]+$", message = "test name must contain only letters.")
          String name,
 //         @Digits(integer=6, fraction=2)
-         Double normaldp,
+         Double normalSd,
          @Digits(integer=6, fraction=2)
-         Double normalmean,
+         Double normalMean,
          @Digits(integer=6, fraction=2)
-         Double highdp,
+         Double highSd,
          @Digits(integer=6, fraction=2)
-         Double highmean,
-         Double normalmaxvalue) {
+         Double highMean,
+         Double normalMaxValue) {
     public DefaultRegisterListRecord(DefaultValues defaultValues) {
         this(defaultValues.getName(), defaultValues.getNormalSd(),
                 defaultValues.getNormalMean(), defaultValues.getHighSd(),
