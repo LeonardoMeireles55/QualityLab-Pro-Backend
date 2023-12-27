@@ -1,12 +1,12 @@
 package leonardo.labutilities.qualitylabpro.services;
 
+import leonardo.labutilities.qualitylabpro.component.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.repository.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -15,32 +15,22 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryCustom userRepositoryCustom;
 
     public User signUp(String login, String password, String email, UserRoles userRoles) {
-        var user = new User(login, encrypt(password), email, userRoles);
+        var user = new User(login, BCryptEncoderComponent.encrypt(password), email, userRoles);
 
-        return userRepository.save(user);
+        return userRepositoryCustom.save(user);
     }
 
     public void updUser(String name, String email, String password, String newPassword, UserRoles userRoles) {
-        var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
+        var oldPass = userRepositoryCustom.getReferenceByUsernameAndEmail(name, email);
 
-        if(!decrypt(password, oldPass.getPassword()) || decrypt(newPassword, oldPass.getPassword())) {
+        if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) || BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
             log.error("PasswordNotMatches. {}, {}", name, email);
             throw new ErrorHandling.PasswordNotMatchesException();
         } else {
-            userRepository.setPasswordWhereByUsername(oldPass.getUsername(), encrypt(newPassword));
+            userRepositoryCustom.setPasswordWhereByUsername(oldPass.getUsername(), BCryptEncoderComponent.encrypt(newPassword));
         }
     }
-
-    private static String encrypt(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
-    }
-    private static Boolean decrypt(String pass, String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.matches(pass, password);
-    }
-
 }

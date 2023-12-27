@@ -4,7 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import leonardo.labutilities.qualitylabpro.repository.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UserRepository userRepository;
+    private final UserRepositoryCustom userRepositoryCustom;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -27,7 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             var tokenJWT = getToken(request);
             if (tokenJWT != null) {
                 var subject = tokenService.getSubject(tokenJWT);
-                var users = userRepository.findByUsername(subject);
+                var users = userRepositoryCustom.findByUsername(subject);
                 var authentication = new UsernamePasswordAuthenticationToken(users, null, users.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

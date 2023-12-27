@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
+public interface GenericAnalyticsRepositoryCustom extends JpaRepository<GenericAnalytics, Long> {
     boolean existsByName(String name);
 
     List<GenericAnalytics> findAllByName(Pageable pageable, String name);

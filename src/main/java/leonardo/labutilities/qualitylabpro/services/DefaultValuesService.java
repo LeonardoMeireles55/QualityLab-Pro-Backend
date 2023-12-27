@@ -6,9 +6,9 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterListRecord;
 import leonardo.labutilities.qualitylabpro.record.valuesOfAnalytics.ValuesOfRegistedRecord;
-import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.repository.LotRepository;
-import leonardo.labutilities.qualitylabpro.repository.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -22,25 +22,25 @@ import static leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues.d
 @Service
 public class DefaultValuesService {
 
-    private final DefaultValuesRepository defaultValuesRepository;
+    private final DefaultValuesRepositoryCustom defaultValuesRepositoryCustom;
     private final LotRepository lotRepository;
-    private final UserRepository userRepository;
+    private final UserRepositoryCustom userRepositoryCustom;
 
     @PostConstruct
     public void loadDefaultsValues() {
-        Iterable<DefaultValues> defaultValuesList = defaultValuesRepository.findAll();
+        Iterable<DefaultValues> defaultValuesList = defaultValuesRepositoryCustom.findAll();
         for (DefaultValues defaultValue : defaultValuesList) {
             defaultValuesMap.put(defaultValue.getName(), defaultValue);
         }
     }
 
     public DefaultValues register(DefaultRegisterRecord values) {
-        if (lotRepository.existsById(values.lotId()) && userRepository.existsById(values.user_id())) {
+        if (lotRepository.existsById(values.lotId()) && userRepositoryCustom.existsById(values.user_id())) {
             var defaultValues = new DefaultValues(values);
-            if (!defaultValuesRepository.existsByName(values.name())) {
+            if (!defaultValuesRepositoryCustom.existsByName(values.name())) {
                 defaultValuesMap.put(defaultValues.getName(), defaultValues);
                 loadDefaultsValues();
-                return defaultValuesRepository.save(defaultValues);
+                return defaultValuesRepositoryCustom.save(defaultValues);
             }
             throw new ErrorHandling.DataIntegrityViolationException();
         }
@@ -51,12 +51,12 @@ public class DefaultValuesService {
         try {
             System.out.printf(defaultRegisterRecords.get(0).user_id().toString());
             if (lotRepository.existsById(defaultRegisterRecords.get(0).lotId()) ||
-                    userRepository.existsById(defaultRegisterRecords.get(0).user_id())) {
+                    userRepositoryCustom.existsById(defaultRegisterRecords.get(0).user_id())) {
                 return defaultRegisterRecords.stream()
                         .map(defaultRegisterRecord -> {
                             DefaultValues defaultValues = new DefaultValues(defaultRegisterRecord);
                             defaultValuesMap.put(defaultRegisterRecord.name(), defaultValues);
-                            defaultValuesRepository.save(defaultValues);
+                            defaultValuesRepositoryCustom.save(defaultValues);
                             return new ValuesOfRegistedRecord(defaultValues);
                         }).toList();
             } throw new ErrorHandling.ResourceNotFoundException("User or Lot not Found.");
@@ -67,7 +67,7 @@ public class DefaultValuesService {
         }
     }
     public List<DefaultValues> getDefaultsValues() {
-        List<DefaultValues> defaultValuesList = defaultValuesRepository.findAll();
+        List<DefaultValues> defaultValuesList = defaultValuesRepositoryCustom.findAll();
         if(defaultValuesList.isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException("defaultValuesList is empty.");
         }
@@ -75,32 +75,32 @@ public class DefaultValuesService {
     }
     @Cacheable(value = "name")
     public List<DefaultRegisterListRecord> getValuesByName(String name) {
-        if(!defaultValuesRepository.existsByName(name.toUpperCase())) {
+        if(!defaultValuesRepositoryCustom.existsByName(name.toUpperCase())) {
             throw new ErrorHandling.ResourceNotFoundException("DefaultValues not exists");
         }
-        return defaultValuesRepository.findAll().stream()
+        return defaultValuesRepositoryCustom.findAll().stream()
                 .filter(s -> Objects.equals(s.getName(), name.toUpperCase()))
                 .map(DefaultRegisterListRecord::new).toList();
     }
     public void deleteValuesById(Long id){
-        if(!defaultValuesRepository.existsById(id)) {
+        if(!defaultValuesRepositoryCustom.existsById(id)) {
             throw new ErrorHandling.ResourceNotFoundException("DefaultValues not exists.");
         }
-        defaultValuesRepository.deleteById(id);
+        defaultValuesRepositoryCustom.deleteById(id);
         defaultValuesMap.clear();
     }
     public void deleteValues(String name){
-        if(!defaultValuesRepository.existsByName(name)) {
+        if(!defaultValuesRepositoryCustom.existsByName(name)) {
             throw new ErrorHandling.ResourceNotFoundException("DefaultValues not exists.");
         }
-        defaultValuesRepository.deleteByName(name);
+        defaultValuesRepositoryCustom.deleteByName(name);
         defaultValuesMap.clear();
     }
     public void deleteValuesAll() {
-        if(defaultValuesRepository.findAll().isEmpty()) {
+        if(defaultValuesRepositoryCustom.findAll().isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException("DefaultValues not exists.");
         }
-        defaultValuesRepository.deleteAll();
+        defaultValuesRepositoryCustom.deleteAll();
         defaultValuesMap.clear();
     }
 }

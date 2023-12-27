@@ -6,7 +6,7 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.DefaultValues;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterListRecord;
 import leonardo.labutilities.qualitylabpro.record.valuesOfAnalytics.ValuesOfRegistedRecord;
-import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import java.util.List;
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/defaultsValues")
 public class DefaultValuesController {
-    private final DefaultValuesRepository repository;
+    private final DefaultValuesRepositoryCustom repository;
     private final DefaultValuesService defaultValuesService;
 
     @Transactional

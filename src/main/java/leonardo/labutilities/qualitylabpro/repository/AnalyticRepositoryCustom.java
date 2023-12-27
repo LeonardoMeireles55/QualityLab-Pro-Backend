@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AnalyticRepository extends JpaRepository<Analytics, Long> {
+public interface AnalyticRepositoryCustom extends JpaRepository<Analytics, Long> {
     boolean existsByName(String name);
     List<Analytics> findAllByName(Pageable pageable, String name);
 }
