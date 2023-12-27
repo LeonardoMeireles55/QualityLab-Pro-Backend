@@ -5,10 +5,10 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.record.defaultValues.DefaultRegisterRecord;
 import leonardo.labutilities.qualitylabpro.record.lot.ValueOfLotRecord;
-import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepository;
+import leonardo.labutilities.qualitylabpro.repository.DefaultValuesRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.repository.LotRepository;
 
-import leonardo.labutilities.qualitylabpro.repository.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.DefaultValuesService;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +53,7 @@ class DefaultValuesControllerTest {
     private JacksonTester<DefaultValues> authDataJacksonTesterDefaultValues;
 
     @MockBean
-    private DefaultValuesRepository defaultValuesRepository;
+    private DefaultValuesRepositoryCustom defaultValuesRepositoryCustom;
 
     @Autowired
     DefaultValuesController defaultValuesController;
@@ -64,14 +64,14 @@ class DefaultValuesControllerTest {
     @Autowired
     LotRepository lotRepository;
     @Autowired
-    UserRepository userRepository;
+    UserRepositoryCustom userRepositoryCustom;
 
 
 
 
     @Test
     @DisplayName("It should return the http code 400 when the information is invalid")
-    void registerTest1() throws Exception {
+    void registerTestInvalid() throws Exception {
         var response = mvc
                 .perform(post("/defaultsValues/register"))
                 .andReturn().getResponse();
@@ -81,17 +81,19 @@ class DefaultValuesControllerTest {
     }
     @Test
     @DisplayName("Should return http code 201 when information is valid")
-    void registerTest2() throws Exception {
+    void registerTestValid() throws Exception {
 
         lotRepository.save(new Lot(new ValueOfLotRecord("abc123")));
         var user = new User
                 ("Leonardo", "Leonardo123@", "leo@email.com", UserRoles.USER);
-        userRepository.save(user);
+
+        userRepositoryCustom.save(user);
+
         var data = new DefaultRegisterRecord
                 ("albumin",0.2,3.4, 5.4, 0.3, 1L, 1L);
         DefaultValues defaultValues = new DefaultValues(data);
 
-        when(defaultValuesRepository.save(any())).thenReturn(defaultValues);
+        when(defaultValuesRepositoryCustom.save(any())).thenReturn(defaultValues);
 
         var response = mvc
                 .perform(post("/defaultsValues/register")

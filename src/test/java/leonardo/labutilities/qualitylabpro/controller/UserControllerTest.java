@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import leonardo.labutilities.qualitylabpro.domain.entitys.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.record.user.UserRecord;
-import leonardo.labutilities.qualitylabpro.repository.UserRepository;
+import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +44,7 @@ class UserControllerTest {
     private JacksonTester<UserRecord> authDataJacksonTester;
 
     @MockBean
-    private UserRepository repository;
+    private UserRepositoryCustom repository;
 
     @Test
     @DisplayName("It should return the http code 400 when the information is invalid")
