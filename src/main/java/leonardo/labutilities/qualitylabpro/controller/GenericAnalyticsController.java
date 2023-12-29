@@ -5,16 +5,27 @@ import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -24,6 +35,7 @@ import java.util.stream.Stream;
 @Validated
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
+    private final GenericAnalyticsRepositoryCustom genericAnalyticsRepositoryCustom;
 
     @PostMapping
     @Transactional
@@ -32,16 +44,39 @@ public class GenericAnalyticsController {
             (@RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
         Stream<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
           var response = ResponseEntity.ok().body(valuesOfGenericsList.toList());
-        if(response.hasBody()) {
+        if(!Objects.equals(response.getBody(), Collections.emptyList())) {
             return response;
         }
         throw new ErrorHandling.DataIntegrityViolationException();
     }
-    @GetMapping
-    @RequestMapping(value = "/getResults" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResults(Pageable pageable) {
-        return ResponseEntity.ok().body(genericAnalyticsService.getAllResults(pageable).getContent());
+
+    @GetMapping()
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity <Optional<GenericAnalytics>> getValuesById(@PathVariable Long id){
+        var defaultValues = genericAnalyticsService.getResultsById(id);
+
+        return ResponseEntity.ok(defaultValues);
     }
+
+    @GetMapping("/getResults")
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getResults(Pageable pageable) {
+        List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
+
+        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+                .map(result -> {
+                    Link selfLink = linkTo(methodOn(GenericAnalyticsController.class)
+                            .getResultsByName(Pageable.unpaged(), result.name())).withSelfRel();
+                    return EntityModel.of(result, selfLink);
+                })
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
+                CollectionModel.of(resultModels,
+                        linkTo(methodOn(GenericAnalyticsController.class).getResults(pageable)).withSelfRel());
+
+        return ResponseEntity.ok().body(collectionModel);
+    }
+
     @GetMapping
     @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
@@ -64,6 +99,6 @@ public class GenericAnalyticsController {
     @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
-        return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
+            return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
     }
 }
