@@ -58,7 +58,7 @@ public class GenericAnalyticsController {
         return ResponseEntity.ok(defaultValues);
     }
 
-    @GetMapping("/getResults")
+    @GetMapping("/getAllResultsHateoas")
     public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getResults(Pageable pageable) {
         List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
 
