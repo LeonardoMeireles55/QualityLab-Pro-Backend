@@ -52,14 +52,20 @@ public class GenericAnalyticsController {
 
     @GetMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity <Optional<GenericAnalytics>> getValuesById(@PathVariable Long id){
+    public ResponseEntity <Optional<GenericAnalytics>> getResultsById(@PathVariable Long id){
         var defaultValues = genericAnalyticsService.getResultsById(id);
 
         return ResponseEntity.ok(defaultValues);
     }
 
+    @GetMapping
+    @RequestMapping(value = "/getAllResults" , method = RequestMethod.GET)
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResults(Pageable pageable) {
+        return ResponseEntity.ok().body(genericAnalyticsService.getAllResults(pageable));
+    }
+
     @GetMapping("/getAllResultsHateoas")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getResults(Pageable pageable) {
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllResultsHateos(Pageable pageable) {
         List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
 
         List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
@@ -72,7 +78,7 @@ public class GenericAnalyticsController {
 
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class).getResults(pageable)).withSelfRel());
+                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateos(pageable)).withSelfRel());
 
         return ResponseEntity.ok().body(collectionModel);
     }
