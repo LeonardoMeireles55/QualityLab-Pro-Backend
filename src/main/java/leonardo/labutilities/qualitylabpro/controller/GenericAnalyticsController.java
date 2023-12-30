@@ -65,10 +65,13 @@ public class GenericAnalyticsController {
     }
 
     @GetMapping("/getAllResultsHateoas")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllResultsHateos(Pageable pageable) {
-        List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
+    getAllResultsHateos(Pageable pageable) {
+        List<ValuesOfLevelsGenericRecord>
+                resultsList = genericAnalyticsService.getAllResults(pageable);
 
-        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+        List<EntityModel<ValuesOfLevelsGenericRecord>>
+                resultModels = resultsList.stream()
                 .map(result -> {
                     Link selfLink = linkTo(methodOn(GenericAnalyticsController.class)
                             .getResultsByName(Pageable.unpaged(), result.name())).withSelfRel();
@@ -78,33 +81,39 @@ public class GenericAnalyticsController {
 
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateos(pageable)).withSelfRel());
+                        linkTo(methodOn(GenericAnalyticsController.class)
+                                .getAllResultsHateos(pageable)).withSelfRel());
 
         return ResponseEntity.ok().body(collectionModel);
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByName(Pageable pageable, @PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
+    getResultsByName(Pageable pageable, @PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByName(pageable, name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateAsc(@PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
+    getResultsByNameOrderByDateAsc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateAsc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByNameOrderByDateDesc(@PathVariable String name) {
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
+    getResultsByNameOrderByDateDesc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateDesc(name));
     }
 
     @GetMapping
     @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByLevel
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
+    getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
-            return ResponseEntity.ok().body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
+            return ResponseEntity.ok()
+                    .body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
     }
 }
