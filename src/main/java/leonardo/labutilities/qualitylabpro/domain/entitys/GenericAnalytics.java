@@ -6,12 +6,14 @@ import leonardo.labutilities.qualitylabpro.component.GenericValidatorComponent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @Getter
 @Entity(name = "generic_analytics")
-public class GenericAnalytics {
+public class GenericAnalytics extends
+        RepresentationModel<GenericAnalytics> {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     String date;

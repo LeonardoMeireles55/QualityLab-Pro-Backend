@@ -8,12 +8,12 @@ import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -29,14 +29,19 @@ public class GenericAnalyticsService {
                         values.name()));
         return valuesFilter.map(values -> {
             GenericAnalytics genericAnalytics = new GenericAnalytics(values, genericValidatorComponent);
-            return genericAnalyticsRepositoryCustom.save(genericAnalytics);
+                return genericAnalyticsRepositoryCustom.save(genericAnalytics);
         });
     }
 
     @Cacheable(value = "name")
-    public Page<ValuesOfLevelsGenericRecord> getAllResults(Pageable pageable) {
+    public List<ValuesOfLevelsGenericRecord> getAllResults(Pageable pageable) {
         log.info("Retrieve all results...");
-        return genericAnalyticsRepositoryCustom.findAll(pageable).map(ValuesOfLevelsGenericRecord::new);
+        var resultsList = genericAnalyticsRepositoryCustom.findAll(pageable).map(ValuesOfLevelsGenericRecord::new)
+                .toList();
+        if(resultsList.isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found");
+        }
+        return resultsList;
     }
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
@@ -84,5 +89,13 @@ public class GenericAnalyticsService {
         log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepositoryCustom.findAllByNameOrderByDateDesc(nameUpper).stream()
                 .map(ValuesOfLevelsGenericRecord::new).toList();
+    }
+    @Cacheable(value = "id")
+    public Optional<GenericAnalytics> getResultsById(Long id) {
+        if (!genericAnalyticsRepositoryCustom.existsById(id)) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
+        log.info("Retrieve results by dateDesc...");
+        return genericAnalyticsRepositoryCustom.findById(id);
     }
 }
