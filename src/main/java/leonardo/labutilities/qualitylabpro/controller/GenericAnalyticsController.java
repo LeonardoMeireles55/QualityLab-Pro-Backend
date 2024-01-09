@@ -64,6 +64,7 @@ public class GenericAnalyticsController {
         return ResponseEntity.ok().body(genericAnalyticsService.getAllResults(pageable));
     }
 
+
     @GetMapping("/getAllResultsHateoas")
     public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
     getAllResultsHateos(Pageable pageable) {
@@ -116,4 +117,15 @@ public class GenericAnalyticsController {
             return ResponseEntity.ok()
                     .body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
     }
+    @GetMapping
+    @RequestMapping(value = "/getAllResultsByDate/{name}/{level}/{dateStart}/{dateEnd}" , method = RequestMethod.GET)
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByDate(
+                                                                      @PathVariable String name,
+                                                                      @PathVariable String level,
+                                                                      @PathVariable String dateStart,
+                                                                      @PathVariable String dateEnd) {
+        return ResponseEntity.ok().body(genericAnalyticsService
+                .getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+    }
+
 }

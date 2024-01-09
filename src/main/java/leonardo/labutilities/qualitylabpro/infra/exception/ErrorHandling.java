@@ -3,6 +3,7 @@ package leonardo.labutilities.qualitylabpro.infra.exception;
 import leonardo.labutilities.qualitylabpro.record.auth.ErrorOfValidationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -104,13 +105,13 @@ public class ErrorHandling {
 //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + exception.getLocalizedMessage());
 //    }
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         String ErrorMessage =
                 "An error occurred while processing your request, The provided value already exists in the database.";
-        log.error("BAD_REQUEST: {}", ErrorMessage);
+        log.error("CONFLICT: {}", ErrorMessage);
 
-        return new ResponseEntity<>(ErrorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("409", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(PasswordNotMatchesException.class)

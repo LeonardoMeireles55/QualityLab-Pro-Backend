@@ -53,23 +53,6 @@ public class GenericAnalyticsService {
         return genericAnalyticsRepositoryCustom.findAllByName(pageable, nameUpper).stream()
                 .map(ValuesOfLevelsGenericRecord::new).toList();
     }
-    @Cacheable(value ={"name", "level"})
-    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
-        var nameUpper = name.toUpperCase();
-        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
-        if (Objects.equals(level, "1")) {
-            level = "PCCC1";
-        } else if (Objects.equals(level, "2")) {
-            level = "PCCC2";
-        } else {
-            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
-        }
-        log.info("Retrieve results by name and level...");
-        return genericAnalyticsRepositoryCustom.findAllByNameAndLevel(pageable, nameUpper, level).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
-    }
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
@@ -97,5 +80,39 @@ public class GenericAnalyticsService {
         }
         log.info("Retrieve results by dateDesc...");
         return genericAnalyticsRepositoryCustom.findById(id);
+    }
+
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevelAndDate(String name, String level, String dateStart, String dateEnd) {
+        if (!genericAnalyticsRepositoryCustom.existsByName(name.toUpperCase())) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
+        if (Objects.equals(level, "1")) {
+            level = "PCCC1";
+        } else if (Objects.equals(level, "2")) {
+            level = "PCCC2";
+        } else {
+            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        }
+        log.info("Retrieve results by name, level and date");
+        return genericAnalyticsRepositoryCustom
+                .findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd).stream()
+                .map(ValuesOfLevelsGenericRecord::new).toList();
+    }
+    @Cacheable(value ={"name", "level"})
+    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+        var nameUpper = name.toUpperCase();
+        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
+        if (Objects.equals(level, "1")) {
+            level = "PCCC1";
+        } else if (Objects.equals(level, "2")) {
+            level = "PCCC2";
+        } else {
+            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        }
+        log.info("Retrieve results by name and level...");
+        return genericAnalyticsRepositoryCustom.findAllByNameAndLevel(pageable, nameUpper, level).stream()
+                .map(ValuesOfLevelsGenericRecord::new).toList();
     }
 }

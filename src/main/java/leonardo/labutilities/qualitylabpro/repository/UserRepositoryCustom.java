@@ -16,4 +16,8 @@ public interface UserRepositoryCustom extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE users u SET u.password = ?2 WHERE u.username = ?1")
     void setPasswordWhereByUsername(String username, String newPassword);
+
+    boolean existsByUsername(String name);
+
+    boolean existsByEmail(String email);
 }

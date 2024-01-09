@@ -19,7 +19,8 @@ public class UserService {
 
     public User signUp(String login, String password, String email, UserRoles userRoles) {
         var user = new User(login, BCryptEncoderComponent.encrypt(password), email, userRoles);
-
+        if(userRepositoryCustom.existsByUsername(login) || userRepositoryCustom.existsByEmail(email)) {
+            throw new ErrorHandling.DataIntegrityViolationException();}
         return userRepositoryCustom.save(user);
     }
 
