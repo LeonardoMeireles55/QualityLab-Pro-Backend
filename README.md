@@ -48,7 +48,7 @@ http://localhost:8080/swagger-ui.html
 ```
 
 #### React PlotlyJs Front-end
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/231a8b46-a11f-489e-8f2c-c777f156ab21)
+![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/df035490-b790-484e-92ff-507b12ed42e7)
 
 
 
