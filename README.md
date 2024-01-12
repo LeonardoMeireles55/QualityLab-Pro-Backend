@@ -1,4 +1,4 @@
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/b654c69a-bc6a-40c8-ba6a-aef793c522cd)# QualityLab Pro-API RESTful for internal laboratory quality control.
+# QualityLab Pro-API RESTful for internal laboratory quality control.
 
 <p align="center">
 <img src="https://img.shields.io/static/v1?label=STATUS&message=In%20progress&color=RED&style=for-the-badge" alt="Em desenvolvimento"/>
@@ -40,19 +40,15 @@ git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 #### Step 2. Upload the Docker container to create the mariaDB database
 In the project root directory, run the command:
 ```
-docker-compose up -d
+docker-compose up or docker compose up
 ```
-#### Step 3 (Optional). you can run the application and tests with the database in memory. When compiling and running the .jar.
-```
-java -jar QualityLabPro-0.0.1-beta.jar
-```
-#### Step 4. you can Access API documentation
+#### Step 3. you can Access API documentation
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
 #### React PlotlyJs Front-end
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/4b8c8f7c-e103-4ca2-93f2-fb953daf249c)
+![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/8e11fd48-f098-4b5b-bffc-e7885beeb31c)
 
 
 
