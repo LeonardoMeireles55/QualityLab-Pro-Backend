@@ -50,9 +50,8 @@ java -jar QualityLabPro-0.0.1-beta.jar
 ```
 http://localhost:8080/swagger-ui.html
 ```
-#### Exemple with Google sheets.
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/c4a9e006-7952-420d-8202-a25c5e36847b)
 
-#### Exemple with matplotlib PYTHON.
-![Exemplo_matplotlib](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/1d323148-5a5f-4d1d-8c34-3cba56380a39)
+#### React PlotlyJs Front-end
+![](![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/351d4f6d-2196-4ce6-a691-62402d8ba562)
+)
 
