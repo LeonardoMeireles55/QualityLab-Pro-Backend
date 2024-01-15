@@ -25,11 +25,12 @@ public class GenericAnalyticsService {
 
     public Stream<GenericAnalytics> sendValues(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
         var valuesFilter = valuesOfLevelsList.stream()
-                .filter(values -> !genericAnalyticsRepositoryCustom.existsByDateAndLevelAndName(values.date(), values.level(),
+                .filter(values -> !genericAnalyticsRepositoryCustom.existsByDateAndLevelAndName(values.date(),
+                        values.level(),
                         values.name()));
         return valuesFilter.map(values -> {
             GenericAnalytics genericAnalytics = new GenericAnalytics(values, genericValidatorComponent);
-                return genericAnalyticsRepositoryCustom.save(genericAnalytics);
+            return genericAnalyticsRepositoryCustom.save(genericAnalytics);
         });
     }
 
@@ -38,72 +39,74 @@ public class GenericAnalyticsService {
         log.info("Retrieve all results...");
         var resultsList = genericAnalyticsRepositoryCustom.findAll(pageable).map(ValuesOfLevelsGenericRecord::new)
                 .toList();
-        if(resultsList.isEmpty()) {
+        if (resultsList.isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found");
         }
         return resultsList;
     }
+
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
-        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom.findAllByName(pageable,
+                nameUpper);
+
+        List<GenericAnalytics> analyticsList = analyticsOptional
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
         log.info("Retrieve results by name...");
-        return genericAnalyticsRepositoryCustom.findAllByName(pageable, nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
     }
+
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
-        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                .findAllByNameOrderByDateAsc(nameUpper);
+
+        List<GenericAnalytics> analyticsList = analyticsOptional
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
         log.info("Retrieve results by dateAsc...");
-        return genericAnalyticsRepositoryCustom.findAllByNameOrderByDateAsc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
     }
+
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
-        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                .findAllByNameOrderByDateDesc(nameUpper);
+
+        List<GenericAnalytics> analyticsList = analyticsOptional
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
         log.info("Retrieve results by dateDesc...");
-        return genericAnalyticsRepositoryCustom.findAllByNameOrderByDateDesc(nameUpper).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
-    }
-    @Cacheable(value = "id")
-    public Optional<GenericAnalytics> getResultsById(Long id) {
-        if (!genericAnalyticsRepositoryCustom.existsById(id)) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
-        log.info("Retrieve results by dateDesc...");
-        return genericAnalyticsRepositoryCustom.findById(id);
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
     }
 
-    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevelAndDate(String name, String level, String dateStart, String dateEnd) {
-        if (!genericAnalyticsRepositoryCustom.existsByName(name.toUpperCase())) {
-            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
-        }
-        if (Objects.equals(level, "1")) {
-            level = "PCCC1";
-        } else if (Objects.equals(level, "2")) {
-            level = "PCCC2";
-        } else {
-            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
-        }
-        log.info("Retrieve results by name, level and date");
-        return genericAnalyticsRepositoryCustom
-                .findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
+    @Cacheable(value = "id")
+    public GenericAnalytics getResultsById(Long id) {
+        return genericAnalyticsRepositoryCustom.findById(id)
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
     }
-    @Cacheable(value ={"name", "level"})
-    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevelAndDate(String name, String level,
+            String dateStart, String dateEnd) {
         var nameUpper = name.toUpperCase();
+
         if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
+
         if (Objects.equals(level, "1")) {
             level = "PCCC1";
         } else if (Objects.equals(level, "2")) {
@@ -111,8 +114,43 @@ public class GenericAnalyticsService {
         } else {
             throw new ErrorHandling.ResourceNotFoundException("Level not found.");
         }
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                .findAllByNameAndLevelAndDateBetween(nameUpper, level, dateStart, dateEnd);
+
+        List<GenericAnalytics> analyticsList = analyticsOptional
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
+        log.info("Retrieve results by name, level, and date");
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
+    }
+
+    @Cacheable(value = { "name", "level" })
+    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+        var nameUpper = name.toUpperCase();
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                .findAllByNameAndLevel(pageable, nameUpper, convertLevel(level));
+
+        List<GenericAnalytics> analyticsList = analyticsOptional.orElseThrow(
+                () -> new ErrorHandling.ResourceNotFoundException("Results not found or level not found."));
+
         log.info("Retrieve results by name and level...");
-        return genericAnalyticsRepositoryCustom.findAllByNameAndLevel(pageable, nameUpper, level).stream()
-                .map(ValuesOfLevelsGenericRecord::new).toList();
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
+    }
+
+    private String convertLevel(String inputLevel) {
+        switch (inputLevel) {
+            case "1":
+                return "PCCC1";
+            case "2":
+                return "PCCC2";
+            default:
+                throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        }
     }
 }

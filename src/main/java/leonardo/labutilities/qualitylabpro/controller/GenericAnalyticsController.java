@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,7 +33,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
-    private final GenericAnalyticsRepositoryCustom genericAnalyticsRepositoryCustom;
 
     @PostMapping
     @Transactional
@@ -52,7 +49,7 @@ public class GenericAnalyticsController {
 
     @GetMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity <Optional<GenericAnalytics>> getResultsById(@PathVariable Long id){
+    public ResponseEntity<GenericAnalytics> getResultsById(@PathVariable Long id){
         var defaultValues = genericAnalyticsService.getResultsById(id);
 
         return ResponseEntity.ok(defaultValues);
@@ -67,7 +64,7 @@ public class GenericAnalyticsController {
 
     @GetMapping("/getAllResultsHateoas")
     public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
-    getAllResultsHateos(Pageable pageable) {
+    getAllResultsHateoas(Pageable pageable) {
         List<ValuesOfLevelsGenericRecord>
                 resultsList = genericAnalyticsService.getAllResults(pageable);
 
@@ -83,7 +80,7 @@ public class GenericAnalyticsController {
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
                         linkTo(methodOn(GenericAnalyticsController.class)
-                                .getAllResultsHateos(pageable)).withSelfRel());
+                                .getAllResultsHateoas(pageable)).withSelfRel());
 
         return ResponseEntity.ok().body(collectionModel);
     }

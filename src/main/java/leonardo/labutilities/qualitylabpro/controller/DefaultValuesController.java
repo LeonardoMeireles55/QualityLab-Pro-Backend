@@ -83,17 +83,4 @@ public class DefaultValuesController {
 
         return ResponseEntity.ok().body("deleted all default values.");
     }
-    @Transactional
-    @PutMapping("/patchValues/{id}/{value}")
-    public void updateValuesById(@PathVariable Long id, Double value1, Double value2, Double value3, Double value4){
-
-        var patch = repository.getReferenceById(id);
-
-        patch.setNormalSd(value1);
-        patch.setHighSd(value2);
-        patch.setNormalMean(value3);
-        patch.setHighMean(value4);
-
-        repository.save(patch);
-    }
 }
