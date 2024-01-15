@@ -4,7 +4,8 @@
 <img src="https://img.shields.io/static/v1?label=STATUS&message=In%20progress&color=RED&style=for-the-badge" alt="Em desenvolvimento"/>
 </p>
 
-## Stacks
+## Technologies
+
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
@@ -40,19 +41,15 @@ git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 #### Step 2. Upload the Docker container to create the mariaDB database
 In the project root directory, run the command:
 ```
-docker-compose up -d
+docker-compose up or docker compose up
 ```
-#### Step 3 (Optional). you can run the application and tests with the database in memory. When compiling and running the .jar.
-```
-java -jar QualityLabPro-0.0.1-beta.jar
-```
-#### Step 4. you can Access API documentation
+#### Step 3. you can Access API documentation
 ```
 http://localhost:8080/swagger-ui.html
 ```
-#### Exemple with Google sheets.
-![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/c4a9e006-7952-420d-8202-a25c5e36847b)
 
-#### Exemple with matplotlib PYTHON.
-![Exemplo_matplotlib](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/1d323148-5a5f-4d1d-8c34-3cba56380a39)
+#### React PlotlyJs Front-end
+![image](https://github.com/LeonardoMeireles55/QualityLabPro/assets/123477726/df035490-b790-484e-92ff-507b12ed42e7)
+
+
 
