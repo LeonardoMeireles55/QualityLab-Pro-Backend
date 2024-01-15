@@ -6,11 +6,9 @@ import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepositoryCustom;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +16,6 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class GenericAnalyticsService {
     private final GenericAnalyticsRepositoryCustom genericAnalyticsRepositoryCustom;
     private final GenericValidatorComponent genericValidatorComponent;
@@ -36,7 +33,6 @@ public class GenericAnalyticsService {
 
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getAllResults(Pageable pageable) {
-        log.info("Retrieve all results...");
         var resultsList = genericAnalyticsRepositoryCustom.findAll(pageable).map(ValuesOfLevelsGenericRecord::new)
                 .toList();
         if (resultsList.isEmpty()) {
@@ -46,7 +42,7 @@ public class GenericAnalyticsService {
     }
 
     @Cacheable(value = "name")
-    public List<ValuesOfLevelsGenericRecord> getResultsByName(Pageable pageable, String name) {
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
 
         Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom.findAllByName(pageable,
@@ -55,7 +51,6 @@ public class GenericAnalyticsService {
         List<GenericAnalytics> analyticsList = analyticsOptional
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
 
-        log.info("Retrieve results by name...");
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
@@ -71,7 +66,6 @@ public class GenericAnalyticsService {
         List<GenericAnalytics> analyticsList = analyticsOptional
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
 
-        log.info("Retrieve results by dateAsc...");
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
@@ -87,7 +81,6 @@ public class GenericAnalyticsService {
         List<GenericAnalytics> analyticsList = analyticsOptional
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
 
-        log.info("Retrieve results by dateDesc...");
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
@@ -121,14 +114,13 @@ public class GenericAnalyticsService {
         List<GenericAnalytics> analyticsList = analyticsOptional
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
 
-        log.info("Retrieve results by name, level, and date");
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
     }
 
     @Cacheable(value = { "name", "level" })
-    public List<ValuesOfLevelsGenericRecord> getResultsByNameAndLevel(Pageable pageable, String name, String level) {
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
 
         Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
@@ -137,7 +129,6 @@ public class GenericAnalyticsService {
         List<GenericAnalytics> analyticsList = analyticsOptional.orElseThrow(
                 () -> new ErrorHandling.ResourceNotFoundException("Results not found or level not found."));
 
-        log.info("Retrieve results by name and level...");
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();

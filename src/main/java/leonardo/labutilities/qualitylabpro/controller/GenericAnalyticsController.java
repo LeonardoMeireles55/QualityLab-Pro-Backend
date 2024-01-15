@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -29,7 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
-@RequestMapping("/bio")
+@RequestMapping("/analytics")
 @Validated
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
@@ -61,58 +60,54 @@ public class GenericAnalyticsController {
         return ResponseEntity.ok().body(genericAnalyticsService.getAllResults(pageable));
     }
 
-
     @GetMapping("/getAllResultsHateoas")
     public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
     getAllResultsHateoas(Pageable pageable) {
-        List<ValuesOfLevelsGenericRecord>
-                resultsList = genericAnalyticsService.getAllResults(pageable);
-
-        List<EntityModel<ValuesOfLevelsGenericRecord>>
-                resultModels = resultsList.stream()
-                .map(result -> {
-                    Link selfLink = linkTo(methodOn(GenericAnalyticsController.class)
-                            .getResultsByName(Pageable.unpaged(), result.name())).withSelfRel();
-                    return EntityModel.of(result, selfLink);
-                })
+        List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
+    
+        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+                .map(result -> EntityModel.of(result,
+                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsByName(Pageable.unpaged(), result.name()))
+                                .withSelfRel()))
                 .collect(Collectors.toList());
-
+    
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class)
-                                .getAllResultsHateoas(pageable)).withSelfRel());
-
+                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateoas(pageable))
+                                .withSelfRel());
+    
         return ResponseEntity.ok().body(collectionModel);
     }
+    
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllResultsByName/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
-    getResultsByName(Pageable pageable, @PathVariable String name) {
-        return ResponseEntity.ok().body(genericAnalyticsService.getResultsByName(pageable, name));
+    getAllResultsByName(Pageable pageable, @PathVariable String name) {
+        return ResponseEntity.ok().body(genericAnalyticsService.getAllResultsByName(pageable, name));
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllResultsByName/orderAsc/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
-    getResultsByNameOrderByDateAsc(@PathVariable String name) {
+    getAllResultsByNameOrderByDateAsc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateAsc(name));
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllResultsByName/orderDesc/{name}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
-    getResultsByNameOrderByDateDesc(@PathVariable String name) {
+    getAllResultsByNameOrderByDateDesc(@PathVariable String name) {
         return ResponseEntity.ok().body(genericAnalyticsService.getResultsByDateDesc(name));
     }
 
     @GetMapping
-    @RequestMapping(value = "/getResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllResultsByNameLevel/{name}/{level}" , method = RequestMethod.GET)
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
     getResultsByLevel
             (Pageable pageable, @PathVariable String name, @PathVariable String level) {
             return ResponseEntity.ok()
-                    .body(genericAnalyticsService.getResultsByNameAndLevel(pageable, name, level));
+                    .body(genericAnalyticsService.getAllResultsByNameAndLevel(pageable, name, level));
     }
     @GetMapping
     @RequestMapping(value = "/getAllResultsByDate/{name}/{level}/{dateStart}/{dateEnd}" , method = RequestMethod.GET)

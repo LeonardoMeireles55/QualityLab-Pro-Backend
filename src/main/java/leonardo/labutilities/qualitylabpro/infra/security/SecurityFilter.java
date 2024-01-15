@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import leonardo.labutilities.qualitylabpro.services.TokenService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserRepositoryCustom userRepositoryCustom;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
             var tokenJWT = getToken(request);
