@@ -27,11 +27,13 @@ public class UserService {
     public void updUser(String name, String email, String password, String newPassword, UserRoles userRoles) {
         var oldPass = userRepositoryCustom.getReferenceByUsernameAndEmail(name, email);
 
-        if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) || BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
+        if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
+                BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
             log.error("PasswordNotMatches. {}, {}", name, email);
             throw new ErrorHandling.PasswordNotMatchesException();
         } else {
-            userRepositoryCustom.setPasswordWhereByUsername(oldPass.getUsername(), BCryptEncoderComponent.encrypt(newPassword));
+            userRepositoryCustom.setPasswordWhereByUsername(oldPass.getUsername(),
+                    BCryptEncoderComponent.encrypt(newPassword));
         }
     }
 }

@@ -115,12 +115,12 @@ public class ErrorHandling {
     }
 
     @ExceptionHandler(PasswordNotMatchesException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<String> PasswordNotMatchesException(PasswordNotMatchesException exception) {
         String ErrorMessage = "Passwords not matches or Passwords is invalid";
         log.error("BAD_REQUEST: {}", ErrorMessage);
 
-        return new ResponseEntity<>(ErrorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorMessage, HttpStatus.UNAUTHORIZED);
     }
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

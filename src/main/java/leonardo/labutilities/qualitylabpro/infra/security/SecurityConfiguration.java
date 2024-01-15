@@ -28,13 +28,13 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
-                    req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
+                        req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
+                        req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
+                        req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
+                        req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui")
                             .permitAll();
-                    req.anyRequest().authenticated();
+                    req.anyRequest().permitAll();
 
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -50,6 +50,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

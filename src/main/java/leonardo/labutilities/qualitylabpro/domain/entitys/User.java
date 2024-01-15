@@ -9,8 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "users")
@@ -39,12 +39,12 @@ public class User implements UserDetails {
         this.userRoles = roles;
     }
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.userRoles == UserRoles.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
+        return Arrays.stream(UserRoles.values())
+
+                .filter(role -> getUserRoles() == role)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole())).toList();
     }
 
     @Override
@@ -56,7 +56,6 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
