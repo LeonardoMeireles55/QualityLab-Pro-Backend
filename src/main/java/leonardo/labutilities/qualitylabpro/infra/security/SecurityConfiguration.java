@@ -30,8 +30,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/defaultsValues/listRegister").permitAll();
                     req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
+                    req.requestMatchers(HttpMethod.DELETE, "/analytics/deleteAnalyticsResultById").hasRole("ADMIN");
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui")
                             .permitAll();
                     req.anyRequest().permitAll();

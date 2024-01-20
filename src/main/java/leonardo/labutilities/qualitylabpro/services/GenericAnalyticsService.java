@@ -134,14 +134,18 @@ public class GenericAnalyticsService {
                 .toList();
     }
 
-    private String convertLevel(String inputLevel) {
-        switch (inputLevel) {
-            case "1":
-                return "PCCC1";
-            case "2":
-                return "PCCC2";
-            default:
-                throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+    public void deleteAnalyticsById(Long id) {
+        if(!genericAnalyticsRepositoryCustom.existsById(id)) {
+            throw new ErrorHandling.ResourceNotFoundException("Analytics result not exists");
         }
+        genericAnalyticsRepositoryCustom.deleteById(id);
+    }
+
+    private String convertLevel(String inputLevel) {
+        return switch (inputLevel) {
+            case "1" -> "PCCC1";
+            case "2" -> "PCCC2";
+            default -> throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        };
     }
 }

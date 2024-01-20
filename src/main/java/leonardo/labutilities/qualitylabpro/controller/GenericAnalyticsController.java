@@ -46,6 +46,14 @@ public class GenericAnalyticsController {
         throw new ErrorHandling.DataIntegrityViolationException();
     }
 
+    @DeleteMapping
+    @Transactional
+    @RequestMapping(value = "/deleteAnalyticsResultById", method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteAnalyticsResultById(@RequestParam Long id) {
+        genericAnalyticsService.deleteAnalyticsById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping()
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<GenericAnalytics> getResultsById(@PathVariable Long id){
