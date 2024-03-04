@@ -119,6 +119,19 @@ public class GenericAnalyticsService {
                 .toList();
     }
 
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByDate(String dateStart, String dateEnd) {
+
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                .findAllByDateBetween(dateStart, dateEnd);
+
+        List<GenericAnalytics> analyticsList = analyticsOptional
+                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
+        return analyticsList.stream()
+                .map(ValuesOfLevelsGenericRecord::new)
+                .toList();
+    }
+
     @Cacheable(value = { "name", "level" })
     public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();

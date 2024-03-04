@@ -127,5 +127,12 @@ public class GenericAnalyticsController {
         return ResponseEntity.ok().body(genericAnalyticsService
                 .getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
     }
-
+    @GetMapping
+    @RequestMapping(value = "/getAllResultsByDate/{dateStart}/{dateEnd}" , method = RequestMethod.GET)
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByDateBetween(
+            @PathVariable String dateStart,
+            @PathVariable String dateEnd) {
+        return ResponseEntity.ok().body(genericAnalyticsService
+                .getAllResultsByDate(dateStart, dateEnd));
+    }
 }

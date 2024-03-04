@@ -27,5 +27,8 @@ public interface GenericAnalyticsRepositoryCustom extends JpaRepository<GenericA
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4 ORDER BY ga.date ASC")
     Optional<List<GenericAnalytics>> findAllByNameAndLevelAndDateBetween(String name, String level, String startDate, String endDate);
 
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 ORDER BY ga.date ASC")
+    Optional<List<GenericAnalytics>> findAllByDateBetween(String startDate, String endDate);
+
 }
 
