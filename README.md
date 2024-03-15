@@ -16,9 +16,6 @@
 ## Description
 The RESTful API for Laboratory Internal Quality Control is designed to assist clinical and research laboratories in monitoring and controlling the quality of their processes. This API provides endpoints to manage information related to control standards, test results, statistical analyses, and other activities essential for ensuring the accuracy and reliability of laboratory data.
 
-## Application deployment
-ToDo :)
-
 ## Implemented functionalities.
 The API efficiently manages package insert values and test values, offering simple and intuitive CRUD operations.
 
