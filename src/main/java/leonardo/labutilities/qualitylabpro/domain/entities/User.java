@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.domain.entitys;
+package leonardo.labutilities.qualitylabpro.domain.entities;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;

@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.domain.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.entities.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.record.auth.AuthDataRecord;
 import leonardo.labutilities.qualitylabpro.record.auth.TokenJwtRecord;

@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.component.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.domain.entitys.User;
+import leonardo.labutilities.qualitylabpro.domain.entities.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repository.UserRepositoryCustom;
 import lombok.RequiredArgsConstructor;

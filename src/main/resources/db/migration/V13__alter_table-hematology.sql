@@ -1,0 +1,2 @@
+ALTER TABLE hematology
+ADD COLUMN level VARCHAR(10) NOT NULL;

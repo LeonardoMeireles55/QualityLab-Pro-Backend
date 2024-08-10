@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.services;
 
 import leonardo.labutilities.qualitylabpro.component.GenericValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.domain.entitys.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepositoryCustom;
 import lombok.RequiredArgsConstructor;
@@ -100,16 +100,20 @@ public class GenericAnalyticsService {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
 
-        if (Objects.equals(level, "1")) {
-            level = "PCCC1";
-        } else if (Objects.equals(level, "2")) {
-            level = "PCCC2";
-        } else {
-            throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        if (name.equals("TTPA") || name.equals("TAP-20")) {
+            Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+                    .findAllByNameAndLevelAndDateBetween(nameUpper, convertLevelACL(level), dateStart, dateEnd);
+
+            List<GenericAnalytics> analyticsList = analyticsOptional
+                    .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+
+            return analyticsList.stream()
+                    .map(ValuesOfLevelsGenericRecord::new)
+                    .toList();
         }
 
         Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
-                .findAllByNameAndLevelAndDateBetween(nameUpper, level, dateStart, dateEnd);
+                .findAllByNameAndLevelAndDateBetween(nameUpper, convertLevel(level), dateStart, dateEnd);
 
         List<GenericAnalytics> analyticsList = analyticsOptional
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
@@ -137,7 +141,7 @@ public class GenericAnalyticsService {
         var nameUpper = name.toUpperCase();
 
         Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
-                .findAllByNameAndLevel(pageable, nameUpper, convertLevel(level));
+                .findAllByNameAndLevel(pageable, nameUpper, convertLevelACL(level));
 
         List<GenericAnalytics> analyticsList = analyticsOptional.orElseThrow(
                 () -> new ErrorHandling.ResourceNotFoundException("Results not found or level not found."));
@@ -158,6 +162,15 @@ public class GenericAnalyticsService {
         return switch (inputLevel) {
             case "1" -> "PCCC1";
             case "2" -> "PCCC2";
+            case "normal" -> "Normal C. Assayed";
+            case "low" -> "Low C. Assayed";
+            default -> throw new ErrorHandling.ResourceNotFoundException("Level not found.");
+        };
+    }
+    private String convertLevelACL(String inputLevel) {
+        return switch (inputLevel) {
+            case "1" -> "Normal C. Assayed";
+            case "2" -> "Low Abn C. Assayed";
             default -> throw new ErrorHandling.ResourceNotFoundException("Level not found.");
         };
     }
