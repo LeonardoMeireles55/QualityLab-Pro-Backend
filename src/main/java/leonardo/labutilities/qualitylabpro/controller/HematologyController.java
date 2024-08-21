@@ -20,7 +20,7 @@ public class HematologyController {
 
     @PostMapping
     @Transactional
-    @RequestMapping(value = "/sendValues", method = RequestMethod.POST)
+    @RequestMapping(value = "/values", method = RequestMethod.POST)
     public ResponseEntity<List<HematologyAnalytics>> sendValues(@RequestBody List<ValuesOfHematologyRecord> values) {
         var response = hematologyService.saveHematology(values);
         return ResponseEntity.ok().body(response.toList());
