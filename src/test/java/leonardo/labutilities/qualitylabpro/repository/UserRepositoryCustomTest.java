@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.repository;
 
-import leonardo.labutilities.qualitylabpro.component.BCryptEncoderComponent;
+import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.domain.entities.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
 import org.flywaydb.core.Flyway;

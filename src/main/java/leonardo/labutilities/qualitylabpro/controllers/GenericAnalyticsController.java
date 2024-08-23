@@ -1,10 +1,10 @@
-package leonardo.labutilities.qualitylabpro.controller;
+package leonardo.labutilities.qualitylabpro.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.record.user;
+package leonardo.labutilities.qualitylabpro.records.user;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

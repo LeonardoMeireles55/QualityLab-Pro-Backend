@@ -1,12 +1,12 @@
-package leonardo.labutilities.qualitylabpro.controller;
+package leonardo.labutilities.qualitylabpro.controllers;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.domain.entities.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.record.auth.AuthDataRecord;
-import leonardo.labutilities.qualitylabpro.record.auth.TokenJwtRecord;
-import leonardo.labutilities.qualitylabpro.record.user.UserRecord;
+import leonardo.labutilities.qualitylabpro.records.auth.AuthDataRecord;
+import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtRecord;
+import leonardo.labutilities.qualitylabpro.records.user.UserRecord;
 import leonardo.labutilities.qualitylabpro.services.TokenService;
 import leonardo.labutilities.qualitylabpro.services.UserService;
 import lombok.RequiredArgsConstructor;

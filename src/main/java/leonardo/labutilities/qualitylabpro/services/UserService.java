@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.component.BCryptEncoderComponent;
+import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entities.User;
 import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;

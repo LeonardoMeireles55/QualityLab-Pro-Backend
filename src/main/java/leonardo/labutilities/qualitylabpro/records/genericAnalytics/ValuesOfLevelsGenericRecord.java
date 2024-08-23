@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.record.genericAnalytics;
+package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;

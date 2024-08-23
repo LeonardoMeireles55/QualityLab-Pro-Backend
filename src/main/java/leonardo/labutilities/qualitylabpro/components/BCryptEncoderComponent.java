@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.component;
+package leonardo.labutilities.qualitylabpro.components;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

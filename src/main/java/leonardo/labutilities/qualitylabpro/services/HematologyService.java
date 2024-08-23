@@ -1,8 +1,8 @@
 package leonardo.labutilities.qualitylabpro.services;
 
-import leonardo.labutilities.qualitylabpro.component.HematologyValidatorComponent;
+import leonardo.labutilities.qualitylabpro.components.HematologyValidatorComponent;
 import leonardo.labutilities.qualitylabpro.domain.entities.HematologyAnalytics;
-import leonardo.labutilities.qualitylabpro.record.genericAnalytics.ValuesOfHematologyRecord;
+import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfHematologyRecord;
 import leonardo.labutilities.qualitylabpro.repository.HematologyRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
