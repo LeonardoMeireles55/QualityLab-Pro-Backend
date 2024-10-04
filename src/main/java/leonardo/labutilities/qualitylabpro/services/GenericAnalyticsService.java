@@ -44,41 +44,45 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getAllResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom.findAllByName(pageable,
-                nameUpper);
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom.findAllByName(pageable, nameUpper);
 
-        List<GenericAnalytics> analyticsList = analyticsOptional
-                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+        if (analyticsList.isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
 
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
     }
+
 
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
                 .findAllByNameOrderByDateAsc(nameUpper);
 
-        List<GenericAnalytics> analyticsList = analyticsOptional
-                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+        if (analyticsList.isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
 
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
     }
 
+
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
                 .findAllByNameOrderByDateDesc(nameUpper);
 
-        List<GenericAnalytics> analyticsList = analyticsOptional
-                .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
+        if (analyticsList.isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found.");
+        }
 
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
@@ -139,16 +143,18 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
                 .findAllByNameAndLevel(pageable, nameUpper, convertLevelACL(level));
 
-        List<GenericAnalytics> analyticsList = analyticsOptional.orElseThrow(
-                () -> new ErrorHandling.ResourceNotFoundException("Results not found or level not found."));
+        if (analyticsList.isEmpty()) {
+            throw new ErrorHandling.ResourceNotFoundException("Results not found or level not found.");
+        }
 
         return analyticsList.stream()
                 .map(ValuesOfLevelsGenericRecord::new)
                 .toList();
     }
+
 
     public void deleteAnalyticsById(Long id) {
         if(!genericAnalyticsRepositoryCustom.existsById(id)) {
