@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.components.HematologyValidatorComponent;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfHematologyRecord;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
 @Getter
 @Entity(name = "hematology")
 public class HematologyAnalytics {
@@ -25,7 +21,11 @@ public class HematologyAnalytics {
     String description;
 
     @Transient
-    private final HematologyValidatorComponent hematologyValidatorComponent;
+    HematologyValidatorComponent hematologyValidatorComponent;
+
+    public HematologyAnalytics() {
+
+    };
 
     public HematologyAnalytics(ValuesOfHematologyRecord values, HematologyValidatorComponent hematologyValidatorComponent) {
         this.name = values.name();
@@ -40,5 +40,18 @@ public class HematologyAnalytics {
         this.description = hematologyValidatorComponent.getDescription();
     }
 
-
+    public HematologyAnalytics
+            (Long id, String name, double mean, double sd, double value, String date, String level, String rules,
+             String description, HematologyValidatorComponent hematologyValidatorComponent) {
+        this.id = id;
+        this.name = name;
+        this.mean = mean;
+        this.sd = sd;
+        this.value = value;
+        this.date = date;
+        this.level = level;
+        this.rules = rules;
+        this.description = description;
+        this.hematologyValidatorComponent = hematologyValidatorComponent;
+    }
 }

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenericAnalyticsRepositoryCustom extends JpaRepository<GenericAnalytics, Long> {
+public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
 
     boolean existsByName(String name);
 

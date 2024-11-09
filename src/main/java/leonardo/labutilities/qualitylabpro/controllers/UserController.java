@@ -9,7 +9,6 @@ import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtRecord;
 import leonardo.labutilities.qualitylabpro.records.user.UserRecord;
 import leonardo.labutilities.qualitylabpro.services.TokenService;
 import leonardo.labutilities.qualitylabpro.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/user")
 public class UserController {
@@ -26,6 +24,13 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+
+    public UserController
+            (UserService userService, AuthenticationManager authenticationManager, TokenService tokenService) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
 
     @Transactional
     @PostMapping
@@ -41,23 +46,19 @@ public class UserController {
 
     @PostMapping
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
-    public ResponseEntity<?> singIn(@RequestBody @Valid AuthDataRecord authDataRecord) {
-        try {
+    public ResponseEntity<TokenJwtRecord> singIn(@RequestBody @Valid AuthDataRecord authDataRecord) {
             var authToken = new UsernamePasswordAuthenticationToken(authDataRecord.username(),
                     authDataRecord.password());
             var auth = authenticationManager.authenticate(authToken);
             var token = tokenService.generateToken((User) auth.getPrincipal());
 
             return ResponseEntity.ok(new TokenJwtRecord(token));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e + "User or Password is invalid");
-        }
     }
 
     @Transactional
     @PatchMapping
     @RequestMapping(value = "/update/password", method = RequestMethod.PATCH)
-    public ResponseEntity<?> updPassword(@Valid @RequestBody UserRecord userRecord, String newPass) {
+    public ResponseEntity<Void> updPassword(@Valid @RequestBody UserRecord userRecord, String newPass) {
         userService.updUser(userRecord.username(), userRecord.email(), userRecord.password(),
                 newPass, UserRoles.USER);
         return ResponseEntity.noContent().build();

@@ -6,7 +6,7 @@ import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,18 +22,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/analytics")
 @Validated
+@Slf4j
 public class GenericAnalyticsController {
     private final GenericAnalyticsService genericAnalyticsService;
+    public GenericAnalyticsController(GenericAnalyticsService genericAnalyticsService) {
+        this.genericAnalyticsService = genericAnalyticsService;
+    }
 
     @PostMapping()
     @Transactional
     public ResponseEntity<List<GenericAnalytics>> sendValues(
             @RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
-        List<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values).toList();
+        List<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
 
         if (valuesOfGenericsList.isEmpty()) {
             throw new ErrorHandling.DataIntegrityViolationException();

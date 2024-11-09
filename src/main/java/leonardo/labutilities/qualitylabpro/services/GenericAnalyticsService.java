@@ -4,35 +4,46 @@ import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepositoryCustom;
+import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GenericAnalyticsService {
-    private final GenericAnalyticsRepositoryCustom genericAnalyticsRepositoryCustom;
+    private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final GenericValidatorComponent genericValidatorComponent;
 
-    public Stream<GenericAnalytics> sendValues(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
-        var valuesFilter = valuesOfLevelsList.stream()
-                .filter(values -> !genericAnalyticsRepositoryCustom.existsByDateAndLevelAndName(values.date(),
+    public List<GenericAnalytics> sendValues(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
+        // Filtra os valores que não existem
+        List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
+                .filter(values -> !genericAnalyticsRepository.existsByDateAndLevelAndName(
+                        values.date(),
                         values.level(),
-                        values.name()));
-        return valuesFilter.map(values -> {
-            GenericAnalytics genericAnalytics = new GenericAnalytics(values, genericValidatorComponent);
-            return genericAnalyticsRepositoryCustom.save(genericAnalytics);
-        });
+                        values.name()))
+                .map(values -> new GenericAnalytics(values, genericValidatorComponent))
+                .collect(Collectors.toList());
+
+        // Log dos registros que serão inseridos
+        log.info("Inserindo {} registros em batch", newAnalytics.size());
+
+        // Salva todos de uma vez
+        return genericAnalyticsRepository.saveAll(newAnalytics);
     }
 
     @Cacheable(value = "name")
     public List<ValuesOfLevelsGenericRecord> getAllResults(Pageable pageable) {
-        var resultsList = genericAnalyticsRepositoryCustom.findAll(pageable).map(ValuesOfLevelsGenericRecord::new)
+        var resultsList = genericAnalyticsRepository.findAll(pageable).map(ValuesOfLevelsGenericRecord::new)
                 .toList();
         if (resultsList.isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found");
@@ -44,7 +55,7 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getAllResultsByName(Pageable pageable, String name) {
         var nameUpper = name.toUpperCase();
 
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom.findAllByName(pageable, nameUpper);
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepository.findAllByName(pageable, nameUpper);
 
         if (analyticsList.isEmpty()) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
@@ -60,7 +71,7 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getResultsByDateAsc(String name) {
         var nameUpper = name.toUpperCase();
 
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepository
                 .findAllByNameOrderByDateAsc(nameUpper);
 
         if (analyticsList.isEmpty()) {
@@ -77,7 +88,7 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getResultsByDateDesc(String name) {
         var nameUpper = name.toUpperCase();
 
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepository
                 .findAllByNameOrderByDateDesc(nameUpper);
 
         if (analyticsList.isEmpty()) {
@@ -91,7 +102,7 @@ public class GenericAnalyticsService {
 
     @Cacheable(value = "id")
     public GenericAnalytics getResultsById(Long id) {
-        return genericAnalyticsRepositoryCustom.findById(id)
+        return genericAnalyticsRepository.findById(id)
                 .orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."));
     }
 
@@ -99,12 +110,12 @@ public class GenericAnalyticsService {
             String dateStart, String dateEnd) {
         var nameUpper = name.toUpperCase();
 
-        if (!genericAnalyticsRepositoryCustom.existsByName(nameUpper)) {
+        if (!genericAnalyticsRepository.existsByName(nameUpper)) {
             throw new ErrorHandling.ResourceNotFoundException("Results not found.");
         }
 
         if (name.equals("TTPA") || name.equals("TAP-20")) {
-            Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+            Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepository
                     .findAllByNameAndLevelAndDateBetween(nameUpper, convertLevelACL(level), dateStart, dateEnd);
 
             List<GenericAnalytics> analyticsList = analyticsOptional
@@ -115,7 +126,7 @@ public class GenericAnalyticsService {
                     .toList();
         }
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepository
                 .findAllByNameAndLevelAndDateBetween(nameUpper, convertLevel(level), dateStart, dateEnd);
 
         List<GenericAnalytics> analyticsList = analyticsOptional
@@ -128,7 +139,7 @@ public class GenericAnalyticsService {
 
     public List<ValuesOfLevelsGenericRecord> getAllResultsByDate(String dateStart, String dateEnd) {
 
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepositoryCustom
+        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepository
                 .findAllByDateBetween(dateStart, dateEnd);
 
         List<GenericAnalytics> analyticsList = analyticsOptional
@@ -143,7 +154,7 @@ public class GenericAnalyticsService {
     public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevel(Pageable pageable, String name, String level) {
         var nameUpper = name.toUpperCase();
 
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepositoryCustom
+        List<GenericAnalytics> analyticsList = genericAnalyticsRepository
                 .findAllByNameAndLevel(pageable, nameUpper, convertLevelACL(level));
 
         if (analyticsList.isEmpty()) {
@@ -157,10 +168,10 @@ public class GenericAnalyticsService {
 
 
     public void deleteAnalyticsById(Long id) {
-        if(!genericAnalyticsRepositoryCustom.existsById(id)) {
+        if(!genericAnalyticsRepository.existsById(id)) {
             throw new ErrorHandling.ResourceNotFoundException("Analytics result not exists");
         }
-        genericAnalyticsRepositoryCustom.deleteById(id);
+        genericAnalyticsRepository.deleteById(id);
     }
 
     private String convertLevel(String inputLevel) {

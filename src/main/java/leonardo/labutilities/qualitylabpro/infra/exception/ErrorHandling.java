@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -100,7 +101,7 @@ public class ErrorHandling {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> error500(Exception exception) {
-        log.error("INTERNAL_SERVER_ERROR: {}", exception.getLocalizedMessage());
+        log.error("INTERNAL_SERVER_ERROR: {}", exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + exception.getMessage());
     }

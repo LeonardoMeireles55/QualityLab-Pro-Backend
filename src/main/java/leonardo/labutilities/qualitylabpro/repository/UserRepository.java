@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepositoryCustom extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     UserDetails findByUsername(String userName);
     UserDetails getReferenceByUsernameAndEmail(String userName, String Email);
     @Transactional

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class UserRepositoryCustomTest {
+class UserRepositoryTest {
     @BeforeEach
     void clearDatabase(@Autowired Flyway flyway) {
         flyway.clean();
@@ -26,14 +26,14 @@ class UserRepositoryCustomTest {
     }
 
     @Autowired
-    UserRepositoryCustom userRepositoryCustom;
+    UserRepository userRepository;
 
 
     public void setupTestData() {
         var user = new User("UserTest", BCryptEncoderComponent.encrypt("12345"),
                         "leo@hotmail.com", UserRoles.USER);
 
-        userRepositoryCustom.save(user);
+        userRepository.save(user);
     }
 
     @Test
@@ -41,14 +41,14 @@ class UserRepositoryCustomTest {
     @Transactional
     void findByLoginUserDataBaseIsUserExists() {
         setupTestData();
-        var userNotNull = userRepositoryCustom.findByUsername("UserTest");
+        var userNotNull = userRepository.findByUsername("UserTest");
         assertThat(userNotNull).isNotNull();
     }
     @Test
     @DisplayName("return null when user is empty")
     @Transactional
     void findByLoginUserDataBaseIsUserNotExists() {
-        var userEmpty = userRepositoryCustom.findByUsername("");
+        var userEmpty = userRepository.findByUsername("");
         assertThat(userEmpty).isNull();
     }
 
@@ -61,12 +61,12 @@ class UserRepositoryCustomTest {
         String oldPassword = "12345";
         String newPassword = "249195Leo@@";
 
-        var userWithOldPassword = userRepositoryCustom
+        var userWithOldPassword = userRepository
                 .getReferenceByUsernameAndEmail("UserTest", "leo@hotmail.com");
 
-        userRepositoryCustom.setPasswordWhereByUsername(username, newPassword);
+        userRepository.setPasswordWhereByUsername(username, newPassword);
 
-        var userWithNewPassword = userRepositoryCustom
+        var userWithNewPassword = userRepository
                 .getReferenceByUsernameAndEmail("UserTest", "leo@hotmail.com");
 
             assertThat(BCryptEncoderComponent.decrypt(oldPassword, userWithOldPassword.getPassword())
