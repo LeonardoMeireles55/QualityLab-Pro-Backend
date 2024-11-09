@@ -64,7 +64,8 @@ public class GenericAnalyticsController {
     }
 
     @GetMapping("/results/hateoas")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllResultsHateoas(Pageable pageable) {
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
+    getAllResultsHateoas(Pageable pageable) {
         List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
 
         List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
@@ -76,7 +77,8 @@ public class GenericAnalyticsController {
 
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateoas(pageable)).withSelfRel());
+                        linkTo(methodOn(GenericAnalyticsController.class)
+                                .getAllResultsHateoas(pageable)).withSelfRel());
 
         return ResponseEntity.ok(collectionModel);
     }
@@ -112,7 +114,8 @@ public class GenericAnalyticsController {
             @RequestParam String level,
             @RequestParam String dateStart,
             @RequestParam String dateEnd) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+        return ResponseEntity.ok(genericAnalyticsService
+                .getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
     }
 
     @GetMapping("/results/dateRange")
