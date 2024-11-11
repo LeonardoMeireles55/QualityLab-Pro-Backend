@@ -1,10 +1,10 @@
-package leonardo.labutilities.qualitylabpro.services;
+package leonardo.labutilities.qualitylabpro.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import leonardo.labutilities.qualitylabpro.domain.entities.User;
+import leonardo.labutilities.qualitylabpro.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,6 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
     private static final String ISSUER = "lab.api";
-
     public String generateToken(User user) {
         try {
             var algorithm = Algorithm.HMAC256(secret);

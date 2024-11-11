@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.infra.configs;
+package leonardo.labutilities.qualitylabpro.infra.config;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;

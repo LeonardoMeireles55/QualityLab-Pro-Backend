@@ -1,6 +1,4 @@
-package leonardo.labutilities.qualitylabpro.domain.enums;
-
-import lombok.Getter;
+package leonardo.labutilities.qualitylabpro.enums;
 
 public enum UserRoles {
     USER("USER"),

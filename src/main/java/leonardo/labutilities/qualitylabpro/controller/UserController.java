@@ -1,14 +1,14 @@
-package leonardo.labutilities.qualitylabpro.controllers;
+package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.domain.entities.User;
-import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.records.auth.AuthDataRecord;
-import leonardo.labutilities.qualitylabpro.records.auth.TokenJwtRecord;
-import leonardo.labutilities.qualitylabpro.records.user.UserRecord;
-import leonardo.labutilities.qualitylabpro.services.TokenService;
-import leonardo.labutilities.qualitylabpro.services.UserService;
+import leonardo.labutilities.qualitylabpro.model.User;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.dto.authentication.AuthDataRecord;
+import leonardo.labutilities.qualitylabpro.dto.authentication.TokenJwtRecord;
+import leonardo.labutilities.qualitylabpro.dto.user.UserRecord;
+import leonardo.labutilities.qualitylabpro.service.TokenService;
+import leonardo.labutilities.qualitylabpro.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

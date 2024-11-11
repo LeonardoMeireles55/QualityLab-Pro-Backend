@@ -1,6 +1,6 @@
-package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
+package leonardo.labutilities.qualitylabpro.dto.genericAnalytics;
 
-import leonardo.labutilities.qualitylabpro.domain.entities.HematologyAnalytics;
+import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
 
 public record ValuesOfHematologyRecord(
         Long id,

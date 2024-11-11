@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.records.auth;
+package leonardo.labutilities.qualitylabpro.dto.authentication;
 
 import org.springframework.validation.FieldError;
 

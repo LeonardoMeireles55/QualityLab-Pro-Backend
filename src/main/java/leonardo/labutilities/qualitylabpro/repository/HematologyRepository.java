@@ -1,6 +1,6 @@
 package leonardo.labutilities.qualitylabpro.repository;
 
-import leonardo.labutilities.qualitylabpro.domain.entities.HematologyAnalytics;
+import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

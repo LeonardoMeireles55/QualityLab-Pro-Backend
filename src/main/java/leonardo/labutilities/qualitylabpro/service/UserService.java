@@ -1,9 +1,9 @@
-package leonardo.labutilities.qualitylabpro.services;
+package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.domain.entities.User;
-import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.model.User;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

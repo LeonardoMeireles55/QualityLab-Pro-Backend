@@ -1,7 +1,7 @@
-package leonardo.labutilities.qualitylabpro.domain.entities;
+package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.domain.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import lombok.Getter;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;

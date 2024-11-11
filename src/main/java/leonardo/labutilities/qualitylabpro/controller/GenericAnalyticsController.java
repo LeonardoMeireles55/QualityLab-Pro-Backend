@@ -1,11 +1,11 @@
-package leonardo.labutilities.qualitylabpro.controllers;
+package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
-import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.services.GenericAnalyticsService;
+import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.service.AnalyticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
@@ -27,16 +27,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 @Slf4j
 public class GenericAnalyticsController {
-    private final GenericAnalyticsService genericAnalyticsService;
-    public GenericAnalyticsController(GenericAnalyticsService genericAnalyticsService) {
-        this.genericAnalyticsService = genericAnalyticsService;
+    private final AnalyticsService analyticsService;
+    public GenericAnalyticsController(AnalyticsService analyticsService) {
+        this.analyticsService = analyticsService;
     }
 
     @PostMapping()
     @Transactional
     public ResponseEntity<List<GenericAnalytics>> sendValues(
             @RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
-        List<GenericAnalytics> valuesOfGenericsList = genericAnalyticsService.sendValues(values);
+        List<GenericAnalytics> valuesOfGenericsList = analyticsService.submitAnalyticsValues(values);
 
         if (valuesOfGenericsList.isEmpty()) {
             throw new ErrorHandling.DataIntegrityViolationException();
@@ -48,24 +48,24 @@ public class GenericAnalyticsController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteAnalyticsResultById(@PathVariable Long id) {
-        genericAnalyticsService.deleteAnalyticsById(id);
+        analyticsService.removeAnalyticsById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericAnalytics> getResultsById(@PathVariable Long id) {
-        GenericAnalytics defaultValues = genericAnalyticsService.getResultsById(id);
+        GenericAnalytics defaultValues = analyticsService.findResultsById(id);
         return ResponseEntity.ok(defaultValues);
     }
 
     @GetMapping("/results")
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResults(Pageable pageable) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResults(pageable));
+        return ResponseEntity.ok(analyticsService.listAllResults(pageable));
     }
 
     @GetMapping("/results/hateoas")
     public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllResultsHateoas(Pageable pageable) {
-        List<ValuesOfLevelsGenericRecord> resultsList = genericAnalyticsService.getAllResults(pageable);
+        List<ValuesOfLevelsGenericRecord> resultsList = analyticsService.listAllResults(pageable);
 
         List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
                 .map(result -> EntityModel.of(result,
@@ -76,49 +76,46 @@ public class GenericAnalyticsController {
 
         CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
                 CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateoas(pageable)).withSelfRel());
-
+                        linkTo(methodOn(GenericAnalyticsController.class).getAllResultsHateoas(pageable))
+                                .withSelfRel());
         return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/results/search")
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByName(
             Pageable pageable, @RequestParam String name) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResultsByName(pageable, name));
+        return ResponseEntity.ok(analyticsService.findResultsByName(pageable, name));
     }
 
     @GetMapping("/results/search/order/{order}")
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByNameOrderByDate(
             @RequestParam String name,
             @PathVariable String order) {
-        List<ValuesOfLevelsGenericRecord> results;
-        if ("asc".equalsIgnoreCase(order)) {
-            results = genericAnalyticsService.getResultsByDateAsc(name);
-        } else  {
-            results = genericAnalyticsService.getResultsByDateDesc(name);
-        }
+
+        List<ValuesOfLevelsGenericRecord> results = analyticsService.findResultsByNameOrderedByDate(name, order);
+
         return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/results/search/byLevel")
+    @GetMapping("/results/search/level")
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getResultsByLevel(
             Pageable pageable, @RequestParam String name, @RequestParam String level) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResultsByNameAndLevel(pageable, name, level));
+        return ResponseEntity.ok(analyticsService.getAllResultsByNameAndLevel(pageable, name, level));
     }
 
-    @GetMapping("/results/search/byDateRange")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByDate(
+    @GetMapping("/results/search/date-range")
+    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
             @RequestParam String dateStart,
             @RequestParam String dateEnd) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+        return ResponseEntity.ok(analyticsService.getAllResultsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
     }
 
-    @GetMapping("/results/dateRange")
+    @GetMapping("/results/date-range")
     public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllResultsByDateBetween(
             @RequestParam String dateStart,
             @RequestParam String dateEnd) {
-        return ResponseEntity.ok(genericAnalyticsService.getAllResultsByDate(dateStart, dateEnd));
+        return ResponseEntity.ok(analyticsService.getAllResultsByDate(dateStart, dateEnd));
     }
 }

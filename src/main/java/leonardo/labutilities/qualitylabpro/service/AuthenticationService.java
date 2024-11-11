@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.services;
+package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class AuthService implements UserDetailsService {
+public class AuthenticationService implements UserDetailsService {
 
     private final UserRepository userRepository;
 

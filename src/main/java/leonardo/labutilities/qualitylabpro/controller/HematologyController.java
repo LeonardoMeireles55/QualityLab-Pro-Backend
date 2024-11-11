@@ -1,9 +1,9 @@
-package leonardo.labutilities.qualitylabpro.controllers;
+package leonardo.labutilities.qualitylabpro.controller;
 
 
-import leonardo.labutilities.qualitylabpro.domain.entities.HematologyAnalytics;
-import leonardo.labutilities.qualitylabpro.records.genericAnalytics.ValuesOfHematologyRecord;
-import leonardo.labutilities.qualitylabpro.services.HematologyService;
+import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
+import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfHematologyRecord;
+import leonardo.labutilities.qualitylabpro.service.HematologyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

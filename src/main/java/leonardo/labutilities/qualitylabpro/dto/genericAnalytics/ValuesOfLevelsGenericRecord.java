@@ -1,7 +1,7 @@
-package leonardo.labutilities.qualitylabpro.records.genericAnalytics;
+package leonardo.labutilities.qualitylabpro.dto.genericAnalytics;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import leonardo.labutilities.qualitylabpro.domain.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 
 
 public record ValuesOfLevelsGenericRecord(
