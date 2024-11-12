@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.infra.exception;
 
 import leonardo.labutilities.qualitylabpro.dto.authentication.ErrorOfValidationRecord;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -43,6 +44,12 @@ public class ErrorHandling {
         public PasswordNotMatchesException() {
             super();
         }
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<Object> handlePropertyReferenceException(PropertyReferenceException ex) {
+        String errorMessage = "BAD_REQUEST: invalid property " + ex.getMessage();
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 
     @ExceptionHandler(NoContentException.class)

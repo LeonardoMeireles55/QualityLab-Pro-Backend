@@ -4,11 +4,12 @@ import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AnalyticsValidationComponent {
     private final GenericAnalyticsRepository genericAnalyticsRepository;

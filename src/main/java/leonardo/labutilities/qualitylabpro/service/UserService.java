@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void updUser(String name, String email, String password, String newPassword, UserRoles userRoles) {
+    public void updateUserPassword(String name, String email, String password, String newPassword, UserRoles userRoles) {
         var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
 
         if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||

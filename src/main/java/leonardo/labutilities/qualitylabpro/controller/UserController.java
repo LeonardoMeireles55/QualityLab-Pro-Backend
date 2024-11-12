@@ -58,8 +58,8 @@ public class UserController {
     @Transactional
     @PatchMapping
     @RequestMapping(value = "/update/password", method = RequestMethod.PATCH)
-    public ResponseEntity<Void> updPassword(@Valid @RequestBody UserRecord userRecord, String newPass) {
-        userService.updUser(userRecord.username(), userRecord.email(), userRecord.password(),
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody UserRecord userRecord, String newPass) {
+        userService.updateUserPassword(userRecord.username(), userRecord.email(), userRecord.password(),
                 newPass, UserRoles.USER);
         return ResponseEntity.noContent().build();
     }

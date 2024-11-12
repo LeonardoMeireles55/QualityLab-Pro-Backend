@@ -1,13 +1,12 @@
 package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.AnalyticsValidationComponent;
-import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
+import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.components.LevelConverterComponent;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
 import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -18,19 +17,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class AnalyticsService {
 
     private final GenericAnalyticsRepository genericAnalyticsRepository;
-    private final GenericValidatorComponent genericValidatorComponent;
+    private final RulesValidatorComponent rulesValidatorComponent;
     private final AnalyticsValidationComponent analyticsValidationComponent;
     private final LevelConverterComponent levelConverterComponent;
+
+    public AnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
+                            RulesValidatorComponent rulesValidatorComponent,
+                            AnalyticsValidationComponent analyticsValidationComponent,
+                            LevelConverterComponent levelConverterComponent) {
+        this.genericAnalyticsRepository = genericAnalyticsRepository;
+        this.rulesValidatorComponent = rulesValidatorComponent;
+        this.analyticsValidationComponent = analyticsValidationComponent;
+        this.levelConverterComponent = levelConverterComponent;
+    }
 
     public List<GenericAnalytics> submitAnalyticsValues(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
                 .filter(analyticsValidationComponent::doesNotExist)
-                .map(values -> new GenericAnalytics(values, genericValidatorComponent))
+                .map(values -> new GenericAnalytics(values, rulesValidatorComponent))
                 .collect(Collectors.toList());
 
         return genericAnalyticsRepository.saveAll(newAnalytics);
@@ -78,13 +86,10 @@ public class AnalyticsService {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), analyticsValidationComponent::ensureResultsFound));
     }
 
-    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevelAndDate(String name, String level,
-                                                                                String dateStart, String dateEnd) {
+    public List<ValuesOfLevelsGenericRecord> getAllResultsByNameAndLevelAndDate
+            (String name, String level, String dateStart, String dateEnd) {
         analyticsValidationComponent.ensureNameExists(name);
-        
-        return (name.equals("TTPA") || name.equals("TAP-20")) ?
-                findResultsAclTopByNameAndLevel(name, level, dateStart, dateEnd) :
-                findCobasResultsByNameLevelAndDateRange(name, level, dateStart, dateEnd);
+                return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd);
     }
 
     public List<ValuesOfLevelsGenericRecord> getAllResultsByDate(String dateStart, String dateEnd) {
@@ -100,26 +105,5 @@ public class AnalyticsService {
             throw new ErrorHandling.ResourceNotFoundException("Analytics result does not exist.");
         }
         genericAnalyticsRepository.deleteById(id);
-    }
-
-    private List<ValuesOfLevelsGenericRecord> findResultsAclTopByNameAndLevel
-            (String name, String level, String dateStart, String dateEnd) {
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepository
-                .findAllByNameAndLevelAndDateBetween(name.toUpperCase(),
-                        levelConverterComponent.convertLevelACL(level), dateStart, dateEnd);
-
-        return analyticsOptional.orElseThrow(() -> new ErrorHandling.ResourceNotFoundException("Results not found."))
-                .stream().map(ValuesOfLevelsGenericRecord::new).toList();
-    }
-
-    private List<ValuesOfLevelsGenericRecord> findCobasResultsByNameLevelAndDateRange(
-            String name, String level, String dateStart, String dateEnd) {
-        Optional<List<GenericAnalytics>> analyticsOptional = genericAnalyticsRepository
-                .findAllByNameAndLevelAndDateBetween(name.toUpperCase(),
-                        levelConverterComponent.convertLevel(level), dateStart, dateEnd);
-
-        return analyticsOptional.orElseThrow(() ->
-                        new ErrorHandling.ResourceNotFoundException("Results not found."))
-                .stream().map(ValuesOfLevelsGenericRecord::new).toList();
     }
 }

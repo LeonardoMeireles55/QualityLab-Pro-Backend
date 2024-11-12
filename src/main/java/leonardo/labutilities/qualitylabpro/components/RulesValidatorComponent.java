@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class GenericValidatorComponent {
+public class RulesValidatorComponent {
     String description;
     String rules;
     public void validator(Double value, Double mean, Double sd) {

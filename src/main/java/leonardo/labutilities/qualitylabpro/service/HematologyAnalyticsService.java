@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class HematologyService {
+public class HematologyAnalyticsService {
     private final HematologyRepository hematologyRepository;
     private final HematologyValidatorComponent hematologyValidatorComponent;
 

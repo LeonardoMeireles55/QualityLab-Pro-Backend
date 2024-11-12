@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.components.GenericValidatorComponent;
+import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -29,7 +29,7 @@ public class GenericAnalytics extends
     String description;
 
     @Transient
-    GenericValidatorComponent genericValidatorComponent;
+    RulesValidatorComponent rulesValidatorComponent;
 
     public GenericAnalytics() {
 
@@ -38,7 +38,7 @@ public class GenericAnalytics extends
     public GenericAnalytics
             (Long id, String date, String levelLot, String testLot, String name, String level, double value,
              double mean, double sd, String unitValue, String rules, String description,
-             GenericValidatorComponent genericValidatorComponent) {
+             RulesValidatorComponent rulesValidatorComponent) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;
@@ -51,10 +51,10 @@ public class GenericAnalytics extends
         this.unitValue = unitValue;
         this.rules = rules;
         this.description = description;
-        this.genericValidatorComponent = genericValidatorComponent;
+        this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public GenericAnalytics(ValuesOfLevelsGenericRecord values, GenericValidatorComponent genericValidatorComponent) {
+    public GenericAnalytics(ValuesOfLevelsGenericRecord values, RulesValidatorComponent rulesValidatorComponent) {
         this.date = values.date();
         this.levelLot = values.level_lot();
         this.testLot = values.test_lot();
@@ -64,9 +64,9 @@ public class GenericAnalytics extends
         this.mean = values.mean();
         this.sd = values.sd();
         this.unitValue = values.unit_value();
-        this.genericValidatorComponent = genericValidatorComponent;
-        genericValidatorComponent.validator(value, mean, sd);
-        this.rules = genericValidatorComponent.getRules();
-        this.description = genericValidatorComponent.getDescription();
+        this.rulesValidatorComponent = rulesValidatorComponent;
+        rulesValidatorComponent.validator(value, mean, sd);
+        this.rules = rulesValidatorComponent.getRules();
+        this.description = rulesValidatorComponent.getDescription();
     }
 }

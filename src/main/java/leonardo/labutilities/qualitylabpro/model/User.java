@@ -2,7 +2,9 @@ package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,12 +20,14 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final String username;
-    private final String password;
+    private  String username;
+    private String password;
     private String email;
     @Column(name = "user_roles")
-    private final UserRoles userRoles;
+    private UserRoles userRoles;
 
+    protected User () {
+    }
     public User(String username, String password) {
         this.username = username;
         this.password = password;
