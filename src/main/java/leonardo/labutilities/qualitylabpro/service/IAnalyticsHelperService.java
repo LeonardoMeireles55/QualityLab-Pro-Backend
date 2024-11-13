@@ -16,8 +16,6 @@ public interface IAnalyticsHelperService {
 
     List<ValuesOfLevelsGenericRecord> findAnalyticsByName(Pageable pageable, String name);
 
-    List<ValuesOfLevelsGenericRecord> findAnalyticsByNameAndOrderByDate(String name, String order);
-
     List<ValuesOfLevelsGenericRecord> findAllAnalyticsByDate(String dateStart, String dateEnd);
 
     List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level);

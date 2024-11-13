@@ -1,10 +1,13 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.service.AnalyticsHelperService;
 import leonardo.labutilities.qualitylabpro.service.BiochemistryAnalyticsService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController("biochemistry-analytics")
 @SecurityRequirement(name = "bearer-key")
@@ -43,5 +50,16 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
             @RequestParam String dateEnd) {
         return ResponseEntity.ok(biochemistryAnalyticsService
                 .findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+    }
+    @Override
+    @GetMapping("/results/mean-standard-deviation")
+    public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam String dateStart,
+            @RequestParam String dateEnd)
+    {
+        return ResponseEntity
+                .ok(biochemistryAnalyticsService.generateMeanAndStandardDeviation(name, level, dateStart, dateEnd));
     }
 }

@@ -2,13 +2,16 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.service.AnalyticsHelperService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -48,47 +51,50 @@ public abstract class GenericAnalyticsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenericAnalytics> getResultsById(@PathVariable Long id) {
-        GenericAnalytics defaultValues = analyticsHelperService.findAnalyticsById(id);
-        return ResponseEntity.ok(defaultValues);
+    public ResponseEntity<ValuesOfLevelsGenericRecord> getAnalyticsById(@PathVariable Long id) {
+        GenericAnalytics genericAnalytics = analyticsHelperService.findAnalyticsById(id);
+        return ResponseEntity.ok(new ValuesOfLevelsGenericRecord(genericAnalytics));
     }
 
     @GetMapping("/results")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAnalytics(Pageable pageable) {
-        return ResponseEntity.ok(analyticsHelperService.findAll(pageable));
-    }
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
+    getAllAnalyticsHateoas( @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-    @GetMapping("/results/hateoas")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllAnalyticsHateoas(Pageable pageable) {
         List<ValuesOfLevelsGenericRecord> resultsList = analyticsHelperService.findAll(pageable);
 
         List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
                 .map(result -> EntityModel.of(result,
-                        linkTo(methodOn(GenericAnalyticsController.class)
-                                .getAllAnalyticsByName(Pageable.unpaged(), result.name()))
+                        linkTo(getClass())
+                                .slash(result.id())
                                 .withSelfRel()))
                 .collect(Collectors.toList());
 
-        CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>> collectionModel =
-                CollectionModel.of(resultModels,
-                        linkTo(methodOn(GenericAnalyticsController.class).getAllAnalyticsHateoas(pageable))
-                                .withSelfRel());
-        return ResponseEntity.ok(collectionModel);
+        return ResponseEntity.ok(CollectionModel.of(resultModels,
+                linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable)).withSelfRel()));
     }
 
     @GetMapping("/results/search/{name}")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByName(
-            Pageable pageable, @PathVariable String name) {
-        return ResponseEntity.ok(analyticsHelperService.findAnalyticsByName(pageable, name));
-    }
-
-    @GetMapping("/results/search/{name}/{order}")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByNameOrderByDate(
+    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllAnalyticsByNameOrderByDate(
             @PathVariable String name,
-            @PathVariable String order) {
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<ValuesOfLevelsGenericRecord> results = analyticsHelperService.findAnalyticsByNameAndOrderByDate(name, order);
-        return ResponseEntity.ok(results);
+        List<ValuesOfLevelsGenericRecord> resultsList = analyticsHelperService.findAnalyticsByName(pageable, name);
+
+        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+                .map(result -> EntityModel.of(result,
+                        linkTo(methodOn(getClass())
+                                .getAnalyticsById(result.id()))
+                                .withSelfRel(),
+                        linkTo(methodOn(getClass())
+                                .getAllAnalyticsByNameOrderByDate(name, pageable))
+                                .withRel("search")))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(
+                CollectionModel.of(resultModels,
+                        linkTo(methodOn(getClass())
+                                .getAllAnalyticsByNameOrderByDate(name, pageable))
+                                .withSelfRel()));
     }
 
     @GetMapping("/results/date-range")
@@ -101,9 +107,16 @@ public abstract class GenericAnalyticsController {
     public abstract ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAnalyticsByLevel(
             Pageable pageable, @RequestParam String name, @RequestParam String level);
 
-    protected abstract ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByDateRange(
+    public abstract ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByDateRange(
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam String dateStart,
+            @RequestParam String dateEnd);
+
+    public abstract ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
             @RequestParam String name,
             @RequestParam String level,
             @RequestParam String dateStart,
             @RequestParam String dateEnd);
 }
+

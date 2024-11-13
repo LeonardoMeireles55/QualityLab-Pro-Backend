@@ -1,8 +1,6 @@
 package leonardo.labutilities.qualitylabpro.service;
 
-import leonardo.labutilities.qualitylabpro.components.AnalyticsValidationComponent;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
-import leonardo.labutilities.qualitylabpro.components.LevelConverterComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
@@ -23,15 +21,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final RulesValidatorComponent rulesValidatorComponent;
-    private final LevelConverterComponent levelConverterComponent;
-
     public AnalyticsHelperService(GenericAnalyticsRepository genericAnalyticsRepository,
-                                  RulesValidatorComponent rulesValidatorComponent,
-                                  AnalyticsValidationComponent analyticsValidationComponent,
-                                  LevelConverterComponent levelConverterComponent) {
+                                  RulesValidatorComponent rulesValidatorComponent) {
         this.genericAnalyticsRepository = genericAnalyticsRepository;
         this.rulesValidatorComponent = rulesValidatorComponent;
-        this.levelConverterComponent = levelConverterComponent;
     }
 
     public List<GenericAnalytics> submitAnalytics(List<ValuesOfLevelsGenericRecord> valuesOfLevelsList) {
@@ -62,27 +55,11 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
-    @Cacheable(value = "name")
-    public List<ValuesOfLevelsGenericRecord> findAnalyticsByNameAndOrderByDate(String name, String order) {
-        Sort sort = order.equalsIgnoreCase("asc")
-                ? Sort.by("date").ascending() : Sort.by("date").descending();
-
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepository.findAllByNameOrderByDate(name, sort);
-
-        return analyticsList.stream()
-                .map(ValuesOfLevelsGenericRecord::new)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
-    }
-
     @Cacheable(value = "id")
     public GenericAnalytics findAnalyticsById(Long id) {
         return genericAnalyticsRepository.findById(id)
                 .orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found."));
     }
-
-    @Cacheable(value = { "name", "level" })
-    public abstract List<ValuesOfLevelsGenericRecord>
-    findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level);
 
     protected List<ValuesOfLevelsGenericRecord>
     findAllAnalyticsByNameAndLevelProtected(Pageable pageable, String name, String level) {
@@ -93,9 +70,6 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .map(ValuesOfLevelsGenericRecord::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
-
-    public abstract List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDate(
-            String name, String level, String dateStart, String dateEnd);
 
     protected List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDateProtected(
             String name, String level, String dateStart, String dateEnd) {
@@ -134,13 +108,5 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             throw new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.");
         }
         return results;
-    }
-
-    public String convertLevelToCobas(String inputLevel) {
-        return levelConverterComponent.convertLevel(inputLevel);
-    }
-
-    public String convertLevelToACL(String inputLevel) {
-        return levelConverterComponent.convertLevelACL(inputLevel);
     }
 }
