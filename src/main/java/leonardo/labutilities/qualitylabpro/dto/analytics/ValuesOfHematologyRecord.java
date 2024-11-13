@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.dto.genericAnalytics;
+package leonardo.labutilities.qualitylabpro.dto.analytics;
 
 import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
 

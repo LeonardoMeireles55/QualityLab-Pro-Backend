@@ -5,15 +5,16 @@ import leonardo.labutilities.qualitylabpro.components.LevelConverterComponent;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BiochemistryAnalyticsService extends BaseAnalyticsHelperService {
+public class BaseAnalyticsHelperService extends AnalyticsHelperService {
 
-    public BiochemistryAnalyticsService(
+    public BaseAnalyticsHelperService(
             GenericAnalyticsRepository genericAnalyticsRepository,
             RulesValidatorComponent rulesValidatorComponent,
             AnalyticsValidationComponent analyticsValidationComponent,
@@ -21,17 +22,15 @@ public class BiochemistryAnalyticsService extends BaseAnalyticsHelperService {
         super(genericAnalyticsRepository, rulesValidatorComponent, analyticsValidationComponent, levelConverterComponent);
     }
 
-    public List<ValuesOfLevelsGenericRecord>
-    findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
-        ensureNameExists(name);
-        return findAllAnalyticsByNameAndLevelProtected(pageable, name,
-                convertLevelToCobas(level));
+    @Override
+    public List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevel(
+            Pageable pageable, String name, String level) {
+        return findAllAnalyticsByNameAndLevelProtected(pageable, name, level);
     }
 
-    public List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDate
-            (String name, String level, String dateStart, String dateEnd) {
-        ensureNameExists(name);
-                return findAllAnalyticsByNameAndLevelAndDateProtected
-                                (name, convertLevelToCobas(level), dateStart, dateEnd);
+    @Override
+    public List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDate(
+            String name, String level, String dateStart, String dateEnd) {
+        return findAllAnalyticsByNameAndLevelAndDateProtected(name, level, dateStart, dateEnd);
     }
 }

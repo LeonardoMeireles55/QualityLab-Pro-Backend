@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 
 import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
-import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfHematologyRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfHematologyRecord;
 import leonardo.labutilities.qualitylabpro.service.HematologyAnalyticsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RestController
-@RequestMapping("/hematology")
+@RestController("hematology-analytics")
+@RequestMapping("/hematology-analytics")
 public class HematologyAnalyticsController {
 
     public HematologyAnalyticsController(HematologyAnalyticsService hematologyAnalyticsService) {

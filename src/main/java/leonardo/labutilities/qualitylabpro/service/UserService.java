@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
-import leonardo.labutilities.qualitylabpro.infra.exception.ErrorHandling;
+import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.model.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repository.UserRepository;
@@ -20,7 +20,7 @@ public class UserService {
     public User signUp(String login, String password, String email, UserRoles userRoles) {
         var user = new User(login, BCryptEncoderComponent.encrypt(password), email, userRoles);
         if(userRepository.existsByUsername(login) || userRepository.existsByEmail(email)) {
-            throw new ErrorHandling.DataIntegrityViolationException();}
+            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();}
         return userRepository.save(user);
     }
 
@@ -30,7 +30,7 @@ public class UserService {
         if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
                 BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
             log.error("PasswordNotMatches. {}, {}", name, email);
-            throw new ErrorHandling.PasswordNotMatchesException();
+            throw new CustomGlobalErrorHandling.PasswordNotMatchesException();
         } else {
             userRepository.setPasswordWhereByUsername(oldPass.getUsername(),
                     BCryptEncoderComponent.encrypt(newPassword));

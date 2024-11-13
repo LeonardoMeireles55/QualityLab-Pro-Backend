@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.repository;
 
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,6 +16,8 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
     List<GenericAnalytics> findAllByName(Pageable pageable, String name);
 
     boolean existsByDateAndLevelAndName(String date, String level, String value);
+
+    List<GenericAnalytics> findAllByNameOrderByDate(String name, Sort sort);
 
     List<GenericAnalytics> findAllByNameOrderByDateAsc(String name);
 

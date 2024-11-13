@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.components.HematologyValidatorComponent;
-import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfHematologyRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfHematologyRecord;
 import lombok.Getter;
 
 @Getter

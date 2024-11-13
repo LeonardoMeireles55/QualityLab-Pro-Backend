@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.dto.genericAnalytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
