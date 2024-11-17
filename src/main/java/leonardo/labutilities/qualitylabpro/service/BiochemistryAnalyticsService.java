@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
 import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import org.springframework.data.domain.Pageable;
@@ -20,18 +20,18 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsHelperService
     }
 
     @Override
-    public List<ValuesOfLevelsGenericRecord>
+    public List<BiochemistryValuesRecord>
     findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
         ensureNameExists(name);
-        return findAllAnalyticsByNameAndLevelProtected(pageable, name,
+        return findAllGenericAnalyticsByNameAndLevel(pageable, name,
                 convertLevel(level));
     }
 
     @Override
-    public List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDate
+    public List<BiochemistryValuesRecord> findAllAnalyticsByNameAndLevelAndDate
             (String name, String level, String dateStart, String dateEnd) {
         ensureNameExists(name);
-        return findAllAnalyticsByNameAndLevelAndDateProtected
+        return findAllGenericAnalyticsByNameAndLevelAndDate
                                 (name, convertLevel(level), dateStart, dateEnd);
     }
     @Override
@@ -49,7 +49,7 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsHelperService
         var filteredResult =
                 getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
 
-        double sum = filteredResult.stream().mapToDouble(ValuesOfLevelsGenericRecord::value).sum();
+        double sum = filteredResult.stream().mapToDouble(BiochemistryValuesRecord::value).sum();
 
         int count = filteredResult.size();
 

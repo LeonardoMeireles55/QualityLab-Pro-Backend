@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 
 
-public record ValuesOfLevelsGenericRecord(
+public record BiochemistryValuesRecord(
         Long id,
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}",
                 message = "Date format invalid. Please use 'YYYY-MM-DD HH:MM:SS'.")
@@ -28,7 +28,7 @@ public record ValuesOfLevelsGenericRecord(
         String rules,
         String description
 ) {
-    public ValuesOfLevelsGenericRecord(GenericAnalytics analytics) {
+    public BiochemistryValuesRecord(GenericAnalytics analytics) {
         this(analytics.getId(), analytics.getDate(), analytics.getLevelLot(), analytics.getTestLot(),
                 analytics.getName(), analytics.getLevel(),
                 analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnitValue(),

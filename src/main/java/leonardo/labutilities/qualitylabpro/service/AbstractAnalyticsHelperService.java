@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import org.springframework.data.domain.Pageable;
 
@@ -17,10 +17,10 @@ public abstract class AbstractAnalyticsHelperService extends AnalyticsHelperServ
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
-    public abstract List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevel(
+    public abstract List<BiochemistryValuesRecord> findAllAnalyticsByNameAndLevel(
             Pageable pageable, String name, String level);
 
-    public abstract List<ValuesOfLevelsGenericRecord> findAllAnalyticsByNameAndLevelAndDate(
+    public abstract List<BiochemistryValuesRecord> findAllAnalyticsByNameAndLevelAndDate(
             String name, String level, String dateStart, String dateEnd);
 
     public abstract String convertLevel(String level);
@@ -28,13 +28,13 @@ public abstract class AbstractAnalyticsHelperService extends AnalyticsHelperServ
     public abstract MeanAndStandardDeviationRecord
     generateMeanAndStandardDeviation(String name, String level, String dateStart, String dateEnd);
 
-    private boolean shouldIncludeRecord(ValuesOfLevelsGenericRecord record) {
+    private boolean shouldIncludeRecord(BiochemistryValuesRecord record) {
         String rules = record.rules();
         return !Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s");
     }
 
-    protected List<ValuesOfLevelsGenericRecord> getFilteredRecords(List<ValuesOfLevelsGenericRecord> records) {
-        return records.stream()
+    List<BiochemistryValuesRecord> getFilteredRecords(List<BiochemistryValuesRecord> records) {
+        return records.stream().filter(this::shouldIncludeRecord)
                 .toList();
     }
 

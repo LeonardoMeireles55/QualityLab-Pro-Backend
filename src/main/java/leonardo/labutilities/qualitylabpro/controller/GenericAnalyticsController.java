@@ -4,14 +4,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
 import leonardo.labutilities.qualitylabpro.service.AnalyticsHelperService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -38,7 +37,7 @@ public abstract class GenericAnalyticsController {
     @PostMapping()
     @Transactional
     public ResponseEntity<List<GenericAnalytics>>
-    postAnalytics(@Valid @RequestBody List<@Valid ValuesOfLevelsGenericRecord> values) {
+    postAnalytics(@Valid @RequestBody List<@Valid BiochemistryValuesRecord> values) {
         List<GenericAnalytics> valuesOfGenericsList = analyticsHelperService.submitAnalytics(values);
         return ResponseEntity.ok(valuesOfGenericsList);
     }
@@ -51,18 +50,18 @@ public abstract class GenericAnalyticsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ValuesOfLevelsGenericRecord> getAnalyticsById(@PathVariable Long id) {
+    public ResponseEntity<BiochemistryValuesRecord> getAnalyticsById(@PathVariable Long id) {
         GenericAnalytics genericAnalytics = analyticsHelperService.findAnalyticsById(id);
-        return ResponseEntity.ok(new ValuesOfLevelsGenericRecord(genericAnalytics));
+        return ResponseEntity.ok(new BiochemistryValuesRecord(genericAnalytics));
     }
 
     @GetMapping("/results")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>>
+    public ResponseEntity<CollectionModel<EntityModel<BiochemistryValuesRecord>>>
     getAllAnalyticsHateoas( @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<ValuesOfLevelsGenericRecord> resultsList = analyticsHelperService.findAll(pageable);
+        List<BiochemistryValuesRecord> resultsList = analyticsHelperService.findAll(pageable);
 
-        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+        List<EntityModel<BiochemistryValuesRecord>> resultModels = resultsList.stream()
                 .map(result -> EntityModel.of(result,
                         linkTo(getClass())
                                 .slash(result.id())
@@ -74,13 +73,13 @@ public abstract class GenericAnalyticsController {
     }
 
     @GetMapping("/results/search/{name}")
-    public ResponseEntity<CollectionModel<EntityModel<ValuesOfLevelsGenericRecord>>> getAllAnalyticsByNameOrderByDate(
+    public ResponseEntity<CollectionModel<EntityModel<BiochemistryValuesRecord>>> getAllAnalyticsByNameOrderByDate(
             @PathVariable String name,
             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<ValuesOfLevelsGenericRecord> resultsList = analyticsHelperService.findAnalyticsByName(pageable, name);
+        List<BiochemistryValuesRecord> resultsList = analyticsHelperService.findAnalyticsByName(pageable, name);
 
-        List<EntityModel<ValuesOfLevelsGenericRecord>> resultModels = resultsList.stream()
+        List<EntityModel<BiochemistryValuesRecord>> resultModels = resultsList.stream()
                 .map(result -> EntityModel.of(result,
                         linkTo(methodOn(getClass())
                                 .getAnalyticsById(result.id()))
@@ -98,16 +97,16 @@ public abstract class GenericAnalyticsController {
     }
 
     @GetMapping("/results/date-range")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByDateBetween(
+    public ResponseEntity<List<BiochemistryValuesRecord>> getAllAnalyticsByDateBetween(
             @RequestParam String dateStart,
             @RequestParam String dateEnd) {
         return ResponseEntity.ok(analyticsHelperService.findAllAnalyticsByDate(dateStart, dateEnd));
     }
 
-    public abstract ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAnalyticsByLevel(
+    public abstract ResponseEntity<List<BiochemistryValuesRecord>> getAnalyticsByLevel(
             Pageable pageable, @RequestParam String name, @RequestParam String level);
 
-    public abstract ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByDateRange(
+    public abstract ResponseEntity<List<BiochemistryValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
             @RequestParam String dateStart,

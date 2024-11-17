@@ -2,24 +2,18 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
-import leonardo.labutilities.qualitylabpro.service.AnalyticsHelperService;
+import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
 import leonardo.labutilities.qualitylabpro.service.BiochemistryAnalyticsService;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController("biochemistry-analytics")
 @SecurityRequirement(name = "bearer-key")
@@ -35,7 +29,7 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
 
     @Override
     @GetMapping("/results/search/level")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>>
+    public ResponseEntity<List<BiochemistryValuesRecord>>
     getAnalyticsByLevel(Pageable pageable, String name, String level) {
         return ResponseEntity.ok(biochemistryAnalyticsService
                 .findAllAnalyticsByNameAndLevel(pageable, name, level));
@@ -43,7 +37,7 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
 
     @Override
     @GetMapping("/results/search/date-range")
-    public ResponseEntity<List<ValuesOfLevelsGenericRecord>> getAllAnalyticsByDateRange(
+    public ResponseEntity<List<BiochemistryValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
             @RequestParam String dateStart,

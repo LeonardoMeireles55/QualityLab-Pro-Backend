@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.model;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfLevelsGenericRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
@@ -54,7 +54,7 @@ public class GenericAnalytics extends
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public GenericAnalytics(ValuesOfLevelsGenericRecord values, RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(BiochemistryValuesRecord values, RulesValidatorComponent rulesValidatorComponent) {
         this.date = values.date();
         this.levelLot = values.level_lot();
         this.testLot = values.test_lot();
