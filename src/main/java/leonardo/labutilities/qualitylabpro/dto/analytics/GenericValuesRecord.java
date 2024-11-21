@@ -1,10 +1,11 @@
 package leonardo.labutilities.qualitylabpro.dto.analytics;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 
 
-public record BiochemistryValuesRecord(
+public record GenericValuesRecord(
         Long id,
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}",
                 message = "Date format invalid. Please use 'YYYY-MM-DD HH:MM:SS'.")
@@ -28,7 +29,11 @@ public record BiochemistryValuesRecord(
         String rules,
         String description
 ) {
-    public BiochemistryValuesRecord(GenericAnalytics analytics) {
+    @JsonIgnore
+    public Long id() {
+        return id;
+    }
+    public GenericValuesRecord(GenericAnalytics analytics) {
         this(analytics.getId(), analytics.getDate(), analytics.getLevelLot(), analytics.getTestLot(),
                 analytics.getName(), analytics.getLevel(),
                 analytics.getValue(), analytics.getMean(), analytics.getSd(), analytics.getUnitValue(),

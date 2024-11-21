@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.service;
 
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +20,14 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService 
     }
 
     @Override
-    public List<BiochemistryValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevel(pageable, name,
                 this.convertLevel(level));
     }
 
     @Override
-    public List<BiochemistryValuesRecord> findAllAnalyticsByNameAndLevelAndDate
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate
             (String name, String level, String dateStart, String dateEnd) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevelAndDate(name.toUpperCase(),
@@ -40,7 +40,7 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService 
         var filteredResult =
                 getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
 
-        double sum = filteredResult.stream().mapToDouble(BiochemistryValuesRecord::value).sum();
+        double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
 
         int count = filteredResult.size();
 

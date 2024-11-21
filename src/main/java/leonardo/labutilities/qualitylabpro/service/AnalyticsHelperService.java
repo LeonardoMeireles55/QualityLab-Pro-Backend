@@ -3,13 +3,14 @@ package leonardo.labutilities.qualitylabpro.service;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public List<GenericAnalytics> submitAnalytics(List<BiochemistryValuesRecord> valuesOfLevelsList) {
+    public List<GenericValuesRecord> submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList) {
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
                 .filter(this::doesNotExist)
                 .map(values -> new GenericAnalytics(values, rulesValidatorComponent))
@@ -36,21 +37,20 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
         }
 
-        return genericAnalyticsRepository.saveAll(newAnalytics);
+        return genericAnalyticsRepository.saveAll(newAnalytics).stream().map(GenericValuesRecord::new).toList();
     }
 
     @Cacheable(value = "name")
-    public List<BiochemistryValuesRecord> findAll(Pageable pageable) {
-        return genericAnalyticsRepository.findAll(pageable).map(BiochemistryValuesRecord::new)
+    public List<GenericValuesRecord> findAll(Pageable pageable) {
+        return genericAnalyticsRepository.findAll(pageable).map(GenericValuesRecord::new)
                 .stream()
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
     @Cacheable(value = "name")
-    public List<BiochemistryValuesRecord> findAnalyticsByName(Pageable pageable, String name) {
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepository.findAllByName(pageable, name.toUpperCase());
+    public List<GenericValuesRecord> findAnalyticsByName(Pageable pageable, String name) {
+        List<GenericValuesRecord> analyticsList = genericAnalyticsRepository.findAllByName(pageable, name.toUpperCase());
         return analyticsList.stream()
-                .map(BiochemistryValuesRecord::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
@@ -60,29 +60,26 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found."));
     }
 
-    List<BiochemistryValuesRecord>
+    List<GenericValuesRecord>
     findAllGenericAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
-        List<GenericAnalytics> analyticsList = genericAnalyticsRepository
+        List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                 .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
-
         return analyticsList.stream()
-                .map(BiochemistryValuesRecord::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
-    List<BiochemistryValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
+    List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
             String name, String level, String dateStart, String dateEnd) {
         return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd)
-                .stream().map(BiochemistryValuesRecord::new).toList();
+                .stream().toList();
     }
 
-    public List<BiochemistryValuesRecord> findAllAnalyticsByDate(String dateStart, String dateEnd) {
-        Optional<List<GenericAnalytics>> analyticsOptional = Optional.ofNullable(genericAnalyticsRepository
+    public List<GenericValuesRecord> findAllAnalyticsByDate(String dateStart, String dateEnd) {
+        Optional<List<GenericValuesRecord>> analyticsOptional = Optional.ofNullable(genericAnalyticsRepository
                 .findAllByDateBetween(dateStart, dateEnd));
 
-        return analyticsOptional.orElseThrow(() -> new CustomGlobalErrorHandling
-                        .ResourceNotFoundException("Results not found."))
-                .stream().map(BiochemistryValuesRecord::new).collect(Collectors.toList());
+        return new ArrayList<>(analyticsOptional.orElseThrow(() -> new CustomGlobalErrorHandling
+                .ResourceNotFoundException("Results not found.")));
     }
 
     public void removeAnalyticsById(Long id) {
@@ -98,12 +95,12 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         }
     }
 
-    public boolean doesNotExist(BiochemistryValuesRecord values) {
+    public boolean doesNotExist(GenericValuesRecord values) {
         return !genericAnalyticsRepository.existsByDateAndLevelAndName(
                 values.date(), values.level(), values.name());
     }
 
-    public List<BiochemistryValuesRecord> ensureResultsFound(List<BiochemistryValuesRecord> results) {
+    public List<GenericValuesRecord> ensureResultsFound(List<GenericValuesRecord> results) {
         if (results.isEmpty()) {
             throw new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.");
         }

@@ -2,7 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.BiochemistryValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.service.CoagulationAnalyticsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
     @Override
     @GetMapping("/results/search/level")
-    public ResponseEntity<List<BiochemistryValuesRecord>>
+    public ResponseEntity<List<GenericValuesRecord>>
     getAnalyticsByLevel(Pageable pageable, String name, String level) {
         return ResponseEntity.ok(coagulationAnalyticsService
                 .findAllAnalyticsByNameAndLevel(pageable, name, level));
@@ -37,7 +37,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
     @Override
     @GetMapping("/results/search/date-range")
-    public ResponseEntity<List<BiochemistryValuesRecord>> getAllAnalyticsByDateRange(
+    public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
             @RequestParam String dateStart,
