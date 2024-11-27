@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +73,21 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
     Pageable pageable = PageRequest.of(0, 40);
     List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
-            String name, String level, String dateStart, String dateEnd) {
+
+
+    String name, String level, String dateStart, String dateEnd) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String formattedDateStart = formatDate(dateStart);
+        String formattedDateEnd = formatDate(dateEnd);
+
+        LocalDate startDate = LocalDate.parse(formattedDateStart, formatter);
+        LocalDate endDate = LocalDate.parse(formattedDateEnd, formatter);
+
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("Bad Request: Date is not valid.");
+        }
+
         return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable)
                 .stream().toList();
     }
@@ -107,5 +123,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             throw new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.");
         }
         return results;
+    }
+
+    private String formatDate(String date) {
+        String[] parts = date.split("-");
+        return String.format("%04d-%02d-%02d", Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
 }
