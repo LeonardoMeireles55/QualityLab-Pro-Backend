@@ -44,15 +44,20 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsHelperService
     }
 
     @Override
-    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name, String level, String dateStart, String dateEnd) {
+    public MeanAndStandardDeviationRecord
+    generateMeanAndStandardDeviation(String name, String level, String dateStart, String dateEnd) {
 
         var filteredResult =
                 getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
 
+        List<Double> values = filteredResult.stream()
+                .map(GenericValuesRecord::value)
+                .toList();
+
         int count = filteredResult.size();
 
-        return calculateMeanAndStandardDeviation(sum, count);
+        return calculateMeanAndStandardDeviation(sum, count, values);
     }
 }

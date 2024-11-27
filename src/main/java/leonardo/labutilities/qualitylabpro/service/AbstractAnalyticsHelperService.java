@@ -38,11 +38,17 @@ public abstract class AbstractAnalyticsHelperService extends AnalyticsHelperServ
                 .toList();
     }
 
-    public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(Double totalValue, Integer size) {
+    public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(Double totalValue, Integer size, List<Double> values) {
         // Calculate mean
         double mean = totalValue / size;
+
+        // Calculate variance (squared differences)
+        double variance = values.stream()
+                .mapToDouble(value -> Math.pow(value - mean, 2))
+                .sum() / size;
+
         // Calculate standard deviation
-        double standardDeviation = Math.sqrt(mean);
+        double standardDeviation = Math.sqrt(variance);
 
         return new MeanAndStandardDeviationRecord(mean, standardDeviation);
     }

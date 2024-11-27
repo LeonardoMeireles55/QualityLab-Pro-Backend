@@ -18,20 +18,20 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
 
     boolean existsByDateAndLevelAndName(String date, String level, String value);
 
-    List<GenericValuesRecord> findAllByNameOrderByDate(String name, Sort sort);
-
-    List<GenericValuesRecord> findAllByNameOrderByDateAsc(String name);
-
-    List<GenericValuesRecord> findAllByNameOrderByDateDesc(String name);
-
-    List<GenericValuesRecord> findAllByLevel(String level);
+//    List<GenericValuesRecord> findAllByNameOrderByDate(String name, Sort sort);
+//
+//    List<GenericValuesRecord> findAllByNameOrderByDateAsc(String name);
+//
+//    List<GenericValuesRecord> findAllByNameOrderByDateDesc(String name);
+//
+//    List<GenericValuesRecord> findAllByLevel(String level);
 
     List<GenericValuesRecord> findAllByNameAndLevel(Pageable pageable, String name, String level);
 
     List<GenericValuesRecord> findAllByNameAndLevelAndTestLot(Pageable pageable, String name, String level, String testLot);
 
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4 ORDER BY ga.date ASC")
-    List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween(String name, String level, String startDate, String endDate);
+    List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween(String name, String level, String startDate, String endDate, Pageable pageable);
 
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 ORDER BY ga.date ASC")
     List<GenericValuesRecord> findAllByDateBetween(String startDate, String endDate);

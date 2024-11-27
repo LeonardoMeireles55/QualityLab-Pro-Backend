@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@RestController("biochemistry-analytics")
+@RestController()
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("biochemistry-analytics")
 public class BiochemistryAnalyticsController extends GenericAnalyticsController {
