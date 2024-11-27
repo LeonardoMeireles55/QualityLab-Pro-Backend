@@ -42,9 +42,13 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService 
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
 
+        List<Double> values = filteredResult.stream()
+                .map(GenericValuesRecord::value)
+                .toList();
+
         int count = filteredResult.size();
 
-        return calculateMeanAndStandardDeviation(sum, count);
+        return calculateMeanAndStandardDeviation(sum, count, values);
     }
 
     @Override

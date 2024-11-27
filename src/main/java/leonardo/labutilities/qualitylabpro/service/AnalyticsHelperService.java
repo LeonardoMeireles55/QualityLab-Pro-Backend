@@ -7,6 +7,7 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +69,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
+    Pageable pageable = PageRequest.of(0, 40);
     List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
             String name, String level, String dateStart, String dateEnd) {
-        return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd)
+        return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable)
                 .stream().toList();
     }
 
