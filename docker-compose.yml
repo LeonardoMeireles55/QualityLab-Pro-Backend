@@ -11,6 +11,7 @@ services:
       - ${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
     volumes:
       - mysql-volume:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
   docker-app:
     restart: on-failure
     depends_on:
@@ -31,6 +32,6 @@ services:
     stdin_open: true
     tty: true
     expose:
-      - 8080:8080
+      - 8080
 volumes:
-    mysql-volume:
+  mysql-volume:
