@@ -5,10 +5,10 @@ services:
     restart: always
     env_file: ./.env
     environment:
-      MYSQL_DATABASE: ${MYSQLDB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQLDB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - ${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}
+      - ${DB_LOCAL_PORT}:${DB_DOCKER_PORT}
     volumes:
       - mysql-volume:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
@@ -27,14 +27,14 @@ services:
       context: ./
       dockerfile: Dockerfile
     working_dir: /usr/src/app
-    container_name: qualityLabPro
+    container_name: quality-lab-pro
     env_file: ./.env
     ports:
-      - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+      - ${SERVER_LOCAL_PORT}:${SERVER_DOCKER_PORT}
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:${MYSQLDB_DOCKER_PORT}/${MYSQLDB_DATABASE}
-      - SPRING_DATASOURCE_USERNAME=${MYSQLDB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${MYSQLDB_ROOT_PASSWORD}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_ROOT_PASSWORD}
     stdin_open: true
     tty: true
     expose:
