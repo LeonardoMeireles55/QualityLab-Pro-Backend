@@ -12,11 +12,17 @@ services:
     volumes:
       - mysql-volume:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   docker-app:
     restart: on-failure
     depends_on:
       mariadb:
-        condition: service_started
+        condition: service_healthy
     build:
       context: ./
       dockerfile: Dockerfile
