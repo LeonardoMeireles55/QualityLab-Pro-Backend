@@ -1,14 +1,13 @@
 package leonardo.labutilities.qualitylabpro.repository;
 
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-import java.util.Optional;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 
 public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
 

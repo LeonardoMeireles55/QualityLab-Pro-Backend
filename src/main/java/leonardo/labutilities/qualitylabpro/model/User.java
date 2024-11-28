@@ -1,18 +1,21 @@
 package leonardo.labutilities.qualitylabpro.model;
 
-import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.enums.UserRoles;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import lombok.Getter;
 
 @Getter
 @Entity(name = "users")
