@@ -5,8 +5,8 @@ services:
     restart: always
     env_file: ./.env
     environment:
-      DB_DATABASE: ${DB_DATABASE}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - ${DB_LOCAL_PORT}:${DB_DOCKER_PORT}
     volumes:
@@ -14,8 +14,6 @@ services:
       - ./database:/docker-entrypoint-initdb.d
   docker-app:
     restart: on-failure
-    depends_on:
-      - mariadb
     build:
       context: ./
       dockerfile: Dockerfile
