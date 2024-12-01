@@ -32,6 +32,7 @@ services:
     hostname: quality-lab-pro:8080
     volumes:
       - ./nginx:/etc/nginx:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
     ports:
       - 80:80
       - 443:443
