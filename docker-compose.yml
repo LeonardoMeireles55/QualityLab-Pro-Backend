@@ -12,7 +12,7 @@ services:
       - mysql-volume:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
 
-  docker-app:
+  quality-lab-pro:
     restart: on-failure
     build:
       context: ./ 
@@ -26,44 +26,16 @@ services:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-
   nginx:
     restart: always
     image: nginx
-    hostname: www.quality-lab-pro.com
+    hostname: quality-lab-pro:8080
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./nginx:/etc/nginx:ro
-      - ./letsencrypt/conf:/etc/letsencrypt
-      - ./letsencrypt/html:/tmp/letsencrypt
     ports:
       - 80:80
       - 443:443
-    environment:
-      - LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@
     depends_on:
-      - docker-app
-
-  letsencrypt:
-    restart: always
-    image: vdhpieter/letsencrypt-webroot
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./letsencrypt/conf:/etc/letsencrypt
-      - ./letsencrypt/html:/tmp/letsencrypt
-    links:
-      - nginx
-    environment:
-      - DOMAINS=quality-lab-pro.com www.quality-lab-pro.com
-      - EMAIL=leomeireles55@hotmail.com
-      - WEBROOT_PATH=/tmp/letsencrypt
-      - EXP_LIMIT=30
-      - CHECK_FREQ=30
-      - CHICKENEGG=1
-      - STAGING=0
-
+      - quality-lab-pro
 volumes:
   mysql-volume:
