@@ -34,7 +34,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
                 .filter(this::doesNotExist)
                 .map(values -> new GenericAnalytics(values, rulesValidatorComponent))
-                .toList();
+                .collect(Collectors.toList());
 
         if (newAnalytics.isEmpty()) {
             throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
@@ -43,18 +43,22 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         List<GenericAnalytics> successfullySaved = new ArrayList<>();
         List<GenericAnalytics> failedAnalytics = new ArrayList<>();
 
-        for (GenericAnalytics analytics : newAnalytics) {
-            try {
-                genericAnalyticsRepository.save(analytics);
-                successfullySaved.add(analytics);
-            } catch (CustomGlobalErrorHandling.DataIntegrityViolationException e) {
-                if (e.getMessage().contains("Out of range value")) {
-                    System.out.println("Catching Out of range value exception");
-                } else {
-                    throw e;
+        try {
+            successfullySaved.addAll(genericAnalyticsRepository.saveAll(newAnalytics));
+        } catch (Exception e) {
+            for (GenericAnalytics analytics : newAnalytics) {
+                try {
+                    genericAnalyticsRepository.save(analytics);
+                    successfullySaved.add(analytics);
+                } catch (CustomGlobalErrorHandling.DataIntegrityViolationException ex) {
+                    if (ex.getMessage().contains("Out of range value")) {
+                        System.out.println("Catching Out of range value exception");
+                    } else {
+                        throw ex;
+                    }
+                } catch (Exception ex) {
+                    failedAnalytics.add(analytics);
                 }
-            } catch (Exception e) {
-                failedAnalytics.add(analytics);
             }
         }
 
