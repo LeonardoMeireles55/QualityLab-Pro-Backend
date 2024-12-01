@@ -71,7 +71,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
 
-    Pageable pageable = PageRequest.of(0, 40);
+    Pageable pageable = PageRequest.of(0, 80);
     List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
 
 
