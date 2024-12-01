@@ -34,13 +34,35 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
                 .filter(this::doesNotExist)
                 .map(values -> new GenericAnalytics(values, rulesValidatorComponent))
-                .collect(Collectors.toList());
+                .toList();
 
         if (newAnalytics.isEmpty()) {
             throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
         }
 
-        return genericAnalyticsRepository.saveAll(newAnalytics).stream().map(GenericValuesRecord::new).toList();
+        List<GenericAnalytics> successfullySaved = new ArrayList<>();
+        List<GenericAnalytics> failedAnalytics = new ArrayList<>();
+
+        for (GenericAnalytics analytics : newAnalytics) {
+            try {
+                genericAnalyticsRepository.save(analytics);
+                successfullySaved.add(analytics);
+            } catch (CustomGlobalErrorHandling.DataIntegrityViolationException e) {
+                if (e.getMessage().contains("Out of range value")) {
+                    System.out.println("Catching Out of range value exception");
+                } else {
+                    throw e;
+                }
+            } catch (Exception e) {
+                failedAnalytics.add(analytics);
+            }
+        }
+
+        if (failedAnalytics.isEmpty()) {
+            return successfullySaved.stream().map(GenericValuesRecord::new).collect(Collectors.toList());
+        } else {
+            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
+        }
     }
 
     @Cacheable(value = "name")
