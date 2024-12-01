@@ -40,33 +40,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
         }
 
-        List<GenericAnalytics> successfullySaved = new ArrayList<>();
-        List<GenericAnalytics> failedAnalytics = new ArrayList<>();
-
-        try {
-            successfullySaved.addAll(genericAnalyticsRepository.saveAll(newAnalytics));
-        } catch (Exception e) {
-            for (GenericAnalytics analytics : newAnalytics) {
-                try {
-                    genericAnalyticsRepository.save(analytics);
-                    successfullySaved.add(analytics);
-                } catch (CustomGlobalErrorHandling.DataIntegrityViolationException ex) {
-                    if (ex.getMessage().contains("Out of range value")) {
-                        System.out.println("Catching Out of range value exception");
-                    } else {
-                        throw ex;
-                    }
-                } catch (Exception ex) {
-                    failedAnalytics.add(analytics);
-                }
-            }
-        }
-
-        if (failedAnalytics.isEmpty()) {
-            return successfullySaved.stream().map(GenericValuesRecord::new).collect(Collectors.toList());
-        } else {
-            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
-        }
+        return genericAnalyticsRepository.saveAll(newAnalytics).stream().map(GenericValuesRecord::new).toList();
     }
 
     @Cacheable(value = "name")
