@@ -1,0 +1,1 @@
+CREATE INDEX generic_analytics_name_level_date_IDX USING BTREE ON generic_analytics (name,`level`,date);
