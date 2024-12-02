@@ -11,9 +11,12 @@ services:
     volumes:
       - mysql-volume:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - qualitylab-net
 
   quality-lab-pro:
     restart: on-failure
+    # image: quality-lab-pro
     build:
       context: ./ 
       dockerfile: Dockerfile
@@ -26,17 +29,22 @@ services:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
+    networks:
+      - qualitylab-net
+  
   nginx:
     restart: always
     image: nginx
-    hostname: quality-lab-pro:8080
     volumes:
       - ./nginx:/etc/nginx:ro
       - ./nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - qualitylab-net
     ports:
       - 80:80
       - 443:443
-    depends_on:
-      - quality-lab-pro
+networks:
+  qualitylab-net:
+    external: true
 volumes:
   mysql-volume:
