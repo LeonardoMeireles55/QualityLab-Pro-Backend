@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://68.183.141.155, http://68.183.141.155, https://leomeireles-dev.xyz, http://leomeireles-dev.xyz")
+                .allowedOrigins("https://quality-lab-pro.vercel.app, https://68.183.141.155, http://68.183.141.155, https://leomeireles-dev.xyz, http://leomeireles-dev.xyz")
                 .allowedMethods("GET", "POST")
                 .allowedHeaders("*")
                 .allowCredentials(true)
