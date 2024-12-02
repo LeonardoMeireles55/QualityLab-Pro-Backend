@@ -36,6 +36,7 @@ services:
     restart: always
     image: nginx
     volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./nginx:/etc/nginx:ro
       - ./nginx/certs:/etc/nginx/certs:ro
     networks:
