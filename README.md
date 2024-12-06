@@ -46,7 +46,7 @@ http://localhost:8080/swagger-ui.html
 ```
 
 #### React PlotlyJs Front-end
-![image](https://github.com/user-attachments/assets/f9f6b5d9-25ef-4609-a8f9-14e630b64d30)
+<img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/595fe840-c244-4f24-86f7-3ae191252cc7">
 
 
 
