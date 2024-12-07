@@ -1,6 +1,7 @@
 package leonardo.labutilities.qualitylabpro.controller;
 
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.service.HematologyAnalyticsService;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController("hematology-analytics")
+@SecurityRequirement(name = "bearer-key")
 @RequestMapping("/hematology-analytics")
 public class HematologyAnalyticsController extends GenericAnalyticsController {
 
