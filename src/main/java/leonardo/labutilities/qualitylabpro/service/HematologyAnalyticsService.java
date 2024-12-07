@@ -1,33 +1,64 @@
 package leonardo.labutilities.qualitylabpro.service;
 
-import leonardo.labutilities.qualitylabpro.components.HematologyValidatorComponent;
-import leonardo.labutilities.qualitylabpro.model.HematologyAnalytics;
-import leonardo.labutilities.qualitylabpro.dto.analytics.ValuesOfHematologyRecord;
-import leonardo.labutilities.qualitylabpro.repository.HematologyRepository;
-import lombok.RequiredArgsConstructor;
+import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
+import leonardo.labutilities.qualitylabpro.infra.exception.CustomGlobalErrorHandling;
+import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
-public class HematologyAnalyticsService {
-    private final HematologyRepository hematologyRepository;
-    private final HematologyValidatorComponent hematologyValidatorComponent;
+public class HematologyAnalyticsService extends AbstractAnalyticsHelperService {
 
-    public Stream<HematologyAnalytics> saveHematology(List<ValuesOfHematologyRecord> valuesOfLevelsList) {
-        var valuesFilter = valuesOfLevelsList.stream()
-                .filter(values -> !hematologyRepository.existsByDateAndLevelAndName(values.date(),
-                        values.level(),
-                        values.name()));
-        return valuesFilter.map(values -> {
-            HematologyAnalytics hematologyAnalytics = new HematologyAnalytics(values, hematologyValidatorComponent);
-            return hematologyRepository.save(hematologyAnalytics);
-        });
+    public HematologyAnalyticsService(
+            GenericAnalyticsRepository genericAnalyticsRepository,
+            RulesValidatorComponent rulesValidatorComponent) {
+        super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
-    public List<HematologyAnalytics> GetAllHematology() {
-        return hematologyRepository.findAll().stream().toList();
+    @Override
+    public List<GenericValuesRecord>
+    findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
+        ensureNameExists(name);
+        return findAllGenericAnalyticsByNameAndLevel(pageable, name,
+                convertLevel(level));
+    }
+
+    @Override
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate
+            (String name, String level, String dateStart, String dateEnd) {
+        ensureNameExists(name);
+        return findAllGenericAnalyticsByNameAndLevelAndDate
+                (name, convertLevel(level), dateStart, dateEnd);
+    }
+    @Override
+    public String convertLevel(String inputLevel) {
+        return switch (inputLevel) {
+            case "1" -> "low";
+            case "2" -> "normal";
+            case "3" -> "high";
+            default -> throw new CustomGlobalErrorHandling.ResourceNotFoundException("Level not found.");
+        };
+    }
+
+    @Override
+    public MeanAndStandardDeviationRecord
+    generateMeanAndStandardDeviation(String name, String level, String dateStart, String dateEnd) {
+
+        var filteredResult =
+                getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+
+        double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
+
+        List<Double> values = filteredResult.stream()
+                .map(GenericValuesRecord::value)
+                .toList();
+
+        int count = filteredResult.size();
+
+        return calculateMeanAndStandardDeviation(sum, count, values);
     }
 }
