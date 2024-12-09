@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import java.util.List;
 
+import leonardo.labutilities.qualitylabpro.constants.AvailableBioAnalytics;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,20 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
         this.biochemistryAnalyticsService = biochemistryAnalyticsService;
     }
 
+    @GetMapping("/results/names/date-range")
+    public ResponseEntity<List<GenericValuesRecord>>
+    getAllAnalyticsDateBetween(@RequestParam String startDate,
+                               @RequestParam String endDate,
+                               Pageable pageable) {
+
+        AvailableBioAnalytics names = new AvailableBioAnalytics();
+        List<GenericValuesRecord> resultsList = biochemistryAnalyticsService
+                .getAllByNameInAndDateBetween(names.availableBioAnalytics(), startDate, endDate, pageable);
+        return ResponseEntity.ok(resultsList);
+    }
+
     @Override
-    @GetMapping("/results/search/level")
+    @GetMapping("/results/search/name/level")
     public ResponseEntity<List<GenericValuesRecord>>
     getAnalyticsByLevel(Pageable pageable, String name, String level) {
         return ResponseEntity.ok(biochemistryAnalyticsService

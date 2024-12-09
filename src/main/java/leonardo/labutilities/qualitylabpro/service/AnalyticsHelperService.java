@@ -30,6 +30,13 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
+    public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names, String dateStart, String dateEnd, Pageable pageable) {
+        return genericAnalyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd, pageable)
+                .stream()
+                .toList();
+    }
+    public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level);
+
     public List<GenericValuesRecord> submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList) {
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
                 .filter(this::doesNotExist)
@@ -67,8 +74,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     findAllGenericAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
         List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                 .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
-        return analyticsList.stream()
-                .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
+        return analyticsList.stream().toList();
     }
 
     Pageable pageable = PageRequest.of(0, 80);

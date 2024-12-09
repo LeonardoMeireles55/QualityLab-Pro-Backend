@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 import java.util.List;
 
+import leonardo.labutilities.qualitylabpro.constants.AvailableCoagulationAnalytics;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.service.CoagulationAnalyticsService;
+
 
 @RestController("coagulation-analytics")
 @SecurityRequirement(name = "bearer-key")
@@ -27,11 +29,23 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
     }
 
     @Override
-    @GetMapping("/results/search/level")
+    @GetMapping("/results/search/name/level")
     public ResponseEntity<List<GenericValuesRecord>>
     getAnalyticsByLevel(Pageable pageable, String name, String level) {
         return ResponseEntity.ok(coagulationAnalyticsService
                 .findAllAnalyticsByNameAndLevel(pageable, name, level));
+    }
+
+    @GetMapping("/results/names/date-range")
+    public ResponseEntity<List<GenericValuesRecord>>
+    getAllAnalyticsDateBetween(@RequestParam String startDate,
+                               @RequestParam String endDate,
+                               Pageable pageable) {
+
+        AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
+        List<GenericValuesRecord> resultsList = coagulationAnalyticsService
+                .getAllByNameInAndDateBetween(names.availableCoagulationAnalytics(), startDate, endDate, pageable);
+        return ResponseEntity.ok(resultsList);
     }
 
     @Override

@@ -72,6 +72,12 @@ public abstract class GenericAnalyticsController {
                 linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable)).withSelfRel()));
     }
 
+    @GetMapping("/results/names/date-range")
+    public abstract ResponseEntity<List<GenericValuesRecord>>
+    getAllAnalyticsDateBetween(@RequestParam String startDate,
+                               @RequestParam String endDate,
+                               Pageable pageable);
+
     @GetMapping("/results/search/{name}")
     public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(
             @PathVariable String name,

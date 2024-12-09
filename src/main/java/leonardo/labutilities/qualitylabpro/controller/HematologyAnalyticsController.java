@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.controller;
 
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import leonardo.labutilities.qualitylabpro.constants.AvailableHematologyAnalytics;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.service.HematologyAnalyticsService;
@@ -24,11 +25,23 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
     }
 
     @Override
-    @GetMapping("/results/search/level")
+    @GetMapping("/results/search/name/level")
     public ResponseEntity<List<GenericValuesRecord>>
     getAnalyticsByLevel(Pageable pageable, String name, String level) {
         return ResponseEntity.ok(hematologyAnalyticsService
                 .findAllAnalyticsByNameAndLevel(pageable, name, level));
+    }
+
+    @GetMapping("/results/names/date-range")
+    public ResponseEntity<List<GenericValuesRecord>>
+    getAllAnalyticsDateBetween(@RequestParam String startDate,
+                               @RequestParam String endDate,
+                               Pageable pageable) {
+
+        AvailableHematologyAnalytics names = new AvailableHematologyAnalytics();
+       List<GenericValuesRecord> resultsList = hematologyAnalyticsService
+                .getAllByNameInAndDateBetween(names.availableHematologyAnalytics(), startDate, endDate, pageable);
+       return ResponseEntity.ok(resultsList);
     }
 
     @Override

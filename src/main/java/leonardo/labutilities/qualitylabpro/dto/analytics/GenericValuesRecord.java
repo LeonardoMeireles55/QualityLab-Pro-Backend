@@ -29,6 +29,7 @@ public record GenericValuesRecord(
         String rules,
         String description
 ) {
+
     @JsonIgnore
     public Long id() {
         return id;

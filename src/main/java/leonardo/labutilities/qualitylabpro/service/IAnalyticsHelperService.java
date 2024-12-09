@@ -18,6 +18,9 @@ public interface IAnalyticsHelperService {
 
     List<GenericValuesRecord> findAllAnalyticsByDate(String dateStart, String dateEnd);
 
+    List<GenericValuesRecord> getAllByNameInAndDateBetween(
+            List<String> names, String startDate, String endDate, Pageable pageable);
+
     List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level);
 
     List<GenericValuesRecord>
