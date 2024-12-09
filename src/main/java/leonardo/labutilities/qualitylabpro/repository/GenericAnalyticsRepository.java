@@ -28,12 +28,11 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2")
     List<GenericValuesRecord> findAllByNameAndLevel(Pageable pageable, String name, String level);
 
-    @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3 ORDER BY ga.date ASC")
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3")
     List<GenericValuesRecord> findAllByNameInAndDateBetween(
             List<String> names,
             String startDate,
-            String endDate,
-            Pageable pageable);
+            String endDate);
 
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4")
     List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween

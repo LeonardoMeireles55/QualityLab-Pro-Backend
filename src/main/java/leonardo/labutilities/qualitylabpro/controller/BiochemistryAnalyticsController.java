@@ -30,12 +30,11 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>>
     getAllAnalyticsDateBetween(@RequestParam String startDate,
-                               @RequestParam String endDate,
-                               Pageable pageable) {
+                               @RequestParam String endDate) {
 
         AvailableBioAnalytics names = new AvailableBioAnalytics();
         List<GenericValuesRecord> resultsList = biochemistryAnalyticsService
-                .getAllByNameInAndDateBetween(names.availableBioAnalytics(), startDate, endDate, pageable);
+                .getAllByNameInAndDateBetween(names.availableBioAnalytics(), startDate, endDate);
         return ResponseEntity.ok(resultsList);
     }
 

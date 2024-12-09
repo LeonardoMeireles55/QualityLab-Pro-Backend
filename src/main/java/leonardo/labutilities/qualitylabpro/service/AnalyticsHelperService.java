@@ -30,8 +30,8 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names, String dateStart, String dateEnd, Pageable pageable) {
-        return genericAnalyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd, pageable)
+    public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names, String dateStart, String dateEnd) {
+        return genericAnalyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd)
                 .stream()
                 .toList();
     }

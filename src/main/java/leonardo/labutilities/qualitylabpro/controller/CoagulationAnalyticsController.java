@@ -39,12 +39,11 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>>
     getAllAnalyticsDateBetween(@RequestParam String startDate,
-                               @RequestParam String endDate,
-                               Pageable pageable) {
+                               @RequestParam String endDate) {
 
         AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
         List<GenericValuesRecord> resultsList = coagulationAnalyticsService
-                .getAllByNameInAndDateBetween(names.availableCoagulationAnalytics(), startDate, endDate, pageable);
+                .getAllByNameInAndDateBetween(names.availableCoagulationAnalytics(), startDate, endDate);
         return ResponseEntity.ok(resultsList);
     }
 

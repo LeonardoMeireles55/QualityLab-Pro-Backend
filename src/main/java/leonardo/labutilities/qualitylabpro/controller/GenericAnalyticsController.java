@@ -75,8 +75,7 @@ public abstract class GenericAnalyticsController {
     @GetMapping("/results/names/date-range")
     public abstract ResponseEntity<List<GenericValuesRecord>>
     getAllAnalyticsDateBetween(@RequestParam String startDate,
-                               @RequestParam String endDate,
-                               Pageable pageable);
+                               @RequestParam String endDate);
 
     @GetMapping("/results/search/{name}")
     public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(

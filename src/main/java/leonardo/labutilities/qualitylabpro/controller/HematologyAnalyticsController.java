@@ -35,12 +35,11 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>>
     getAllAnalyticsDateBetween(@RequestParam String startDate,
-                               @RequestParam String endDate,
-                               Pageable pageable) {
+                               @RequestParam String endDate) {
 
         AvailableHematologyAnalytics names = new AvailableHematologyAnalytics();
        List<GenericValuesRecord> resultsList = hematologyAnalyticsService
-                .getAllByNameInAndDateBetween(names.availableHematologyAnalytics(), startDate, endDate, pageable);
+                .getAllByNameInAndDateBetween(names.availableHematologyAnalytics(), startDate, endDate);
        return ResponseEntity.ok(resultsList);
     }
 
