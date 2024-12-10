@@ -31,99 +31,98 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated()
 public abstract class GenericAnalyticsController {
 
-    private final AnalyticsHelperService analyticsHelperService;
+        private final AnalyticsHelperService analyticsHelperService;
 
-    public GenericAnalyticsController(AnalyticsHelperService analyticsHelperService) {
-        this.analyticsHelperService = analyticsHelperService;
-    }
+        public GenericAnalyticsController(AnalyticsHelperService analyticsHelperService) {
+                this.analyticsHelperService = analyticsHelperService;
+        }
 
-    @PostMapping()
-    @Transactional
-    public ResponseEntity<List<GenericValuesRecord>> postAnalytics(@Valid @RequestBody List<@Valid GenericValuesRecord> values) {
-        analyticsHelperService.submitAnalytics(values);
-        return ResponseEntity.status(201).build();
-    }
+        @PostMapping()
+        @Transactional
+        public ResponseEntity<List<GenericValuesRecord>> postAnalytics(
+                        @Valid @RequestBody List<@Valid GenericValuesRecord> values) {
+                analyticsHelperService.submitAnalytics(values);
+                return ResponseEntity.status(201).build();
+        }
 
-    @DeleteMapping("/{id}")
-    @Transactional
-    public ResponseEntity<Void> deleteAnalyticsResultById(@PathVariable Long id) {
-        analyticsHelperService.removeAnalyticsById(id);
-        return ResponseEntity.noContent().build();
-    }
+        @DeleteMapping("/{id}")
+        @Transactional
+        public ResponseEntity<Void> deleteAnalyticsResultById(@PathVariable Long id) {
+                analyticsHelperService.removeAnalyticsById(id);
+                return ResponseEntity.noContent().build();
+        }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GenericValuesRecord> getAnalyticsById(@PathVariable Long id) {
-        GenericAnalytics genericAnalytics = analyticsHelperService.findAnalyticsById(id);
-        return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
-    }
+        @GetMapping("/{id}")
+        public ResponseEntity<GenericValuesRecord> getAnalyticsById(@PathVariable Long id) {
+                GenericAnalytics genericAnalytics = analyticsHelperService.findAnalyticsById(id);
+                return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
+        }
 
-    @GetMapping("/results")
-    public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>>
-    getAllAnalyticsHateoas( @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+        @GetMapping("/results")
+        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsHateoas(
+                        @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<GenericValuesRecord> resultsList = analyticsHelperService.findAll(pageable);
+                List<GenericValuesRecord> resultsList = analyticsHelperService.findAll(pageable);
 
-        List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
-                .map(result -> EntityModel.of(result,
-                        linkTo(getClass())
-                                .slash(result.id())
-                                .withSelfRel()))
-                .collect(Collectors.toList());
+                List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
+                                .map(result -> EntityModel.of(result,
+                                                linkTo(getClass())
+                                                                .slash(result.id())
+                                                                .withSelfRel()))
+                                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(CollectionModel.of(resultModels,
-                linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable)).withSelfRel()));
-    }
+                return ResponseEntity.ok(CollectionModel.of(resultModels,
+                                linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable)).withSelfRel()));
+        }
 
-    @GetMapping("/results/names/date-range")
-    public abstract ResponseEntity<List<GenericValuesRecord>>
-    getAllAnalyticsDateBetween
-    (@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-    @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
+        @GetMapping("/results/names/date-range")
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
+                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
 
-    @GetMapping("/results/search/{name}")
-    public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(
-            @PathVariable String name,
-            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+        @GetMapping("/results/search/{name}")
+        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(
+                        @PathVariable String name,
+                        @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<GenericValuesRecord> resultsList = analyticsHelperService.findAnalyticsByName(pageable, name);
+                List<GenericValuesRecord> resultsList = analyticsHelperService.findAnalyticsByName(pageable, name);
 
-        List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
-                .map(result -> EntityModel.of(result,
-                        linkTo(methodOn(getClass())
-                                .getAnalyticsById(result.id()))
-                                .withSelfRel(),
-                        linkTo(methodOn(getClass())
-                                .getAllAnalyticsByNameOrderByDate(name, pageable))
-                                .withRel("search")))
-                .collect(Collectors.toList());
+                List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
+                                .map(result -> EntityModel.of(result,
+                                                linkTo(methodOn(getClass())
+                                                                .getAnalyticsById(result.id()))
+                                                                .withSelfRel(),
+                                                linkTo(methodOn(getClass())
+                                                                .getAllAnalyticsByNameOrderByDate(name, pageable))
+                                                                .withRel("search")))
+                                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(
-                CollectionModel.of(resultModels,
-                        linkTo(methodOn(getClass())
-                                .getAllAnalyticsByNameOrderByDate(name, pageable))
-                                .withSelfRel()));
-    }
+                return ResponseEntity.ok(
+                                CollectionModel.of(resultModels,
+                                                linkTo(methodOn(getClass())
+                                                                .getAllAnalyticsByNameOrderByDate(name, pageable))
+                                                                .withSelfRel()));
+        }
 
-    @GetMapping("/results/date-range")
-    public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateBetween(
-            @RequestParam LocalDateTime dateStart,
-            @RequestParam LocalDateTime dateEnd) {
-        return ResponseEntity.ok(analyticsHelperService.findAllAnalyticsByDate(dateStart, dateEnd));
-    }
+        @GetMapping("/results/date-range")
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateBetween(
+                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+                return ResponseEntity.ok(analyticsHelperService.findAllAnalyticsByDate(startDate, endDate));
+        }
 
-    public abstract ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
-            Pageable pageable, @RequestParam String name, @RequestParam String level);
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
+                        Pageable pageable, @RequestParam String name, @RequestParam String level);
 
-    public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
-            @RequestParam String name,
-            @RequestParam String level,
-            @RequestParam LocalDateTime dateStart,
-            @RequestParam LocalDateTime dateEnd);
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
+                        @RequestParam String name,
+                        @RequestParam String level,
+                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
 
-    public abstract ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
-            @RequestParam String name,
-            @RequestParam String level,
-            @RequestParam LocalDateTime dateStart,
-            @RequestParam LocalDateTime dateEnd);
+        public abstract ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
+                        @RequestParam String name,
+                        @RequestParam String level,
+                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
 }
-

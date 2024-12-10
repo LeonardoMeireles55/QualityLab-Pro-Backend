@@ -52,10 +52,10 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam LocalDateTime dateStart,
-            @RequestParam LocalDateTime dateEnd) {
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
         return ResponseEntity.ok(biochemistryAnalyticsService
-                .findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+                .findAllAnalyticsByNameAndLevelAndDate(name, level, startDate, endDate));
     }
 
     @Override
@@ -63,9 +63,9 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam LocalDateTime dateStart,
-            @RequestParam LocalDateTime dateEnd) {
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
         return ResponseEntity
-                .ok(biochemistryAnalyticsService.generateMeanAndStandardDeviation(name, level, dateStart, dateEnd));
+                .ok(biochemistryAnalyticsService.generateMeanAndStandardDeviation(name, level, startDate, endDate));
     }
 }
