@@ -3,7 +3,6 @@ package leonardo.labutilities.qualitylabpro.service;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
 import org.springframework.data.domain.Pageable;
 
