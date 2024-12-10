@@ -1,15 +1,17 @@
 package leonardo.labutilities.qualitylabpro.dto.analytics;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import leonardo.labutilities.qualitylabpro.model.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 
 
 public record GenericValuesRecord(
         Long id,
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}",
-                message = "Date format invalid. Please use 'YYYY-MM-DD HH:MM:SS'.")
-        String date,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull
+        LocalDateTime date,
         @NotNull
         String level_lot,
         @NotNull

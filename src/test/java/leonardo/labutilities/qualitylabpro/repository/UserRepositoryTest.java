@@ -1,7 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repository;
 
 import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
-import leonardo.labutilities.qualitylabpro.model.User;
+import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
