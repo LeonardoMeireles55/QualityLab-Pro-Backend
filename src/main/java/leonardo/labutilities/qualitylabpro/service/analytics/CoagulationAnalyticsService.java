@@ -11,12 +11,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// Derived class
 @Service
 public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService {
 
     public CoagulationAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
-                                       RulesValidatorComponent rulesValidatorComponent) {
+            RulesValidatorComponent rulesValidatorComponent) {
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
@@ -28,18 +27,18 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService 
     }
 
     @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate
-            (String name, String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name, String level,
+            LocalDateTime dateStart, LocalDateTime dateEnd) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevelAndDate(name.toUpperCase(),
                 this.convertLevel(level), dateStart, dateEnd);
     }
 
     @Override
-    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name, String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name, String level,
+            LocalDateTime dateStart, LocalDateTime dateEnd) {
 
-        var filteredResult =
-                getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
+        var filteredResult = getFilteredRecords(findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd));
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
 

@@ -1,11 +1,14 @@
-FROM maven:3.8.3-openjdk-17 AS build
-WORKDIR /usr/src/app
-COPY . .
-RUN mvn clean package -DskipTests
+FROM maven:3.9.8-eclipse-temurin-21 AS build
 
-FROM eclipse-temurin:17-jdk
+COPY src /app/src
+COPY pom.xml /app
+
+WORKDIR /app
+RUN mvn clean package -DskipTests -U
+
+FROM openjdk:21
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/src/app/target/QualityLabPro-0.0.1-beta.jar app.jar
+COPY --from=build app/target/QualityLabPro-0.0.1-beta.jar app.jar
 
 CMD ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]

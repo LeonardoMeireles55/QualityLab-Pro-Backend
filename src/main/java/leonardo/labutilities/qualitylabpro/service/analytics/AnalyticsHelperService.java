@@ -23,18 +23,22 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final RulesValidatorComponent rulesValidatorComponent;
+
     public AnalyticsHelperService(GenericAnalyticsRepository genericAnalyticsRepository,
-                                  RulesValidatorComponent rulesValidatorComponent) {
+            RulesValidatorComponent rulesValidatorComponent) {
         this.genericAnalyticsRepository = genericAnalyticsRepository;
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names, LocalDateTime dateStart, LocalDateTime dateEnd) {
+    public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names, LocalDateTime dateStart,
+            LocalDateTime dateEnd) {
         return genericAnalyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd)
                 .stream()
                 .toList();
     }
-    public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name, String level);
+
+    public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name,
+            String level);
 
     public void submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList) {
         List<GenericAnalytics> newAnalytics = valuesOfLevelsList.stream()
@@ -58,7 +62,8 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
     @Cacheable(value = "name")
     public List<GenericValuesRecord> findAnalyticsByName(Pageable pageable, String name) {
-        List<GenericValuesRecord> analyticsList = genericAnalyticsRepository.findAllByName(pageable, name.toUpperCase());
+        List<GenericValuesRecord> analyticsList = genericAnalyticsRepository.findAllByName(pageable,
+                name.toUpperCase());
         return analyticsList.stream()
                 .collect(Collectors.collectingAndThen(Collectors.toList(), this::ensureResultsFound));
     }
@@ -69,17 +74,16 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 .orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found."));
     }
 
-    List<GenericValuesRecord>
-    findAllGenericAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
+    List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevel(Pageable pageable, String name, String level) {
         List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                 .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
         return analyticsList.stream().toList();
     }
 
     Pageable pageable = PageRequest.of(0, 80);
-    List<GenericValuesRecord> 
-    findAllGenericAnalyticsByNameAndLevelAndDate
-    (String name, String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+
+    List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(String name, String level,
+            LocalDateTime dateStart, LocalDateTime dateEnd) {
         return genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable)
                 .stream().toList();
     }
@@ -88,8 +92,8 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         Optional<List<GenericValuesRecord>> analyticsOptional = Optional.ofNullable(genericAnalyticsRepository
                 .findAllByDateBetween(dateStart, dateEnd));
 
-        return new ArrayList<>(analyticsOptional.orElseThrow(() -> new CustomGlobalErrorHandling
-                .ResourceNotFoundException("Results not found.")));
+        return new ArrayList<>(analyticsOptional
+                .orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.")));
     }
 
     public void removeAnalyticsById(Long id) {
@@ -115,10 +119,5 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             throw new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.");
         }
         return results;
-    }
-
-    private String formatDate(String date) {
-        String[] parts = date.split("-");
-        return String.format("%04d-%02d-%02d", Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
     }
 }

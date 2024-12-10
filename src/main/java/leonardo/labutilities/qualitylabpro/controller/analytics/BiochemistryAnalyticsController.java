@@ -31,8 +31,8 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
 
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
 
         AvailableBiochemistryAnalytics names = new AvailableBiochemistryAnalytics();
         List<GenericValuesRecord> resultsList = biochemistryAnalyticsService
@@ -52,8 +52,8 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(biochemistryAnalyticsService
                 .findAllAnalyticsByNameAndLevelAndDate(name, level, startDate, endDate));
     }
@@ -63,8 +63,8 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity
                 .ok(biochemistryAnalyticsService.generateMeanAndStandardDeviation(name, level, startDate, endDate));
     }

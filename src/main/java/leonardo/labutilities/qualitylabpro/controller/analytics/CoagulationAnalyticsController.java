@@ -5,7 +5,6 @@ import java.util.List;
 
 import leonardo.labutilities.qualitylabpro.constants.AvailableCoagulationAnalytics;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +38,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         @GetMapping("/results/names/date-range")
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
 
                 AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
                 List<GenericValuesRecord> resultsList = coagulationAnalyticsService
@@ -54,8 +53,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
                         @RequestParam String name,
                         @RequestParam String level,
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity.ok(coagulationAnalyticsService
                                 .findAllAnalyticsByNameAndLevelAndDate(name, level, startDate, endDate));
         }
@@ -65,8 +64,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name,
                         @RequestParam String level,
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity
                                 .ok(coagulationAnalyticsService.generateMeanAndStandardDeviation(name, level, startDate,
                                                 endDate));

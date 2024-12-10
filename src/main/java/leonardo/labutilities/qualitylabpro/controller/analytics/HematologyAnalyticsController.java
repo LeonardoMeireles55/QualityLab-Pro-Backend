@@ -7,7 +7,6 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviatio
 import leonardo.labutilities.qualitylabpro.service.analytics.HematologyAnalyticsService;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +34,8 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
 
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         AvailableHematologyAnalytics names = new AvailableHematologyAnalytics();
         List<GenericValuesRecord> resultsList = hematologyAnalyticsService
                 .getAllByNameInAndDateBetween(names.availableHematologyAnalytics(), startDate, endDate);
@@ -48,8 +47,8 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(hematologyAnalyticsService
                 .findAllAnalyticsByNameAndLevelAndDate(name, level, startDate, endDate));
     }
@@ -59,8 +58,8 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
     public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
             @RequestParam String name,
             @RequestParam String level,
-            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity
                 .ok(hematologyAnalyticsService.generateMeanAndStandardDeviation(name, level, startDate, endDate));
     }

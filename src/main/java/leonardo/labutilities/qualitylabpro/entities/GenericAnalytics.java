@@ -5,7 +5,6 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.hateoas.RepresentationModel;
@@ -15,7 +14,8 @@ import org.springframework.hateoas.RepresentationModel;
 public class GenericAnalytics extends
         RepresentationModel<GenericAnalytics> {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     LocalDateTime date;
     @Column(name = "level_lot")
@@ -39,10 +39,10 @@ public class GenericAnalytics extends
 
     };
 
-    public GenericAnalytics
-            (Long id, LocalDateTime date, String levelLot, String testLot, String name, String level, double value,
-             double mean, double sd, String unitValue, String rules, String description,
-             RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot, String name, String level,
+            double value,
+            double mean, double sd, String unitValue, String rules, String description,
+            RulesValidatorComponent rulesValidatorComponent) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;

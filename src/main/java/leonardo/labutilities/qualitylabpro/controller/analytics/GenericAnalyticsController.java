@@ -10,7 +10,6 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -77,8 +76,8 @@ public abstract class GenericAnalyticsController {
 
         @GetMapping("/results/names/date-range")
         public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate);
 
         @GetMapping("/results/search/{name}")
         public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(
@@ -106,8 +105,8 @@ public abstract class GenericAnalyticsController {
 
         @GetMapping("/results/date-range")
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateBetween(
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity.ok(analyticsHelperService.findAllAnalyticsByDate(startDate, endDate));
         }
 
@@ -117,12 +116,12 @@ public abstract class GenericAnalyticsController {
         public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
                         @RequestParam String name,
                         @RequestParam String level,
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate);
 
         public abstract ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name,
                         @RequestParam String level,
-                        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
-                        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate);
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate);
 }
