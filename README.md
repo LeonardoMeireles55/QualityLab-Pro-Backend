@@ -16,7 +16,7 @@
 ## Description
 The RESTful API for Laboratory Internal Quality Control is designed to assist clinical and research laboratories in monitoring and controlling the quality of their processes. This API provides endpoints to manage information related to control standards, test results, statistical analyses, and other activities essential for ensuring the accuracy and reliability of laboratory data.
 
-## Implemented functionalities.
+## Implemented functionalities
 The API efficiently manages package insert values and test values, offering simple and intuitive CRUD operations.
 
 ## Coming soon
@@ -24,28 +24,69 @@ The API efficiently manages package insert values and test values, offering simp
 * Add functionality related to westgard rules.
 * Improve API documentation.
 
-#### Requirements
+## Requirements
 * [Java 17](https://www.oracle.com/br/java/technologies/javase/jdk17-archive-downloads.html)
 * [Maven](https://maven.apache.org/)
 * [Docker](https://www.docker.com/get-started/)
 * [Git](https://git-scm.com/)
+
+## Installation
 
 #### Step 1. Clone the repository
 Run the command below in Git Bash or Terminal to clone the repository:
 ```
 git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 ```
-#### Step 2. Upload the Docker container to create the mariaDB database
+
+#### Step 2. Upload the Docker container to create the MariaDB database
 In the project root directory, run the command:
 ```
 docker-compose up or docker compose up
 ```
-#### Step 3. you can Access API documentation
+
+## Usage
+
+#### Step 3. Access API documentation
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
-#### React PlotlyJs Front-end
+## Services
+
+### CoagulationAnalyticsService
+Handles analytics related to coagulation tests.
+
+### BiochemistryAnalyticsService
+Handles analytics related to biochemistry tests.
+
+### HematologyAnalyticsService
+Handles analytics related to hematology tests.
+
+## Controllers
+
+### CoagulationAnalyticsController
+Manages endpoints for coagulation analytics.
+
+### BiochemistryAnalyticsController
+Manages endpoints for biochemistry analytics.
+
+### HematologyAnalyticsController
+Manages endpoints for hematology analytics.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## React PlotlyJs Front-end
 <img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/595fe840-c244-4f24-86f7-3ae191252cc7">
 
 
