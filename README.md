@@ -25,7 +25,7 @@ The API efficiently manages package insert values and test values, offering simp
 * Improve API documentation.
 
 ## Requirements
-* [Java 17](https://www.oracle.com/br/java/technologies/javase/jdk17-archive-downloads.html)
+* [Java 21](https://www.oracle.com/br/java/technologies/javase/jdk21-archive-downloads.html)
 * [Maven](https://maven.apache.org/)
 * [Docker](https://www.docker.com/get-started/)
 * [Git](https://git-scm.com/)
