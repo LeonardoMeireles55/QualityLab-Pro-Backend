@@ -1,6 +1,8 @@
 package leonardo.labutilities.qualitylabpro.infra.config.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -16,28 +18,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestControllerAdvice
 @Slf4j
 public class CustomGlobalErrorHandling {
 
     // Custom Exception Classes
     public static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String message) { super(message); }
+
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
     }
 
-    public static class NoContentException extends RuntimeException { }
+    public static class NoContentException extends RuntimeException {}
 
-    public static class DataIntegrityViolationException extends RuntimeException { }
+    public static class DataIntegrityViolationException extends RuntimeException {}
 
-    public static class PasswordNotMatchesException extends RuntimeException { }
+    public static class PasswordNotMatchesException extends RuntimeException {}
 
     // Validation Exceptions
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+        MethodArgumentNotValidException ex
+    ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
@@ -48,11 +52,15 @@ public class CustomGlobalErrorHandling {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(
+        ConstraintViolationException ex
+    ) {
         Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(violation ->
+        ex
+            .getConstraintViolations()
+            .forEach(violation ->
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage())
-        );
+            );
         log.error("BAD_REQUEST: Constraint violations encountered - {}", errors);
         return ResponseEntity.badRequest().body(errors);
     }
@@ -76,14 +84,18 @@ public class CustomGlobalErrorHandling {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleDataIntegrityViolation() {
         log.error("CONFLICT: Data integrity violation.");
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Data integrity violation - the value already exists.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+            "Data integrity violation - the value already exists."
+        );
     }
 
     @ExceptionHandler(PasswordNotMatchesException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<String> handlePasswordNotMatches() {
         log.error("UNAUTHORIZED: Password does not match.");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Passwords do not match or are invalid.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+            "Passwords do not match or are invalid."
+        );
     }
 
     // Authentication and Authorization Exceptions
@@ -112,8 +124,9 @@ public class CustomGlobalErrorHandling {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleInternalAuthenticationServiceException() {
         log.error("INTERNAL_SERVER_ERROR: Authentication service failure.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Authentication service error. Please try again later.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+            "Authentication service error. Please try again later."
+        );
     }
 
     // Other Exceptions
@@ -126,7 +139,9 @@ public class CustomGlobalErrorHandling {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<String> handleHttpMessageNotReadableException(
+        HttpMessageNotReadableException ex
+    ) {
         log.error("BAD_REQUEST: Malformed request body.");
         return ResponseEntity.badRequest().body("Request body is invalid or malformed.");
     }
@@ -136,6 +151,8 @@ public class CustomGlobalErrorHandling {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         log.error("INTERNAL_SERVER_ERROR: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+            "An unexpected error occurred."
+        );
     }
 }

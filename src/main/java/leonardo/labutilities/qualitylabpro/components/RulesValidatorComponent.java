@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class RulesValidatorComponent {
+
     String description;
     String rules;
+
     public void validator(Double value, Double mean, Double sd) {
         double positive1sRuleNormal = mean + (sd * 1);
         double positive2sRuleNormal = mean + (sd * 2);
@@ -26,7 +28,6 @@ public class RulesValidatorComponent {
                     this.description = "Failed";
                     this.rules = "+3s";
                 }
-
             } else if (value >= positive2sRuleNormal || value <= negative2sRuleNormal) {
                 if (value <= negative2sRuleNormal) {
                     this.description = "Approved";

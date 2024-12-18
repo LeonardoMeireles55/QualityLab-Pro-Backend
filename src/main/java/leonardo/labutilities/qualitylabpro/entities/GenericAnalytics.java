@@ -1,48 +1,60 @@
 package leonardo.labutilities.qualitylabpro.entities;
 
 import jakarta.persistence.*;
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
-
+import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 
 @Entity(name = "generic_analytics")
 @Getter
-public class GenericAnalytics extends
-        RepresentationModel<GenericAnalytics> {
+public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     LocalDateTime date;
+
     @Column(name = "level_lot")
     String levelLot;
+
     @Column(name = "test_lot")
     String testLot;
+
     String name;
     String level;
     double value;
     double mean;
     double sd;
+
     @Column(name = "unit_value")
     String unitValue;
+
     String rules;
     String description;
 
     @Transient
     RulesValidatorComponent rulesValidatorComponent;
 
-    public GenericAnalytics() {
+    public GenericAnalytics() {}
 
-    };
-
-    public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot, String name, String level,
-            double value,
-            double mean, double sd, String unitValue, String rules, String description,
-            RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(
+        Long id,
+        LocalDateTime date,
+        String levelLot,
+        String testLot,
+        String name,
+        String level,
+        double value,
+        double mean,
+        double sd,
+        String unitValue,
+        String rules,
+        String description,
+        RulesValidatorComponent rulesValidatorComponent
+    ) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;
@@ -58,7 +70,10 @@ public class GenericAnalytics extends
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public GenericAnalytics(GenericValuesRecord values, RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(
+        GenericValuesRecord values,
+        RulesValidatorComponent rulesValidatorComponent
+    ) {
         this.date = values.date();
         this.levelLot = values.level_lot();
         this.testLot = values.test_lot();

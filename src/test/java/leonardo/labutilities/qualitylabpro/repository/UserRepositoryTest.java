@@ -1,5 +1,7 @@
 package leonardo.labutilities.qualitylabpro.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
@@ -13,12 +15,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class UserRepositoryTest {
+
     @BeforeEach
     void clearDatabase(@Autowired Flyway flyway) {
         flyway.clean();
@@ -28,10 +29,13 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-
     public void setupTestData() {
-        var user = new User("UserTest", BCryptEncoderComponent.encrypt("12345"),
-                        "leo@hotmail.com", UserRoles.USER);
+        var user = new User(
+            "UserTest",
+            BCryptEncoderComponent.encrypt("12345"),
+            "leo@hotmail.com",
+            UserRoles.USER
+        );
 
         userRepository.save(user);
     }
@@ -44,6 +48,7 @@ class UserRepositoryTest {
         var userNotNull = userRepository.findByUsername("UserTest");
         assertThat(userNotNull).isNotNull();
     }
+
     @Test
     @DisplayName("return null when user is empty")
     @Transactional
@@ -61,15 +66,21 @@ class UserRepositoryTest {
         String oldPassword = "12345";
         String newPassword = "249195Leo@@";
 
-        var userWithOldPassword = userRepository
-                .getReferenceByUsernameAndEmail("UserTest", "leo@hotmail.com");
+        var userWithOldPassword = userRepository.getReferenceByUsernameAndEmail(
+            "UserTest",
+            "leo@hotmail.com"
+        );
 
         userRepository.setPasswordWhereByUsername(username, newPassword);
 
-        var userWithNewPassword = userRepository
-                .getReferenceByUsernameAndEmail("UserTest", "leo@hotmail.com");
+        var userWithNewPassword = userRepository.getReferenceByUsernameAndEmail(
+            "UserTest",
+            "leo@hotmail.com"
+        );
 
-            assertThat(BCryptEncoderComponent.decrypt(oldPassword, userWithOldPassword.getPassword())
-                    || BCryptEncoderComponent.decrypt(newPassword, userWithNewPassword.getPassword())).isTrue();
+        assertThat(
+            BCryptEncoderComponent.decrypt(oldPassword, userWithOldPassword.getPassword()) ||
+            BCryptEncoderComponent.decrypt(newPassword, userWithNewPassword.getPassword())
+        ).isTrue();
     }
 }

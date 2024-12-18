@@ -1,0 +1,7 @@
+{
+    "printWidth": 100,
+    "tabWidth": 4,
+    "useTabs": false,
+    "endOfLine":"crlf",
+    "plugins": ["prettier-plugin-java"]
+}
