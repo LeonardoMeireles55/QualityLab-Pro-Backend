@@ -20,29 +20,39 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfiguration {
+
     private final SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
-                    req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
-                    req.requestMatchers(HttpMethod.DELETE, "/analytics/deleteAnalyticsResultById").hasRole("ADMIN");
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-ui")
-                            .permitAll();
-                    req.anyRequest().permitAll();
-
-                })
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+        return http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(req -> {
+                req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
+                req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
+                req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
+                req
+                    .requestMatchers(HttpMethod.DELETE, "/analytics/deleteAnalyticsResultById")
+                    .hasRole("ADMIN");
+                req
+                    .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/swagger-ui"
+                    )
+                    .permitAll();
+                req.anyRequest().permitAll();
+            })
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean
-    public AuthenticationManager authMenager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authMenager(AuthenticationConfiguration configuration)
+        throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -50,5 +60,4 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

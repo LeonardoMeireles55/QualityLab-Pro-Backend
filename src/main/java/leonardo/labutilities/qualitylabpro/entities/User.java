@@ -1,40 +1,41 @@
 package leonardo.labutilities.qualitylabpro.entities;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
-
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import lombok.Getter;
+import org.hibernate.proxy.HibernateProxy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Entity(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private  String username;
+
+    private String username;
     private String password;
     private String email;
+
     @Column(name = "user_roles")
     private UserRoles userRoles;
 
-    protected User () {
-    }
+    protected User() {}
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.userRoles =  UserRoles.USER;
+        this.userRoles = UserRoles.USER;
     }
 
     public User(String username, String password, String email, UserRoles roles) {
@@ -47,9 +48,9 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(UserRoles.values())
-
-                .filter(role -> getUserRoles() == role)
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole())).toList();
+            .filter(role -> getUserRoles() == role)
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
+            .toList();
     }
 
     @Override
@@ -86,10 +87,12 @@ public class User implements UserDetails {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer()
-                .getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this)
-                .getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> oEffectiveClass = o instanceof HibernateProxy
+            ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+            : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy
+            ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+            : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         User user = (User) o;
         return getId() != null && Objects.equals(getId(), user.getId());
@@ -97,7 +100,8 @@ public class User implements UserDetails {
 
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
-                .getPersistentClass().hashCode() : getClass().hashCode();
+        return this instanceof HibernateProxy
+            ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+            : getClass().hashCode();
     }
 }

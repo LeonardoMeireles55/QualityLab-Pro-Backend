@@ -1,52 +1,65 @@
 package leonardo.labutilities.qualitylabpro.service.analytics;
 
-import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
-import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
-import org.springframework.data.domain.Pageable;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
+import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
+import org.springframework.data.domain.Pageable;
 
 public abstract class AbstractAnalyticsHelperService extends AnalyticsHelperService {
 
     public AbstractAnalyticsHelperService(
-            GenericAnalyticsRepository genericAnalyticsRepository,
-            RulesValidatorComponent rulesValidatorComponent) {
+        GenericAnalyticsRepository genericAnalyticsRepository,
+        RulesValidatorComponent rulesValidatorComponent
+    ) {
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
     public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
-            Pageable pageable, String name, String level);
+        Pageable pageable,
+        String name,
+        String level
+    );
 
     public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(
-            String name, String level, LocalDateTime dateStart, LocalDateTime dateEnd);
+        String name,
+        String level,
+        LocalDateTime dateStart,
+        LocalDateTime dateEnd
+    );
 
     public abstract String convertLevel(String level);
 
-    public abstract MeanAndStandardDeviationRecord
-    generateMeanAndStandardDeviation(String name, String level, LocalDateTime dateStart, LocalDateTime dateEnd);
+    public abstract MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(
+        String name,
+        String level,
+        LocalDateTime dateStart,
+        LocalDateTime dateEnd
+    );
 
     private boolean shouldIncludeRecord(GenericValuesRecord record) {
         String rules = record.rules();
-        return !Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s");
+        return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
     }
 
     List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records) {
-        return records.stream().filter(this::shouldIncludeRecord)
-                .toList();
+        return records.stream().filter(this::shouldIncludeRecord).toList();
     }
 
-    public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(Double totalValue, Integer size, List<Double> values) {
+    public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(
+        Double totalValue,
+        Integer size,
+        List<Double> values
+    ) {
         // Calculate mean
         double mean = totalValue / size;
 
         // Calculate variance (squared differences)
-        double variance = values.stream()
-                .mapToDouble(value -> Math.pow(value - mean, 2))
-                .sum() / size;
+        double variance =
+            values.stream().mapToDouble(value -> Math.pow(value - mean, 2)).sum() / size;
 
         // Calculate standard deviation
         double standardDeviation = Math.sqrt(variance);

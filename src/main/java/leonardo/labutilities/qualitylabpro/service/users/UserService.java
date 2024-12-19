@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -19,21 +18,32 @@ public class UserService {
 
     public User signUp(String login, String password, String email, UserRoles userRoles) {
         var user = new User(login, BCryptEncoderComponent.encrypt(password), email, userRoles);
-        if(userRepository.existsByUsername(login) || userRepository.existsByEmail(email)) {
-            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();}
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
+        }
         return userRepository.save(user);
     }
 
-    public void updateUserPassword(String name, String email, String password, String newPassword, UserRoles userRoles) {
+    public void updateUserPassword(
+        String name,
+        String email,
+        String password,
+        String newPassword,
+        UserRoles userRoles
+    ) {
         var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
 
-        if(!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
-                BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
+        if (
+            !BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
+            BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())
+        ) {
             log.error("PasswordNotMatches. {}, {}", name, email);
             throw new CustomGlobalErrorHandling.PasswordNotMatchesException();
         } else {
-            userRepository.setPasswordWhereByUsername(oldPass.getUsername(),
-                    BCryptEncoderComponent.encrypt(newPassword));
+            userRepository.setPasswordWhereByUsername(
+                oldPass.getUsername(),
+                BCryptEncoderComponent.encrypt(newPassword)
+            );
         }
     }
 }
