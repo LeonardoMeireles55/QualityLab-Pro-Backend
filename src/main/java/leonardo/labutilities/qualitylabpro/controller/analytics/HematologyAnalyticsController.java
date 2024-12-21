@@ -9,11 +9,13 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviatio
 import leonardo.labutilities.qualitylabpro.service.analytics.HematologyAnalyticsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("hematology-analytics")
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/hematology-analytics")
+@Validated
 public class HematologyAnalyticsController extends GenericAnalyticsController {
 
     private final HematologyAnalyticsService hematologyAnalyticsService;

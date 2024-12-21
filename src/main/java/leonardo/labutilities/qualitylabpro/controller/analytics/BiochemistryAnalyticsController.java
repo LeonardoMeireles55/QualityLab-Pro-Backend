@@ -9,14 +9,16 @@ import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviatio
 import leonardo.labutilities.qualitylabpro.service.analytics.BiochemistryAnalyticsService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@SecurityRequirement(name = "bearer-key")
+@RestController("biochemistry-analytics")
 @RequestMapping("biochemistry-analytics")
+@SecurityRequirement(name = "bearer-key")
+@Validated
 public class BiochemistryAnalyticsController extends GenericAnalyticsController {
 
     private final BiochemistryAnalyticsService biochemistryAnalyticsService;
