@@ -1,12 +1,10 @@
 package leonardo.labutilities.qualitylabpro.service.analytics;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.*;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.infra.config.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.repository.GenericAnalyticsRepository;
@@ -24,12 +22,107 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     private final RulesValidatorComponent rulesValidatorComponent;
 
     public AnalyticsHelperService(
-        GenericAnalyticsRepository genericAnalyticsRepository,
-        RulesValidatorComponent rulesValidatorComponent
+            GenericAnalyticsRepository genericAnalyticsRepository,
+            RulesValidatorComponent rulesValidatorComponent
     ) {
         this.genericAnalyticsRepository = genericAnalyticsRepository;
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
+
+    public boolean shouldIncludeRecord(GenericValuesRecord record) {
+        String rules = record.rules();
+        return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
+    }
+
+    public List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records) {
+        return records.stream().filter(this::shouldIncludeRecord).toList();
+    }
+
+    public List<GenericValuesGroupByLevel> getGroupedByLevel(String name, LocalDateTime startDate, LocalDateTime endDate) {
+        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate);
+        return records.stream()
+                .collect(Collectors.groupingBy(GenericValuesRecord::level))
+                .entrySet()
+                .stream()
+                .map(entry -> new GenericValuesGroupByLevel(entry.getKey(), entry.getValue())).toList();
+    }
+
+    public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(
+            Double totalValue,
+            Integer size,
+            List<Double> values
+    ) {
+        double mean = totalValue / size;
+
+        double variance =
+                values.stream().mapToDouble(value -> Math.pow(value - mean, 2)).sum() / size;
+
+        double standardDeviation = Math.sqrt(variance);
+
+        return new MeanAndStandardDeviationRecord(mean, standardDeviation);
+    }
+    public List<GenericResultsGroupByLevel> getGroupedResults(String name, LocalDateTime startDate, LocalDateTime endDate) {
+        List<GenericValuesGroupByLevel> analytics = getGroupedByLevel(name, startDate, endDate);
+        List<MeanAndStandardDeviationRecordGroupByLevel> meanAndStandardDeviation =
+                calculateMeanAndStandardDeviationGrouped(analytics);
+
+        return analytics.stream()
+                .map(analytic -> {
+                    var matchingStats = meanAndStandardDeviation.stream()
+                            .filter(stat -> stat.level().equals(analytic.level()))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("No matching statistics found for level: " + analytic.level()));
+
+                    return new GenericResultsGroupByLevel(analytic, matchingStats);
+                })
+                .collect(Collectors.toList());
+    }
+    public List<MeanAndStandardDeviationRecordGroupByLevel> calculateMeanAndStandardDeviationGrouped(
+            List<GenericValuesGroupByLevel> records
+    ) {
+        return records.stream()
+                .map(group -> {
+                    double sum = group.values().stream().mapToDouble(GenericValuesRecord::value).sum();
+                    List<Double> values = group.values().stream().map(GenericValuesRecord::value).toList();
+                    int count = group.values().size();
+                    MeanAndStandardDeviationRecord stats = calculateMeanAndStandardDeviation(sum, count, values);
+                    return new MeanAndStandardDeviationRecordGroupByLevel(group.level(), Collections.singletonList(stats));
+                }).toList();
+    }
+
+    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(
+            String name,
+            String level,
+            LocalDateTime dateStart,
+            LocalDateTime dateEnd
+    ) {
+        var filteredResult = getFilteredRecords(
+                findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd)
+        );
+
+        double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
+
+        List<Double> values = filteredResult.stream().map(GenericValuesRecord::value).toList();
+
+        int count = filteredResult.size();
+
+        return calculateMeanAndStandardDeviation(sum, count, values);
+    }
+
+    public List<MeanAndStandardDeviationRecordGroupByLevel> generateMeanAndStandardDeviationGrouped(
+            String name, LocalDateTime startDate, LocalDateTime endDate
+    ) {
+        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate);
+
+        var values = records.stream()
+                .collect(Collectors.groupingBy(GenericValuesRecord::level))
+                .entrySet()
+                .stream()
+                .map(entry -> new GenericValuesGroupByLevel(entry.getKey(), entry.getValue())).toList();
+
+        return calculateMeanAndStandardDeviationGrouped(values);
+    }
+
 
     public List<GenericValuesRecord> getAllByNameInAndDateBetween(
         List<String> names,
@@ -60,10 +153,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         }
 
         genericAnalyticsRepository
-            .saveAll(newAnalytics)
-            .stream()
-            .map(GenericValuesRecord::new)
-            .toList();
+            .saveAll(newAnalytics);
     }
 
     @Cacheable(value = "name")

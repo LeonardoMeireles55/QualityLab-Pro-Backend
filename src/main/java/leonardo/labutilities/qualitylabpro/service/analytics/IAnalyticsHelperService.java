@@ -2,11 +2,24 @@ package leonardo.labutilities.qualitylabpro.service.analytics;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesGroupByLevel;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecordGroupByLevel;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import org.springframework.data.domain.Pageable;
 
 public interface IAnalyticsHelperService {
+
+    List<GenericValuesGroupByLevel> getGroupedByLevel(String name, LocalDateTime startDate, LocalDateTime endDate);
+    List<MeanAndStandardDeviationRecordGroupByLevel> calculateMeanAndStandardDeviationGrouped(
+            List<GenericValuesGroupByLevel> records
+    );
+    List<MeanAndStandardDeviationRecordGroupByLevel> generateMeanAndStandardDeviationGrouped(
+            String name, LocalDateTime startDate, LocalDateTime endDate);
+    List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records);
+
+    boolean shouldIncludeRecord(GenericValuesRecord record);
     GenericAnalytics findAnalyticsById(Long id);
 
     void submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList);

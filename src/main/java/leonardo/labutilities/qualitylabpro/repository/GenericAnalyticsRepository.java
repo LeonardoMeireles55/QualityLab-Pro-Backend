@@ -2,6 +2,7 @@ package leonardo.labutilities.qualitylabpro.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import org.springframework.data.domain.Pageable;
@@ -43,9 +44,6 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
     )
     List<GenericValuesRecord> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    // @Query("SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 GROUP BY ga.level ORDER BY ga.date DESC")
-    // List<GenericValuesRecord> findAllByDateBetweenGroupByLevel(LocalDateTime startDate, LocalDateTime endDate);
-
-    // @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.date BETWEEN ?2 AND ?3 GROUP BY ga.level ORDER BY ga.date DESC")
-    // List<GenericValuesRecord> findAllByNameAndDateBetweenGroupByLevel(String name, LocalDateTime startDate, LocalDateTime endDate);
+     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.date BETWEEN ?2 AND ?3 GROUP BY ga.level, ga.id ORDER BY ga.date DESC")
+     List<GenericValuesRecord> findAllByNameAndDateBetweenGroupByLevel(String name, LocalDateTime startDate, LocalDateTime endDate);
 }

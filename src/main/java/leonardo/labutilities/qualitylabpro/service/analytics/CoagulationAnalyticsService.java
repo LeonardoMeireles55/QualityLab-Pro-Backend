@@ -20,6 +20,7 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsHelperService 
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
+
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
         Pageable pageable,
