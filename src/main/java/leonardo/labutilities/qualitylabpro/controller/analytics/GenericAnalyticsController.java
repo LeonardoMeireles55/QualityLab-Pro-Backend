@@ -8,8 +8,8 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecord;
+
+import leonardo.labutilities.qualitylabpro.dto.analytics.*;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.service.analytics.AnalyticsHelperService;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +32,24 @@ public abstract class GenericAnalyticsController {
 
     public GenericAnalyticsController(AnalyticsHelperService analyticsHelperService) {
         this.analyticsHelperService = analyticsHelperService;
+    }
+
+    @GetMapping("results/grouped-by-level")
+    public ResponseEntity<List<GenericResultsGroupByLevel>> getGroupedByLevel(
+            @RequestParam String name,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
+        List<GenericResultsGroupByLevel> groupedData = analyticsHelperService.getGroupedResults(name, startDate, endDate);
+        return ResponseEntity.ok(groupedData);
+    }
+
+    @GetMapping("/results/mean-deviation/grouped-by-level")
+    public ResponseEntity<List<MeanAndStandardDeviationRecordGroupByLevel>> getMeanAndDeviationGrouped(
+            @RequestParam String name,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
+        List<MeanAndStandardDeviationRecordGroupByLevel> groupedData = analyticsHelperService.generateMeanAndStandardDeviationGrouped(name, startDate, endDate);
+        return ResponseEntity.ok(groupedData);
     }
 
     @PostMapping

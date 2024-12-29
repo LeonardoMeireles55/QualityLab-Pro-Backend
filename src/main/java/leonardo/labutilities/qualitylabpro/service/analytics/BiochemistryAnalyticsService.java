@@ -20,6 +20,7 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsHelperService
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
+
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
         Pageable pageable,
