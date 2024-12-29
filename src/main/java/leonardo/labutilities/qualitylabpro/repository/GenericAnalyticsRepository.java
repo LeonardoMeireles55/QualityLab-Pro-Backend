@@ -15,14 +15,6 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
 
     boolean existsByDateAndLevelAndName(LocalDateTime date, String level, String value);
 
-    //    List<GenericValuesRecord> findAllByNameOrderByDate(String name, Sort sort);
-    //
-    //    List<GenericValuesRecord> findAllByNameOrderByDateAsc(String name);
-    //
-    //    List<GenericAnalytics> findAllByNameInOrderByDateDesc(List<String> names);
-    //
-    //    List<GenericValuesRecord> findAllByLevel(String level);
-
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2")
     List<GenericValuesRecord> findAllByNameAndLevel(Pageable pageable, String name, String level);
 
@@ -50,4 +42,10 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
         "SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 ORDER BY ga.date DESC"
     )
     List<GenericValuesRecord> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    // @Query("SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 GROUP BY ga.level ORDER BY ga.date DESC")
+    // List<GenericValuesRecord> findAllByDateBetweenGroupByLevel(LocalDateTime startDate, LocalDateTime endDate);
+
+    // @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.date BETWEEN ?2 AND ?3 GROUP BY ga.level ORDER BY ga.date DESC")
+    // List<GenericValuesRecord> findAllByNameAndDateBetweenGroupByLevel(String name, LocalDateTime startDate, LocalDateTime endDate);
 }
