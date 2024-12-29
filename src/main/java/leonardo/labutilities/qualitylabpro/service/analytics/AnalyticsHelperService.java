@@ -21,7 +21,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final RulesValidatorComponent rulesValidatorComponent;
 
-    private final Pageable pageable = PageRequest.of(0, 80);
+    private final Pageable pageable = PageRequest.of(0, 200);
 
     public AnalyticsHelperService(
             GenericAnalyticsRepository genericAnalyticsRepository,
