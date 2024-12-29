@@ -3,6 +3,7 @@ package leonardo.labutilities.qualitylabpro.service.analytics;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import leonardo.labutilities.qualitylabpro.dto.analytics.GenericResultsGroupByLevel;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesGroupByLevel;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecordGroupByLevel;
@@ -15,8 +16,9 @@ public interface IAnalyticsHelperService {
     List<MeanAndStandardDeviationRecordGroupByLevel> calculateMeanAndStandardDeviationGrouped(
             List<GenericValuesGroupByLevel> records
     );
-    List<MeanAndStandardDeviationRecordGroupByLevel> generateMeanAndStandardDeviationGrouped(
-            String name, LocalDateTime startDate, LocalDateTime endDate);
+    List<GenericValuesGroupByLevel> getGroupedFilteredRecords(List<GenericValuesGroupByLevel> records);
+    boolean groupedShouldIncludeRecord(GenericValuesGroupByLevel record);
+
     List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records);
 
     boolean shouldIncludeRecord(GenericValuesRecord record);
