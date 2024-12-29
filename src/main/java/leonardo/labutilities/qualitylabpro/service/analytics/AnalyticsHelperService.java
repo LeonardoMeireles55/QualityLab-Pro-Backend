@@ -80,10 +80,11 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     }
     public List<GenericResultsGroupByLevel> getGroupedResults(String name, LocalDateTime startDate, LocalDateTime endDate) {
         List<GenericValuesGroupByLevel> analytics = getGroupedByLevel(name, startDate, endDate);
-        var filteredRecords = getGroupedFilteredRecords(analytics);
+//        var filteredRecords = getGroupedFilteredRecords(analytics);
 
         List<MeanAndStandardDeviationRecordGroupByLevel> meanAndStandardDeviation =
-                calculateMeanAndStandardDeviationGrouped(filteredRecords);
+                calculateMeanAndStandardDeviationGrouped(analytics);
+//        System.out.println("meanAndStandardDeviation: " + meanAndStandardDeviation);
         return analytics.stream()
                 .map(analytic -> {
                     var matchingStats = meanAndStandardDeviation.stream()
