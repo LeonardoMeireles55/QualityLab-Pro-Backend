@@ -13,9 +13,9 @@ public record GenericValuesGroupByLevel(
     }
     private String convertLevel(String inputLevel) {
         return switch (inputLevel) {
-            case "PCCC1", "Normal C. Assayed", "low" -> "1";
-            case "PCCC2", "Low Abn C. Assayed", "normal" -> "2";
-            case "high" -> "3";
+            case "PCCC1", "Normal C. Assayed", "low", "1" -> "1";
+            case "PCCC2", "Low Abn C. Assayed", "normal", "2" -> "2";
+            case "high", "3" -> "3";
             default -> throw new CustomGlobalErrorHandling.ResourceNotFoundException(
                     "Level not found."
             );

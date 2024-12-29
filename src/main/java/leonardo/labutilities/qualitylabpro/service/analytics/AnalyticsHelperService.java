@@ -21,6 +21,8 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     private final GenericAnalyticsRepository genericAnalyticsRepository;
     private final RulesValidatorComponent rulesValidatorComponent;
 
+    private final Pageable pageable = PageRequest.of(0, 80);
+
     public AnalyticsHelperService(
             GenericAnalyticsRepository genericAnalyticsRepository,
             RulesValidatorComponent rulesValidatorComponent
@@ -34,12 +36,27 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
     }
 
+    public boolean groupedShouldIncludeRecord(GenericValuesGroupByLevel record) {
+        return record.values().stream()
+                .allMatch(genericValuesRecord ->
+                        !Objects.equals(genericValuesRecord.rules(), "+3s") &&
+                                !Objects.equals(genericValuesRecord.rules(), "-3s")
+                );
+    }
+
     public List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records) {
         return records.stream().filter(this::shouldIncludeRecord).toList();
     }
+    public List<GenericValuesGroupByLevel> getGroupedFilteredRecords(List<GenericValuesGroupByLevel> records) {
+        return records.stream()
+                .filter(this::groupedShouldIncludeRecord).map((GenericValuesGroupByLevel record) -> {
+                    List<GenericValuesRecord> filteredRecords = getFilteredRecords(record.values());
+                    return new GenericValuesGroupByLevel(record.level(), filteredRecords);
+                }).toList();
+    }
 
     public List<GenericValuesGroupByLevel> getGroupedByLevel(String name, LocalDateTime startDate, LocalDateTime endDate) {
-        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate);
+        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable);
         return records.stream()
                 .collect(Collectors.groupingBy(GenericValuesRecord::level))
                 .entrySet()
@@ -63,9 +80,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     }
     public List<GenericResultsGroupByLevel> getGroupedResults(String name, LocalDateTime startDate, LocalDateTime endDate) {
         List<GenericValuesGroupByLevel> analytics = getGroupedByLevel(name, startDate, endDate);
-        List<MeanAndStandardDeviationRecordGroupByLevel> meanAndStandardDeviation =
-                calculateMeanAndStandardDeviationGrouped(analytics);
+        var filteredRecords = getGroupedFilteredRecords(analytics);
 
+        List<MeanAndStandardDeviationRecordGroupByLevel> meanAndStandardDeviation =
+                calculateMeanAndStandardDeviationGrouped(filteredRecords);
         return analytics.stream()
                 .map(analytic -> {
                     var matchingStats = meanAndStandardDeviation.stream()
@@ -112,7 +130,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
     public List<MeanAndStandardDeviationRecordGroupByLevel> generateMeanAndStandardDeviationGrouped(
             String name, LocalDateTime startDate, LocalDateTime endDate
     ) {
-        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate);
+        List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable);
 
         var values = records.stream()
                 .collect(Collectors.groupingBy(GenericValuesRecord::level))
@@ -197,8 +215,6 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         );
         return analyticsList.stream().toList();
     }
-
-    Pageable pageable = PageRequest.of(0, 80);
 
     List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(
         String name,
