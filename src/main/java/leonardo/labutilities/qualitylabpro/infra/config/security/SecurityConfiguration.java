@@ -30,21 +30,28 @@ public class SecurityConfiguration {
             .cors(Customizer.withDefaults())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(req -> {
+                // Public endpoints
                 req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
                 req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
                 req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
-                req
-                    .requestMatchers(HttpMethod.DELETE, "/analytics/deleteAnalyticsResultById")
-                    .hasRole("ADMIN");
-                req
-                    .requestMatchers(
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html",
-                        "/swagger-ui/**",
-                        "/swagger-ui"
-                    )
-                    .permitAll();
-                req.anyRequest().permitAll();
+                req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").authenticated();
+
+                
+                // Swagger/OpenAPI endpoints
+                req.requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**"
+                ).permitAll();
+
+                // Admin-only endpoints
+                req.requestMatchers(HttpMethod.DELETE, "/generic-analytics/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.DELETE, "/biochemistry-analytics/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.DELETE, "/hematology-analytics/**").hasRole("ADMIN");
+                req.requestMatchers(HttpMethod.DELETE, "/coagulation-analytics/**").hasRole("ADMIN");
+
+                // All other endpoints require authentication
+                req.anyRequest().authenticated();
             })
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
