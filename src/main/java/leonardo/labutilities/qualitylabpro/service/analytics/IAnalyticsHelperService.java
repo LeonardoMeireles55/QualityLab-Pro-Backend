@@ -3,7 +3,6 @@ package leonardo.labutilities.qualitylabpro.service.analytics;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import leonardo.labutilities.qualitylabpro.dto.analytics.GenericResultsGroupByLevel;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesGroupByLevel;
 import leonardo.labutilities.qualitylabpro.dto.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dto.analytics.MeanAndStandardDeviationRecordGroupByLevel;
