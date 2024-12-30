@@ -19,10 +19,49 @@ The RESTful API for Laboratory Internal Quality Control is designed to assist cl
 ## Implemented functionalities
 The API efficiently manages package insert values and test values, offering simple and intuitive CRUD operations.
 
-## Coming soon
+## Project Structure
+```
+src
+├── main
+│   ├── java
+│   │   └── leonardo
+│   │       └── labutilities
+│   │           └── qualitylabpro
+│   │               ├── config
+│   │               ├── controller
+│   │               ├── domain
+│   │               │   ├── dto
+│   │               │   ├── entity
+│   │               │   ├── enums
+│   │               │   └── repository
+│   │               ├── infra
+│   │               │   ├── exception
+│   │               │   └── security
+│   │               └── service
+│   └── resources
+│       ├── application-dev.properties
+│       ├── application-prod.properties
+│       ├── application-test.properties
+│       └── db
+│           └── migration
+└── test
+    └── java
+        └── leonardo
+            └── labutilities
+                └── qualitylabpro
+                    ├── controller
+                    ├── repository
+                    └── service
+```
 
-* Add functionality related to westgard rules.
-* Improve API documentation.
+### Key Directories:
+- `config/`: Configuration classes
+- `controller/`: REST API endpoints
+- `domain/`: Core business logic and data structures
+- `infra/`: Infrastructure components like security and exception handling
+- `service/`: Business service implementations
+- `resources/`: Application properties and database migrations
+- `test/`: Unit and integration tests
 
 ## Requirements
 * [Java 21](https://www.oracle.com/br/java/technologies/javase/jdk21-archive-downloads.html)
@@ -72,6 +111,8 @@ Manages endpoints for biochemistry analytics.
 
 ### HematologyAnalyticsController
 Manages endpoints for hematology analytics.
+
+
 
 ## Contributing
 
