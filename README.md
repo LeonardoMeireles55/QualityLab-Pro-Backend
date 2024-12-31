@@ -128,6 +128,7 @@ Manages endpoints for hematology analytics.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## React PlotlyJs Front-end
+<img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/e43c369e-9989-4624-a495-197d09bf2245">
 <img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/595fe840-c244-4f24-86f7-3ae191252cc7">
 
 
