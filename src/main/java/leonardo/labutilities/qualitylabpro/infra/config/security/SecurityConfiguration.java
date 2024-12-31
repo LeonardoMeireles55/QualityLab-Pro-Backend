@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                 req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
                 req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
                 req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
-                req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").authenticated();
+                req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").permitAll();
 
                 
                 // Swagger/OpenAPI endpoints
