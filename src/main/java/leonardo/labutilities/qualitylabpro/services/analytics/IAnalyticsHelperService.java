@@ -18,8 +18,6 @@ public interface IAnalyticsHelperService {
     List<GenericValuesGroupByLevel> getGroupedFilteredRecords(List<GenericValuesGroupByLevel> records);
     boolean groupedShouldIncludeRecord(GenericValuesGroupByLevel record);
 
-    List<GenericValuesRecord> getFilteredRecords(List<GenericValuesRecord> records);
-
     boolean shouldIncludeRecord(GenericValuesRecord record);
     GenericAnalytics findAnalyticsById(Long id);
 

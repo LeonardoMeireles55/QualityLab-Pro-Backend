@@ -66,9 +66,7 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
         LocalDateTime dateStart,
         LocalDateTime dateEnd
     ) {
-        var filteredResult = getFilteredRecords(
-            findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd)
-        );
+        var filteredResult = findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd);
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
 
