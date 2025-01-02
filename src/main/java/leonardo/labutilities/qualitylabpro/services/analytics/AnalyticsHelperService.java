@@ -95,10 +95,18 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 }).toList();
     }
 
+    private void throwIfEmpty(List<?> results, String message) {
+        if (results == null || results.isEmpty()) {
+            throw new CustomGlobalErrorHandling.ResourceNotFoundException(message);
+        }
+    }
+
     public List<GenericValuesGroupByLevel> getGroupedByLevel(String name, LocalDateTime startDate,
             LocalDateTime endDate) {
         List<GenericValuesRecord> records = genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(name,
                 startDate, endDate, pageable);
+        throwIfEmpty(records, "No analytics found for the given parameters");
+                
         return records.stream()
                 .collect(Collectors.groupingBy(GenericValuesRecord::level))
                 .entrySet()
@@ -213,6 +221,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         List<GenericValuesRecord> analyticsList = genericAnalyticsRepository.findAllByName(
                 pageable,
                 name.toUpperCase());
+        throwIfEmpty(analyticsList, "No analytics found with the given name");
         return analyticsList;
     }
 
@@ -231,6 +240,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 pageable,
                 name.toUpperCase(),
                 level);
+        throwIfEmpty(analyticsList, "No analytics found for the given name and level");
         return analyticsList;
     }
 
@@ -239,19 +249,19 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
             String level,
             LocalDateTime dateStart,
             LocalDateTime dateEnd) {
-        return genericAnalyticsRepository
+        List<GenericValuesRecord> results = genericAnalyticsRepository
                 .findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable);
+        throwIfEmpty(results, "No analytics found for the given parameters");
+        return results;
     }
 
     public List<GenericValuesRecord> findAllAnalyticsByDate(
             LocalDateTime dateStart,
             LocalDateTime dateEnd) {
-        Optional<List<GenericValuesRecord>> analyticsOptional = Optional.ofNullable(
-                genericAnalyticsRepository.findAllByDateBetween(dateStart, dateEnd));
-
-        return new ArrayList<>(
-                analyticsOptional.orElseThrow(
-                        () -> new CustomGlobalErrorHandling.ResourceNotFoundException("Results by date not found.")));
+        List<GenericValuesRecord> results = genericAnalyticsRepository
+                .findAllByDateBetween(dateStart, dateEnd);
+        throwIfEmpty(results, "No analytics found for the given date range");
+        return results;
     }
 
 }
