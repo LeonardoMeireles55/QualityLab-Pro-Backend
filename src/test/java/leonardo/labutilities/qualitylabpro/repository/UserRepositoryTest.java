@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
+import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
