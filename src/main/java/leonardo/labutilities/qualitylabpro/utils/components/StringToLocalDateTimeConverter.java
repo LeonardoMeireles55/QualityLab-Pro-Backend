@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.lang.NonNull;
 
 @Component
 public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
@@ -13,7 +14,7 @@ public class StringToLocalDateTimeConverter implements Converter<String, LocalDa
     );
 
     @Override
-    public LocalDateTime convert(String source) {
+    public LocalDateTime convert(@NonNull String source) {
         return LocalDateTime.parse(source, FORMATTER);
     }
 }
