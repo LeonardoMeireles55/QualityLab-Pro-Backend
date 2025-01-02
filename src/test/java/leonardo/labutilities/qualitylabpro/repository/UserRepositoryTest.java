@@ -2,10 +2,10 @@ package leonardo.labutilities.qualitylabpro.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.utils.components.BCryptEncoderComponent;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;

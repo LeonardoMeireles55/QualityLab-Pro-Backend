@@ -2,10 +2,11 @@ package leonardo.labutilities.qualitylabpro.services.analytics;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
+
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStandardDeviationRecord;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
+import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 
 import org.springframework.data.domain.Pageable;
 

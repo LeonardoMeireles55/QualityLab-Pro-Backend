@@ -1,10 +1,10 @@
 package leonardo.labutilities.qualitylabpro.services.users;
 
-import leonardo.labutilities.qualitylabpro.components.BCryptEncoderComponent;
-import leonardo.labutilities.qualitylabpro.configs.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.utils.components.BCryptEncoderComponent;
+import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

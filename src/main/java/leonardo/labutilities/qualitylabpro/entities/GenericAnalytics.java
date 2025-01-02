@@ -2,8 +2,9 @@ package leonardo.labutilities.qualitylabpro.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
+
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 

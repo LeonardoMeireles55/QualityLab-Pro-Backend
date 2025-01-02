@@ -3,11 +3,12 @@ package leonardo.labutilities.qualitylabpro.services.analytics;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import leonardo.labutilities.qualitylabpro.components.RulesValidatorComponent;
-import leonardo.labutilities.qualitylabpro.configs.exception.CustomGlobalErrorHandling;
+
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
+import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
