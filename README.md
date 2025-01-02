@@ -54,7 +54,9 @@ src
             └── labutilities
                 └── qualitylabpro
                     ├── ControlApplicationTests.java
-                    └── repository
+                    └── controllers
+                    └── repositories
+                    └── services
 ```
 
 ### Key Directories:
