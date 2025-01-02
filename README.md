@@ -27,31 +27,34 @@ src
 │   │   └── leonardo
 │   │       └── labutilities
 │   │           └── qualitylabpro
-│   │               ├── config
-│   │               ├── controller
-│   │               ├── domain
-│   │               │   ├── dto
-│   │               │   ├── entity
-│   │               │   ├── enums
-│   │               │   └── repository
-│   │               ├── infra
-│   │               │   ├── exception
-│   │               │   └── security
-│   │               └── service
+│   │               ├── ControlApplication.java
+│   │               ├── configs
+│   │               ├── constants
+│   │               ├── controllers
+│   │               ├── dtos
+│   │               ├── entities
+│   │               ├── enums
+│   │               ├── repositories
+│   │               ├── services
+│   │               └── utils
 │   └── resources
+│       ├── META-INF
+│       │   └── spring.factories
+│       ├── aplication-local.properties
 │       ├── application-dev.properties
+│       ├── application-mariadb.properties
 │       ├── application-prod.properties
 │       ├── application-test.properties
+│       ├── application.properties
 │       └── db
-│           └── migration
+│           └── migrations
 └── test
     └── java
         └── leonardo
             └── labutilities
                 └── qualitylabpro
-                    ├── controller
-                    ├── repository
-                    └── service
+                    ├── ControlApplicationTests.java
+                    └── repository
 ```
 
 ### Key Directories:
