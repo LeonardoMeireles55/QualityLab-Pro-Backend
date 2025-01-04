@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
 import leonardo.labutilities.qualitylabpro.services.analytics.AnalyticsHelperService;
 
 import org.springframework.data.domain.Pageable;
@@ -36,21 +36,21 @@ public abstract class GenericAnalyticsController {
         }
 
         @GetMapping("results/grouped-by-level")
-        public ResponseEntity<List<GenericResultsGroupByLevel>> getGroupedByLevel(
+        public ResponseEntity<List<GroupedResultsByLevel>> getGroupedByLevel(
                         @RequestParam String name,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                List<GenericResultsGroupByLevel> groupedData =
+                List<GroupedResultsByLevel> groupedData =
                                 analyticsHelperService.findAnalyticsWithGroupedResults(name, startDate, endDate);
                 return ResponseEntity.ok(groupedData);
         }
 
         @GetMapping("/results/mean-deviation/grouped-by-level")
-        public ResponseEntity<List<MeanAndStandardDeviationRecordGroupByLevel>> getMeanAndDeviationGrouped(
+        public ResponseEntity<List<GroupedMeanAndStdRecordByLevel>> getMeanAndDeviationGrouped(
                         @RequestParam String name,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                List<MeanAndStandardDeviationRecordGroupByLevel> groupedData =
+                List<GroupedMeanAndStdRecordByLevel> groupedData =
                                 analyticsHelperService.calculateGroupedMeanAndStandardDeviation(name,
                                                 startDate, endDate);
                 return ResponseEntity.ok(groupedData);
@@ -73,11 +73,11 @@ public abstract class GenericAnalyticsController {
 
         @GetMapping("/{id}")
         public ResponseEntity<GenericValuesRecord> getAnalyticsById(@PathVariable Long id) {
-                GenericAnalytics genericAnalytics = analyticsHelperService.findById(id);
-                return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
+                GenericAnalytic genericAnalytic = analyticsHelperService.findById(id);
+                return ResponseEntity.ok(new GenericValuesRecord(genericAnalytic));
         }
 
-        @GetMapping("/results")
+        @GetMapping()
         public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsHateoas(
                         @PageableDefault(sort = "date",
                                         direction = Sort.Direction.DESC) Pageable pageable) {
@@ -138,7 +138,7 @@ public abstract class GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate);
 
-        public abstract ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
+        public abstract ResponseEntity<MeanAndStdDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate);

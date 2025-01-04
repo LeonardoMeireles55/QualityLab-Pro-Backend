@@ -29,9 +29,8 @@ public class SecurityConfiguration {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     // Public endpoints
-                    req.requestMatchers(HttpMethod.POST, "/user/signIn").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/user/signUp").permitAll();
-                    req.requestMatchers(HttpMethod.PATCH, "/user/update/password").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/users/sign-in").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/users/sign-up").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").permitAll();
 
                     // Swagger/OpenAPI endpoints
@@ -47,6 +46,7 @@ public class SecurityConfiguration {
                             .hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.DELETE, "/coagulation-analytics/**")
                             .hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/users/**");
 
                     // All other endpoints require authentication
                     req.anyRequest().authenticated();

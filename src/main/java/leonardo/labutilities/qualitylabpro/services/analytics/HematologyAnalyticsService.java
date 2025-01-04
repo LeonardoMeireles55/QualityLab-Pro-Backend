@@ -44,18 +44,4 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
                     "Level not found.");
         };
     }
-//
-//    @Override
-//    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name,
-//            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
-//        var filteredResult = findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd);
-//
-//        double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
-//
-//        List<Double> values = filteredResult.stream().map(GenericValuesRecord::value).toList();
-//
-//        int count = filteredResult.size();
-//
-//        return calculateMeanAndStandardDeviation(sum, count, values);
-//    }
 }

@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.time.LocalDateTime;
 import java.util.List;
 import leonardo.labutilities.qualitylabpro.constants.AvailableCoagulationAnalytics;
+import leonardo.labutilities.qualitylabpro.constants.AvailableHematologyAnalytics;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStandardDeviationRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
 import leonardo.labutilities.qualitylabpro.services.analytics.CoagulationAnalyticsService;
 
 import org.springframework.data.domain.Pageable;
@@ -20,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("coagulation-analytics")
 @Validated
-
 public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         private final CoagulationAnalyticsService coagulationAnalyticsService;
+        private static final List<String> names = new AvailableCoagulationAnalytics().availableCoagulationAnalytics();
 
         public CoagulationAnalyticsController(
                         CoagulationAnalyticsService coagulationAnalyticsService) {
@@ -43,9 +44,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
                 List<GenericValuesRecord> resultsList = coagulationAnalyticsService
-                                .getAllByNameInAndDateBetween(names.availableCoagulationAnalytics(),
+                                .getAllByNameInAndDateBetween(names,
                                                 startDate, endDate);
                 return ResponseEntity.ok(resultsList);
         }
@@ -63,7 +63,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         @Override
         @GetMapping("/results/mean-standard-deviation")
-        public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
+        public ResponseEntity<MeanAndStdDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
