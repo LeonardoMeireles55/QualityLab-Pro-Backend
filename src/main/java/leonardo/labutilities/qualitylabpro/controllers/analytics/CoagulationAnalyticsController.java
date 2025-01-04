@@ -36,7 +36,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(Pageable pageable,
                         String name, String level) {
                 return ResponseEntity.ok(coagulationAnalyticsService
-                                .findAllAnalyticsByNameAndLevel(pageable, name, level));
+                                .findAnalyticsByNameAndLevel(pageable, name, level));
         }
 
         @GetMapping("/results/names/date-range")
@@ -68,6 +68,6 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity.ok(coagulationAnalyticsService
-                                .generateMeanAndStandardDeviation(name, level, startDate, endDate));
+                                .calculateMeanAndStandardDeviation(name, level, startDate, endDate));
         }
 }

@@ -11,26 +11,26 @@ import org.springframework.data.domain.Pageable;
 
 public interface IAnalyticsHelperService {
 
-        List<GenericValuesGroupByLevel> getGroupedByLevel(String name, LocalDateTime startDate,
-                        LocalDateTime endDate);
+        List<GenericValuesGroupByLevel> findGroupedAnalyticsByLevel(String name, LocalDateTime startDate,
+                                                                    LocalDateTime endDate);
 
-        List<MeanAndStandardDeviationRecordGroupByLevel> calculateMeanAndStandardDeviationGrouped(
+        List<MeanAndStandardDeviationRecordGroupByLevel> getMeanAndStandardDeviationForGroups(
                         List<GenericValuesGroupByLevel> records);
 
-        List<GenericValuesGroupByLevel> getGroupedFilteredRecords(
+        List<GenericValuesGroupByLevel> findFilteredGroupedAnalytics(
                         List<GenericValuesGroupByLevel> records);
 
-        boolean groupedShouldIncludeRecord(GenericValuesGroupByLevel record);
+        boolean isGroupedRecordValid(GenericValuesGroupByLevel record);
 
-        boolean shouldIncludeRecord(GenericValuesRecord record);
+        boolean isRecordValid(GenericValuesRecord record);
 
-        GenericAnalytics findAnalyticsById(Long id);
+        GenericAnalytics findById(Long id);
 
-        void submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList);
+        void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList);
 
         List<GenericValuesRecord> findAll(Pageable pageable);
 
-        List<GenericValuesRecord> findAnalyticsByName(Pageable pageable, String name);
+        List<GenericValuesRecord> findAnalyticsByNameWithPagination(Pageable pageable, String name);
 
         List<GenericValuesRecord> findAllAnalyticsByDate(LocalDateTime dateStart,
                         LocalDateTime dateEnd);
@@ -38,11 +38,11 @@ public interface IAnalyticsHelperService {
         List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names,
                         LocalDateTime startDate, LocalDateTime endDate);
 
-        List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name,
-                        String level);
+        List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
+                                                              String level);
 
         List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name, String level,
                         LocalDateTime dateStart, LocalDateTime dateEnd);
 
-        void removeAnalyticsById(Long id);
+        void deleteAnalyticsById(Long id);
 }

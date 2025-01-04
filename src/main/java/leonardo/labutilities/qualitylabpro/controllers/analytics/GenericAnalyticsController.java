@@ -41,7 +41,7 @@ public abstract class GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 List<GenericResultsGroupByLevel> groupedData =
-                                analyticsHelperService.getGroupedResults(name, startDate, endDate);
+                                analyticsHelperService.findAnalyticsWithGroupedResults(name, startDate, endDate);
                 return ResponseEntity.ok(groupedData);
         }
 
@@ -51,7 +51,7 @@ public abstract class GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 List<MeanAndStandardDeviationRecordGroupByLevel> groupedData =
-                                analyticsHelperService.generateMeanAndStandardDeviationGrouped(name,
+                                analyticsHelperService.calculateGroupedMeanAndStandardDeviation(name,
                                                 startDate, endDate);
                 return ResponseEntity.ok(groupedData);
         }
@@ -60,20 +60,20 @@ public abstract class GenericAnalyticsController {
         @Transactional
         public ResponseEntity<List<GenericValuesRecord>> postAnalytics(
                         @Valid @RequestBody List<@Valid GenericValuesRecord> values) {
-                analyticsHelperService.submitAnalytics(values);
+                analyticsHelperService.saveNewAnalyticsRecords(values);
                 return ResponseEntity.status(201).build();
         }
 
         @DeleteMapping("/{id}")
         @Transactional
         public ResponseEntity<Void> deleteAnalyticsResultById(@PathVariable Long id) {
-                analyticsHelperService.removeAnalyticsById(id);
+                analyticsHelperService.deleteAnalyticsById(id);
                 return ResponseEntity.noContent().build();
         }
 
         @GetMapping("/{id}")
         public ResponseEntity<GenericValuesRecord> getAnalyticsById(@PathVariable Long id) {
-                GenericAnalytics genericAnalytics = analyticsHelperService.findAnalyticsById(id);
+                GenericAnalytics genericAnalytics = analyticsHelperService.findById(id);
                 return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
         }
 
@@ -104,7 +104,7 @@ public abstract class GenericAnalyticsController {
                         @PathVariable String name, @PageableDefault(sort = "date",
                                         direction = Sort.Direction.DESC) Pageable pageable) {
                 List<GenericValuesRecord> resultsList =
-                                analyticsHelperService.findAnalyticsByName(pageable, name);
+                                analyticsHelperService.findAnalyticsByNameWithPagination(pageable, name);
 
                 List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
                                 .map(result -> EntityModel.of(result,

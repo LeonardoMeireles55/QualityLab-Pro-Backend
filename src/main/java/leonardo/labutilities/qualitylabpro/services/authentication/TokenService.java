@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.services.users;
+package leonardo.labutilities.qualitylabpro.services.authentication;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

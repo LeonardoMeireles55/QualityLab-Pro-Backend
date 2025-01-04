@@ -21,15 +21,24 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
         private final GenericAnalyticsRepository genericAnalyticsRepository;
         private final RulesValidatorComponent rulesValidatorComponent;
-
         private final Pageable pageable = PageRequest.of(0, 200);
 
-        public void removeAnalyticsById(Long id) {
+        public AnalyticsHelperService(GenericAnalyticsRepository genericAnalyticsRepository,
+                                      RulesValidatorComponent rulesValidatorComponent) {
+                this.genericAnalyticsRepository = genericAnalyticsRepository;
+                this.rulesValidatorComponent = rulesValidatorComponent;
+        }
+
+        public void deleteAnalyticsById(Long id) {
                 if (!genericAnalyticsRepository.existsById(id)) {
                         throw new CustomGlobalErrorHandling.ResourceNotFoundException(
                                         "Analytics by id not found");
                 }
                 genericAnalyticsRepository.deleteById(id);
+        }
+
+        private List<Double> extractRecordValues(List<GenericValuesRecord> records) {
+                return records.stream().map(GenericValuesRecord::value).toList();
         }
 
         public void ensureNameExists(String name) {
@@ -39,12 +48,12 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 }
         }
 
-        public boolean doesNotExist(GenericValuesRecord values) {
+        public boolean isAnalyticsNonExistent(GenericValuesRecord values) {
                 return !genericAnalyticsRepository.existsByDateAndLevelAndName(values.date(),
                                 values.level(), values.name());
         }
 
-        public List<GenericValuesRecord> ensureResultsFound(List<GenericValuesRecord> results) {
+        public List<GenericValuesRecord> validateAnalyticsNameExists(List<GenericValuesRecord> results) {
                 if (results.isEmpty()) {
                         throw new CustomGlobalErrorHandling.ResourceNotFoundException(
                                         "Results not found.");
@@ -52,17 +61,24 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return results;
         }
 
-        public AnalyticsHelperService(GenericAnalyticsRepository genericAnalyticsRepository,
-                        RulesValidatorComponent rulesValidatorComponent) {
-                this.genericAnalyticsRepository = genericAnalyticsRepository;
-                this.rulesValidatorComponent = rulesValidatorComponent;
+        public boolean isRecordValid(GenericValuesRecord record) {
+                String rules = record.rules();
+                return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
         }
 
-        private List<Double> extractValues(List<GenericValuesRecord> records) {
-                return records.stream().map(GenericValuesRecord::value).toList();
+        public boolean isGroupedRecordValid(GenericValuesGroupByLevel record) {
+                return record.values().stream().allMatch(genericValuesRecord -> !Objects
+                        .equals(genericValuesRecord.rules(), "+3s")
+                        && !Objects.equals(genericValuesRecord.rules(), "-3s"));
         }
 
-        private MeanAndStandardDeviationRecord calculateStats(List<Double> values) {
+        private void validateResultsNotEmpty(List<?> results, String message) {
+                if (results == null || results.isEmpty()) {
+                        throw new CustomGlobalErrorHandling.ResourceNotFoundException(message);
+                }
+        }
+
+        private MeanAndStandardDeviationRecord computeStatistics(List<Double> values) {
                 double sum = values.stream().mapToDouble(Double::doubleValue).sum();
                 int size = values.size();
                 double mean = sum / size;
@@ -71,20 +87,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return new MeanAndStandardDeviationRecord(mean, Math.sqrt(variance));
         }
 
-        public boolean shouldIncludeRecord(GenericValuesRecord record) {
-                String rules = record.rules();
-                return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
-        }
 
-        public boolean groupedShouldIncludeRecord(GenericValuesGroupByLevel record) {
-                return record.values().stream().allMatch(genericValuesRecord -> !Objects
-                                .equals(genericValuesRecord.rules(), "+3s")
-                                && !Objects.equals(genericValuesRecord.rules(), "-3s"));
-        }
-
-        public List<GenericValuesGroupByLevel> getGroupedFilteredRecords(
+        public List<GenericValuesGroupByLevel> findFilteredGroupedAnalytics(
                         List<GenericValuesGroupByLevel> records) {
-                return records.stream().filter(this::groupedShouldIncludeRecord)
+                return records.stream().filter(this::isGroupedRecordValid)
                                 .map((GenericValuesGroupByLevel record) -> {
                                         List<GenericValuesRecord> filteredRecords = record.values();
                                         return new GenericValuesGroupByLevel(record.level(),
@@ -92,46 +98,29 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                 }).toList();
         }
 
-        private void throwIfEmpty(List<?> results, String message) {
-                if (results == null || results.isEmpty()) {
-                        throw new CustomGlobalErrorHandling.ResourceNotFoundException(message);
-                }
-        }
 
-        public List<GenericValuesGroupByLevel> getGroupedByLevel(String name,
-                        LocalDateTime startDate, LocalDateTime endDate) {
+
+        public List<GenericValuesGroupByLevel> findGroupedAnalyticsByLevel(String name,
+                                                                           LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
                                 genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(
                                                 name, startDate, endDate, pageable);
-                throwIfEmpty(records, "No analytics found for the given parameters");
+                validateResultsNotEmpty(records, "No analytics found for the given parameters");
 
                 return records.stream().collect(Collectors.groupingBy(GenericValuesRecord::level))
                                 .entrySet().stream()
                                 .map(entry -> new GenericValuesGroupByLevel(entry.getKey(),
-                                                entry.getValue()))
-                                .toList();
+                                                entry.getValue())).toList();
         }
 
-        public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(Double totalValue,
-                        Integer size, List<Double> values) {
-                double mean = totalValue / size;
-
-                double variance = values.stream().mapToDouble(value -> Math.pow(value - mean, 2))
-                                .sum() / size;
-
-                double standardDeviation = Math.sqrt(variance);
-
-                return new MeanAndStandardDeviationRecord(mean, standardDeviation);
-        }
-
-        public List<GenericResultsGroupByLevel> getGroupedResults(String name,
-                        LocalDateTime startDate, LocalDateTime endDate) {
+        public List<GenericResultsGroupByLevel> findAnalyticsWithGroupedResults(String name,
+                                                                                LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesGroupByLevel> analytics =
-                                getGroupedByLevel(name, startDate, endDate);
+                                findGroupedAnalyticsByLevel(name, startDate, endDate);
                 Map<String, MeanAndStandardDeviationRecord> statsByLevel = analytics.stream()
                                 .collect(Collectors.toMap(GenericValuesGroupByLevel::level,
-                                                group -> calculateStats(
-                                                                extractValues(group.values()))));
+                                                group -> computeStatistics(
+                                                                extractRecordValues(group.values()))));
 
                 return analytics.stream().map(analytic -> new GenericResultsGroupByLevel(analytic,
                                 new MeanAndStandardDeviationRecordGroupByLevel(analytic.level(),
@@ -140,27 +129,26 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                 .toList();
         }
 
-        public List<MeanAndStandardDeviationRecordGroupByLevel> calculateMeanAndStandardDeviationGrouped(
+        public List<MeanAndStandardDeviationRecordGroupByLevel> getMeanAndStandardDeviationForGroups(
                         List<GenericValuesGroupByLevel> records) {
                 return records.stream()
                                 .map(group -> new MeanAndStandardDeviationRecordGroupByLevel(
                                                 group.level(),
-                                                Collections.singletonList(calculateStats(
-                                                                extractValues(group.values())))))
+                                                Collections.singletonList(computeStatistics(
+                                                                extractRecordValues(group.values())))))
                                 .toList();
         }
 
-        public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name,
-                        String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+        public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(String name,
+                                                                                String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
                 List<GenericValuesRecord> values = findAllAnalyticsByNameAndLevelAndDate(name,
                                 level, dateStart, dateEnd).stream()
-                                                .filter((filteredResults) -> shouldIncludeRecord(
-                                                                filteredResults))
+                                                .filter(this::isRecordValid)
                                                 .toList();
-                return calculateStats(extractValues(values));
+                return computeStatistics(extractRecordValues(values));
         }
 
-        public List<MeanAndStandardDeviationRecordGroupByLevel> generateMeanAndStandardDeviationGrouped(
+        public List<MeanAndStandardDeviationRecordGroupByLevel> calculateGroupedMeanAndStandardDeviation(
                         String name, LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
                                 genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(
@@ -172,7 +160,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                 entry.getValue()))
                                 .toList();
 
-                return calculateMeanAndStandardDeviationGrouped(values);
+                return getMeanAndStandardDeviationForGroups(values);
         }
 
         public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names,
@@ -182,12 +170,12 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                 .toList();
         }
 
-        public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable,
-                        String name, String level);
+        public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
+                                                                              String name, String level);
 
-        public void submitAnalytics(List<GenericValuesRecord> valuesOfLevelsList) {
+        public void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList) {
                 List<GenericAnalytics> newAnalytics =
-                                valuesOfLevelsList.stream().filter(this::doesNotExist)
+                                valuesOfLevelsList.stream().filter(this::isAnalyticsNonExistent)
                                                 .map(values -> new GenericAnalytics(values,
                                                                 rulesValidatorComponent))
                                                 .collect(Collectors.toList());
@@ -203,38 +191,38 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         public List<GenericValuesRecord> findAll(Pageable pageable) {
                 return genericAnalyticsRepository.findAll(pageable).map(GenericValuesRecord::new)
                                 .stream().collect(Collectors.collectingAndThen(Collectors.toList(),
-                                                this::ensureResultsFound));
+                                                this::validateAnalyticsNameExists));
         }
 
         @Cacheable(value = "name")
-        public List<GenericValuesRecord> findAnalyticsByName(Pageable pageable, String name) {
+        public List<GenericValuesRecord> findAnalyticsByNameWithPagination(Pageable pageable, String name) {
                 List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                                 .findAllByName(pageable, name.toUpperCase());
-                throwIfEmpty(analyticsList, "No analytics found with the given name");
+                validateResultsNotEmpty(analyticsList, "No analytics found with the given name");
                 return analyticsList;
         }
 
         @Cacheable(value = "id")
-        public GenericAnalytics findAnalyticsById(Long id) {
+        public GenericAnalytics findById(Long id) {
                 return genericAnalyticsRepository.findById(id).orElseThrow(
                                 () -> new CustomGlobalErrorHandling.ResourceNotFoundException(
                                                 "Results not found."));
         }
 
-        List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevel(Pageable pageable,
-                        String name, String level) {
+        List<GenericValuesRecord> findAnalyticsByNameAndLevelWithPagination(Pageable pageable,
+                                                                            String name, String level) {
                 List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                                 .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
-                throwIfEmpty(analyticsList, "No analytics found for the given name and level");
+                validateResultsNotEmpty(analyticsList, "No analytics found for the given name and level");
                 return analyticsList;
         }
 
-        List<GenericValuesRecord> findAllGenericAnalyticsByNameAndLevelAndDate(String name,
-                        String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+        List<GenericValuesRecord> findAnalyticsByNameLevelAndDate(String name,
+                                                                  String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
                 List<GenericValuesRecord> results =
                                 genericAnalyticsRepository.findAllByNameAndLevelAndDateBetween(name,
                                                 level, dateStart, dateEnd, pageable);
-                throwIfEmpty(results, "No analytics found for the given parameters");
+                validateResultsNotEmpty(results, "No analytics found for the given parameters");
                 return results;
         }
 
@@ -242,7 +230,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                         LocalDateTime dateEnd) {
                 List<GenericValuesRecord> results =
                                 genericAnalyticsRepository.findAllByDateBetween(dateStart, dateEnd);
-                throwIfEmpty(results, "No analytics found for the given date range");
+                validateResultsNotEmpty(results, "No analytics found for the given date range");
                 return results;
         }
 

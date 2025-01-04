@@ -7,7 +7,7 @@ import leonardo.labutilities.qualitylabpro.dtos.authentication.TokenJwtRecord;
 import leonardo.labutilities.qualitylabpro.dtos.users.UserRecord;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
-import leonardo.labutilities.qualitylabpro.services.users.TokenService;
+import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
 import leonardo.labutilities.qualitylabpro.services.users.UserService;
 
 import org.springframework.http.ResponseEntity;

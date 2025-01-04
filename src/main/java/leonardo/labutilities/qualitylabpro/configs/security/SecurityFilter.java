@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
-import leonardo.labutilities.qualitylabpro.services.users.TokenService;
+import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

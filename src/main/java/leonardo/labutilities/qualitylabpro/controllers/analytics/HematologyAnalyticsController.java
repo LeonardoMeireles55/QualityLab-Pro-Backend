@@ -32,7 +32,7 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
         public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(Pageable pageable,
                         String name, String level) {
                 return ResponseEntity.ok(hematologyAnalyticsService
-                                .findAllAnalyticsByNameAndLevel(pageable, name, level));
+                                .findAnalyticsByNameAndLevel(pageable, name, level));
         }
 
         @GetMapping("/results/names/date-range")
@@ -64,6 +64,6 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity.ok(hematologyAnalyticsService
-                                .generateMeanAndStandardDeviation(name, level, startDate, endDate));
+                                .calculateMeanAndStandardDeviation(name, level, startDate, endDate));
         }
 }

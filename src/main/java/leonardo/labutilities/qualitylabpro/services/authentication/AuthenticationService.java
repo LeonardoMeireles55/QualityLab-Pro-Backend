@@ -1,4 +1,4 @@
-package leonardo.labutilities.qualitylabpro.services.users;
+package leonardo.labutilities.qualitylabpro.services.authentication;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

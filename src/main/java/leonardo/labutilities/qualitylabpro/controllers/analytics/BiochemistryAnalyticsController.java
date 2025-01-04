@@ -46,7 +46,7 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
         public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(Pageable pageable,
                         String name, String level) {
                 return ResponseEntity.ok(biochemistryAnalyticsService
-                                .findAllAnalyticsByNameAndLevel(pageable, name, level));
+                                .findAnalyticsByNameAndLevel(pageable, name, level));
         }
 
         @Override
@@ -67,6 +67,6 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 return ResponseEntity.ok(biochemistryAnalyticsService
-                                .generateMeanAndStandardDeviation(name, level, startDate, endDate));
+                                .calculateMeanAndStandardDeviation(name, level, startDate, endDate));
         }
 }
