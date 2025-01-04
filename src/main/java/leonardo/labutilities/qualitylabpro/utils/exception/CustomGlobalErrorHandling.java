@@ -26,24 +26,24 @@ public class CustomGlobalErrorHandling extends RuntimeException {
                         error -> error.getDefaultMessage() != null ? error.getDefaultMessage()
                                 : "Invalid value"));
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Validation failed",
-                request.getRequestURI());
+        ApiError apiError =
+                new ApiError(HttpStatus.BAD_REQUEST, "Validation failed", request.getRequestURI());
         apiError.addValidationErrors(errors);
 
         log.error("Validation failed for request to {}: {}", request.getRequestURI(), errors);
         return ResponseEntity.badRequest().body(apiError);
     }
 
-    @ExceptionHandler({ ResourceNotFoundException.class })
+    @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<ApiError> handleNotFound(Exception ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(),
-                request.getRequestURI());
+        ApiError apiError =
+                new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
 
         log.error("Resource not found at {}: {}", request.getRequestURI(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
-    @ExceptionHandler({ BadCredentialsException.class, PasswordNotMatchesException.class })
+    @ExceptionHandler({BadCredentialsException.class, PasswordNotMatchesException.class})
     public ResponseEntity<ApiError> handleAuthenticationErrors(Exception ex,
             HttpServletRequest request) {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Authentication failed",
@@ -55,8 +55,8 @@ public class CustomGlobalErrorHandling extends RuntimeException {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiError> handleAccessDenied(HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Access denied",
-                request.getRequestURI());
+        ApiError apiError =
+                new ApiError(HttpStatus.FORBIDDEN, "Access denied", request.getRequestURI());
 
         log.error("Access denied at {}", request.getRequestURI());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);

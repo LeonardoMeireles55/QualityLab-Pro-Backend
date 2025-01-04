@@ -15,41 +15,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class CoagulationAnalyticsService extends AbstractAnalyticsService {
 
-    public CoagulationAnalyticsService(
-            GenericAnalyticsRepository genericAnalyticsRepository,
+    public CoagulationAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
             RulesValidatorComponent rulesValidatorComponent) {
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
     @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
-            Pageable pageable,
-            String name,
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name,
             String level) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevel(pageable, name, this.convertLevel(level));
     }
 
     @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(
-            String name,
-            String level,
-            LocalDateTime dateStart,
-            LocalDateTime dateEnd) {
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
+            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         this.ensureNameExists(name);
-        return this.findAllGenericAnalyticsByNameAndLevelAndDate(
-                name.toUpperCase(),
-                this.convertLevel(level),
-                dateStart,
-                dateEnd);
+        return this.findAllGenericAnalyticsByNameAndLevelAndDate(name.toUpperCase(),
+                this.convertLevel(level), dateStart, dateEnd);
     }
 
     @Override
-    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(
-            String name,
-            String level,
-            LocalDateTime dateStart,
-            LocalDateTime dateEnd) {
+    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name,
+            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         var filteredResult = findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd);
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();

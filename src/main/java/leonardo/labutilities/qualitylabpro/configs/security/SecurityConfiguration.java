@@ -25,9 +25,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+        return http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     // Public endpoints
@@ -37,21 +35,22 @@ public class SecurityConfiguration {
                     req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").permitAll();
 
                     // Swagger/OpenAPI endpoints
-                    req.requestMatchers(
-                            "/v3/api-docs/**",
-                            "/swagger-ui.html",
-                            "/swagger-ui/**").permitAll();
+                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**")
+                            .permitAll();
 
                     // Admin-only endpoints
-                    req.requestMatchers(HttpMethod.DELETE, "/generic-analytics/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/biochemistry-analytics/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/hematology-analytics/**").hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/coagulation-analytics/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/generic-analytics/**")
+                            .hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/biochemistry-analytics/**")
+                            .hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/hematology-analytics/**")
+                            .hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/coagulation-analytics/**")
+                            .hasRole("ADMIN");
 
                     // All other endpoints require authentication
                     req.anyRequest().authenticated();
-                })
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                }).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

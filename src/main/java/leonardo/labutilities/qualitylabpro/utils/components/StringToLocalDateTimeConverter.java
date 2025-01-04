@@ -9,8 +9,8 @@ import org.springframework.lang.NonNull;
 @Component
 public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public LocalDateTime convert(@NonNull String source) {

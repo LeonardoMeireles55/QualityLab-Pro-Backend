@@ -15,32 +15,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class HematologyAnalyticsService extends AbstractAnalyticsService {
 
-    public HematologyAnalyticsService(
-            GenericAnalyticsRepository genericAnalyticsRepository,
+    public HematologyAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
             RulesValidatorComponent rulesValidatorComponent) {
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
     @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
-            Pageable pageable,
-            String name,
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(Pageable pageable, String name,
             String level) {
         ensureNameExists(name);
         return findAllGenericAnalyticsByNameAndLevel(pageable, name, convertLevel(level));
     }
 
     @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(
-            String name,
-            String level,
-            LocalDateTime dateStart,
-            LocalDateTime dateEnd) {
+    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
+            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         ensureNameExists(name);
-        return findAllGenericAnalyticsByNameAndLevelAndDate(
-                name,
-                convertLevel(level),
-                dateStart,
+        return findAllGenericAnalyticsByNameAndLevelAndDate(name, convertLevel(level), dateStart,
                 dateEnd);
     }
 
@@ -56,11 +47,8 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
     }
 
     @Override
-    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(
-            String name,
-            String level,
-            LocalDateTime dateStart,
-            LocalDateTime dateEnd) {
+    public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(String name,
+            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         var filteredResult = findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd);
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();

@@ -23,62 +23,51 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
-    private final CoagulationAnalyticsService coagulationAnalyticsService;
+        private final CoagulationAnalyticsService coagulationAnalyticsService;
 
-    public CoagulationAnalyticsController(CoagulationAnalyticsService coagulationAnalyticsService) {
-        super(coagulationAnalyticsService);
-        this.coagulationAnalyticsService = coagulationAnalyticsService;
-    }
+        public CoagulationAnalyticsController(
+                        CoagulationAnalyticsService coagulationAnalyticsService) {
+                super(coagulationAnalyticsService);
+                this.coagulationAnalyticsService = coagulationAnalyticsService;
+        }
 
-    @Override
-    @GetMapping("/results/search/name/level")
-    public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
-            Pageable pageable,
-            String name,
-            String level) {
-        return ResponseEntity.ok(
-                coagulationAnalyticsService.findAllAnalyticsByNameAndLevel(pageable, name, level));
-    }
+        @Override
+        @GetMapping("/results/search/name/level")
+        public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(Pageable pageable,
+                        String name, String level) {
+                return ResponseEntity.ok(coagulationAnalyticsService
+                                .findAllAnalyticsByNameAndLevel(pageable, name, level));
+        }
 
-    @GetMapping("/results/names/date-range")
-    public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-            @RequestParam("startDate") LocalDateTime startDate,
-            @RequestParam("endDate") LocalDateTime endDate) {
-        AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
-        List<GenericValuesRecord> resultsList = coagulationAnalyticsService.getAllByNameInAndDateBetween(
-                names.availableCoagulationAnalytics(),
-                startDate,
-                endDate);
-        return ResponseEntity.ok(resultsList);
-    }
+        @GetMapping("/results/names/date-range")
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
+                AvailableCoagulationAnalytics names = new AvailableCoagulationAnalytics();
+                List<GenericValuesRecord> resultsList = coagulationAnalyticsService
+                                .getAllByNameInAndDateBetween(names.availableCoagulationAnalytics(),
+                                                startDate, endDate);
+                return ResponseEntity.ok(resultsList);
+        }
 
-    @Override
-    @GetMapping("/results/search/date-range")
-    public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
-            @RequestParam String name,
-            @RequestParam String level,
-            @RequestParam("startDate") LocalDateTime startDate,
-            @RequestParam("endDate") LocalDateTime endDate) {
-        return ResponseEntity.ok(
-                coagulationAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
-                        name,
-                        level,
-                        startDate,
-                        endDate));
-    }
+        @Override
+        @GetMapping("/results/search/date-range")
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
+                        @RequestParam String name, @RequestParam String level,
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
+                return ResponseEntity.ok(
+                                coagulationAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
+                                                name, level, startDate, endDate));
+        }
 
-    @Override
-    @GetMapping("/results/mean-standard-deviation")
-    public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
-            @RequestParam String name,
-            @RequestParam String level,
-            @RequestParam("startDate") LocalDateTime startDate,
-            @RequestParam("endDate") LocalDateTime endDate) {
-        return ResponseEntity.ok(
-                coagulationAnalyticsService.generateMeanAndStandardDeviation(
-                        name,
-                        level,
-                        startDate,
-                        endDate));
-    }
+        @Override
+        @GetMapping("/results/mean-standard-deviation")
+        public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
+                        @RequestParam String name, @RequestParam String level,
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
+                return ResponseEntity.ok(coagulationAnalyticsService
+                                .generateMeanAndStandardDeviation(name, level, startDate, endDate));
+        }
 }

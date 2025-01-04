@@ -5,6 +5,6 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@AutoConfigureBefore({ JacksonAutoConfiguration.class })
+@AutoConfigureBefore({JacksonAutoConfiguration.class})
 public class DateTimeAutoConfiguration {
 }

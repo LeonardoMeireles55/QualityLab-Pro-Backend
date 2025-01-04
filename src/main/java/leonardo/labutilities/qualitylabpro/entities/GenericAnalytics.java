@@ -39,23 +39,11 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
     @Transient
     RulesValidatorComponent rulesValidatorComponent;
 
-    public GenericAnalytics() {
-    }
+    public GenericAnalytics() {}
 
-    public GenericAnalytics(
-            Long id,
-            LocalDateTime date,
-            String levelLot,
-            String testLot,
-            String name,
-            String level,
-            double value,
-            double mean,
-            double sd,
-            String unitValue,
-            String rules,
-            String description,
-            RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot,
+            String name, String level, double value, double mean, double sd, String unitValue,
+            String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;
@@ -71,8 +59,7 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public GenericAnalytics(
-            GenericValuesRecord values,
+    public GenericAnalytics(GenericValuesRecord values,
             RulesValidatorComponent rulesValidatorComponent) {
         this.date = values.date();
         this.levelLot = values.level_lot();
