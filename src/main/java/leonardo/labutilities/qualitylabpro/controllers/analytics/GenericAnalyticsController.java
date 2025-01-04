@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.services.analytics.AnalyticsHelperService;
 
 import org.springframework.data.domain.Pageable;
@@ -73,8 +73,8 @@ public abstract class GenericAnalyticsController {
 
         @GetMapping("/{id}")
         public ResponseEntity<GenericValuesRecord> getAnalyticsById(@PathVariable Long id) {
-                GenericAnalytic genericAnalytic = analyticsHelperService.findById(id);
-                return ResponseEntity.ok(new GenericValuesRecord(genericAnalytic));
+                GenericAnalytics genericAnalytics = analyticsHelperService.findById(id);
+                return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
         }
 
         @GetMapping()

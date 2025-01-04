@@ -10,7 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Entity(name = "generic_analytics")
 @Getter
-public class GenericAnalytic extends RepresentationModel<GenericAnalytic> {
+public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +39,11 @@ public class GenericAnalytic extends RepresentationModel<GenericAnalytic> {
     @Transient
     RulesValidatorComponent rulesValidatorComponent;
 
-    public GenericAnalytic() {}
+    public GenericAnalytics() {}
 
-    public GenericAnalytic(Long id, LocalDateTime date, String levelLot, String testLot,
-                           String name, String level, double value, double mean, double sd, String unitValue,
-                           String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot,
+                            String name, String level, double value, double mean, double sd, String unitValue,
+                            String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;
@@ -59,8 +59,8 @@ public class GenericAnalytic extends RepresentationModel<GenericAnalytic> {
         this.rulesValidatorComponent = rulesValidatorComponent;
     }
 
-    public GenericAnalytic(GenericValuesRecord values,
-                           RulesValidatorComponent rulesValidatorComponent) {
+    public GenericAnalytics(GenericValuesRecord values,
+                            RulesValidatorComponent rulesValidatorComponent) {
         this.date = values.date();
         this.levelLot = values.level_lot();
         this.testLot = values.test_lot();

@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
@@ -181,9 +181,9 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                                               String name, String level);
 
         public void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList) {
-                List<GenericAnalytic> newAnalytics =
+                List<GenericAnalytics> newAnalytics =
                                 valuesOfLevelsList.stream().filter(this::isAnalyticsNonExistent)
-                                                .map(values -> new GenericAnalytic(values,
+                                                .map(values -> new GenericAnalytics(values,
                                                                 rulesValidatorComponent))
                                                 .collect(Collectors.toList());
 
@@ -204,13 +204,13 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         @Cacheable(value = "name")
         public List<GenericValuesRecord> findAnalyticsByNameWithPagination(Pageable pageable, String name) {
                 List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
-                                .findAllByName(pageable, name.toUpperCase());
+                                .findAllByName(name.toUpperCase(), pageable);
                 validateResultsNotEmpty(analyticsList, "No analytics found with the given name");
                 return analyticsList;
         }
 
         @Cacheable(value = "id")
-        public GenericAnalytic findById(Long id) {
+        public GenericAnalytics findById(Long id) {
                 return genericAnalyticsRepository.findById(id).orElseThrow(
                                 () -> new CustomGlobalErrorHandling.ResourceNotFoundException(
                                                 "Results not found."));

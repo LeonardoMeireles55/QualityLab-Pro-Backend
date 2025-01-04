@@ -6,7 +6,7 @@ import java.util.List;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedValuesByLevel;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedMeanAndStdRecordByLevel;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import org.springframework.data.domain.Pageable;
 
 public interface IAnalyticsHelperService {
@@ -24,7 +24,7 @@ public interface IAnalyticsHelperService {
 
         boolean isRecordValid(GenericValuesRecord record);
 
-        GenericAnalytic findById(Long id);
+        GenericAnalytics findById(Long id);
 
         void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList);
 

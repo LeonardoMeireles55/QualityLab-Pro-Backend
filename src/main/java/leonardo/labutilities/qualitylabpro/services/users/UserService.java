@@ -30,12 +30,6 @@ public class UserService {
          log.info("Sending recovery email to: {}", recoveryEmailRecord.email());
          emailService.sendEmail(new EmailRecord(recoveryEmailRecord.email(), subject, message));
     }
-
-    public User findUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException("User not found"));
-    }
-
     public void recoverPassword(String username, String email) {
 
         var user = userRepository.existsByUsernameAndEmail(username, email);

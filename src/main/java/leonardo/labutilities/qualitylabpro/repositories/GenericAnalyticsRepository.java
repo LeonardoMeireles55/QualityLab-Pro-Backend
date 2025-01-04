@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytic, Long> {
+public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
         boolean existsByName(String name);
-
-        List<GenericValuesRecord> findAllByName(Pageable pageable, String name);
+        @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1")
+        List<GenericValuesRecord> findAllByName(String name, Pageable pageable);
 
         boolean existsByDateAndLevelAndName(LocalDateTime date, String level, String value);
 
