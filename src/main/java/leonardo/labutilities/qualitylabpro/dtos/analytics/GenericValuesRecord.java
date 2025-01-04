@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
 
 public record GenericValuesRecord(Long id,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") @NotNull LocalDateTime date,
@@ -16,7 +16,7 @@ public record GenericValuesRecord(Long id,
         return id;
     }
 
-    public GenericValuesRecord(GenericAnalytics analytics) {
+    public GenericValuesRecord(GenericAnalytic analytics) {
         this(analytics.getId(), analytics.getDate(), analytics.getLevelLot(),
                 analytics.getTestLot(), analytics.getName(), analytics.getLevel(),
                 analytics.getValue(), analytics.getMean(), analytics.getSd(),

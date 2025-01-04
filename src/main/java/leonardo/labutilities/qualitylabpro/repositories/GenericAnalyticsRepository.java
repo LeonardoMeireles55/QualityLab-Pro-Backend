@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
+public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytic, Long> {
         boolean existsByName(String name);
 
         List<GenericValuesRecord> findAllByName(Pageable pageable, String name);
@@ -23,6 +23,8 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
         @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3")
         List<GenericValuesRecord> findAllByNameInAndDateBetween(List<String> names,
                         LocalDateTime startDate, LocalDateTime endDate);
+        @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) ORDER BY ga.date ASC")
+        List<GenericValuesRecord> findAllByNameIn(List<String> names, Pageable pageable);
 
         @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4 ORDER BY ga.date ASC")
         List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween(String name, String level,

@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
 import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
@@ -66,7 +66,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
         }
 
-        public boolean isGroupedRecordValid(GenericValuesGroupByLevel record) {
+        public boolean isGroupedRecordValid(GroupedValuesByLevel record) {
                 return record.values().stream().allMatch(genericValuesRecord -> !Objects
                         .equals(genericValuesRecord.rules(), "+3s")
                         && !Objects.equals(genericValuesRecord.rules(), "-3s"));
@@ -78,30 +78,30 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 }
         }
 
-        private MeanAndStandardDeviationRecord computeStatistics(List<Double> values) {
+        private MeanAndStdDeviationRecord computeStatistics(List<Double> values) {
                 double sum = values.stream().mapToDouble(Double::doubleValue).sum();
                 int size = values.size();
                 double mean = sum / size;
                 double variance = values.stream().mapToDouble(value -> Math.pow(value - mean, 2))
                                 .average().orElse(0.0);
-                return new MeanAndStandardDeviationRecord(mean, Math.sqrt(variance));
+                return new MeanAndStdDeviationRecord(mean, Math.sqrt(variance));
         }
 
 
-        public List<GenericValuesGroupByLevel> findFilteredGroupedAnalytics(
-                        List<GenericValuesGroupByLevel> records) {
+        public List<GroupedValuesByLevel> findFilteredGroupedAnalytics(
+                        List<GroupedValuesByLevel> records) {
                 return records.stream().filter(this::isGroupedRecordValid)
-                                .map((GenericValuesGroupByLevel record) -> {
+                                .map((GroupedValuesByLevel record) -> {
                                         List<GenericValuesRecord> filteredRecords = record.values();
-                                        return new GenericValuesGroupByLevel(record.level(),
+                                        return new GroupedValuesByLevel(record.level(),
                                                         filteredRecords);
                                 }).toList();
         }
 
 
 
-        public List<GenericValuesGroupByLevel> findGroupedAnalyticsByLevel(String name,
-                                                                           LocalDateTime startDate, LocalDateTime endDate) {
+        public List<GroupedValuesByLevel> findGroupedAnalyticsByLevel(String name,
+                                                                      LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
                                 genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(
                                                 name, startDate, endDate, pageable);
@@ -109,38 +109,38 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
                 return records.stream().collect(Collectors.groupingBy(GenericValuesRecord::level))
                                 .entrySet().stream()
-                                .map(entry -> new GenericValuesGroupByLevel(entry.getKey(),
+                                .map(entry -> new GroupedValuesByLevel(entry.getKey(),
                                                 entry.getValue())).toList();
         }
 
-        public List<GenericResultsGroupByLevel> findAnalyticsWithGroupedResults(String name,
-                                                                                LocalDateTime startDate, LocalDateTime endDate) {
-                List<GenericValuesGroupByLevel> analytics =
+        public List<GroupedResultsByLevel> findAnalyticsWithGroupedResults(String name,
+                                                                           LocalDateTime startDate, LocalDateTime endDate) {
+                List<GroupedValuesByLevel> analytics =
                                 findGroupedAnalyticsByLevel(name, startDate, endDate);
-                Map<String, MeanAndStandardDeviationRecord> statsByLevel = analytics.stream()
-                                .collect(Collectors.toMap(GenericValuesGroupByLevel::level,
+                Map<String, MeanAndStdDeviationRecord> statsByLevel = analytics.stream()
+                                .collect(Collectors.toMap(GroupedValuesByLevel::level,
                                                 group -> computeStatistics(
                                                                 extractRecordValues(group.values()))));
 
-                return analytics.stream().map(analytic -> new GenericResultsGroupByLevel(analytic,
-                                new MeanAndStandardDeviationRecordGroupByLevel(analytic.level(),
+                return analytics.stream().map(analytic -> new GroupedResultsByLevel(analytic,
+                                new GroupedMeanAndStdRecordByLevel(analytic.level(),
                                                 Collections.singletonList(statsByLevel
                                                                 .get(analytic.level())))))
                                 .toList();
         }
 
-        public List<MeanAndStandardDeviationRecordGroupByLevel> getMeanAndStandardDeviationForGroups(
-                        List<GenericValuesGroupByLevel> records) {
+        public List<GroupedMeanAndStdRecordByLevel> getMeanAndStandardDeviationForGroups(
+                        List<GroupedValuesByLevel> records) {
                 return records.stream()
-                                .map(group -> new MeanAndStandardDeviationRecordGroupByLevel(
+                                .map(group -> new GroupedMeanAndStdRecordByLevel(
                                                 group.level(),
                                                 Collections.singletonList(computeStatistics(
                                                                 extractRecordValues(group.values())))))
                                 .toList();
         }
 
-        public MeanAndStandardDeviationRecord calculateMeanAndStandardDeviation(String name,
-                                                                                String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+        public MeanAndStdDeviationRecord calculateMeanAndStandardDeviation(String name,
+                                                                           String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
                 List<GenericValuesRecord> values = findAllAnalyticsByNameAndLevelAndDate(name,
                                 level, dateStart, dateEnd).stream()
                                                 .filter(this::isRecordValid)
@@ -148,7 +148,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return computeStatistics(extractRecordValues(values));
         }
 
-        public List<MeanAndStandardDeviationRecordGroupByLevel> calculateGroupedMeanAndStandardDeviation(
+        public List<GroupedMeanAndStdRecordByLevel> calculateGroupedMeanAndStandardDeviation(
                         String name, LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
                                 genericAnalyticsRepository.findAllByNameAndDateBetweenGroupByLevel(
@@ -156,7 +156,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 var values = records.stream()
                                 .collect(Collectors.groupingBy(GenericValuesRecord::level))
                                 .entrySet().stream()
-                                .map(entry -> new GenericValuesGroupByLevel(entry.getKey(),
+                                .map(entry -> new GroupedValuesByLevel(entry.getKey(),
                                                 entry.getValue()))
                                 .toList();
 
@@ -170,13 +170,20 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                 .toList();
         }
 
+        public List<GenericValuesRecord> getAllByNameIn(List<String> names, Pageable pageable) {
+                return genericAnalyticsRepository
+                        .findAllByNameIn(names, pageable).stream()
+                        .toList();
+        }
+
+
         public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
                                                                               String name, String level);
 
         public void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList) {
-                List<GenericAnalytics> newAnalytics =
+                List<GenericAnalytic> newAnalytics =
                                 valuesOfLevelsList.stream().filter(this::isAnalyticsNonExistent)
-                                                .map(values -> new GenericAnalytics(values,
+                                                .map(values -> new GenericAnalytic(values,
                                                                 rulesValidatorComponent))
                                                 .collect(Collectors.toList());
 
@@ -203,7 +210,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         }
 
         @Cacheable(value = "id")
-        public GenericAnalytics findById(Long id) {
+        public GenericAnalytic findById(Long id) {
                 return genericAnalyticsRepository.findById(id).orElseThrow(
                                 () -> new CustomGlobalErrorHandling.ResourceNotFoundException(
                                                 "Results not found."));

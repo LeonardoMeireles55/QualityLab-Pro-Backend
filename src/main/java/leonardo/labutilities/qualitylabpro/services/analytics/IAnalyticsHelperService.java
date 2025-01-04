@@ -3,28 +3,28 @@ package leonardo.labutilities.qualitylabpro.services.analytics;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesGroupByLevel;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedValuesByLevel;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStandardDeviationRecordGroupByLevel;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedMeanAndStdRecordByLevel;
+import leonardo.labutilities.qualitylabpro.entities.GenericAnalytic;
 import org.springframework.data.domain.Pageable;
 
 public interface IAnalyticsHelperService {
 
-        List<GenericValuesGroupByLevel> findGroupedAnalyticsByLevel(String name, LocalDateTime startDate,
-                                                                    LocalDateTime endDate);
+        List<GroupedValuesByLevel> findGroupedAnalyticsByLevel(String name, LocalDateTime startDate,
+                                                               LocalDateTime endDate);
 
-        List<MeanAndStandardDeviationRecordGroupByLevel> getMeanAndStandardDeviationForGroups(
-                        List<GenericValuesGroupByLevel> records);
+        List<GroupedMeanAndStdRecordByLevel> getMeanAndStandardDeviationForGroups(
+                        List<GroupedValuesByLevel> records);
 
-        List<GenericValuesGroupByLevel> findFilteredGroupedAnalytics(
-                        List<GenericValuesGroupByLevel> records);
+        List<GroupedValuesByLevel> findFilteredGroupedAnalytics(
+                        List<GroupedValuesByLevel> records);
 
-        boolean isGroupedRecordValid(GenericValuesGroupByLevel record);
+        boolean isGroupedRecordValid(GroupedValuesByLevel record);
 
         boolean isRecordValid(GenericValuesRecord record);
 
-        GenericAnalytics findById(Long id);
+        GenericAnalytic findById(Long id);
 
         void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList);
 

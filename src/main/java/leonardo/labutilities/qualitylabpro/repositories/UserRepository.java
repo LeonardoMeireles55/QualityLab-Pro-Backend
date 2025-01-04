@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     UserDetails getReferenceByUsernameAndEmail(String userName, String Email);
 
+    boolean existsByUsernameAndEmail(String userName, String Email);
+
     @Transactional
     @Modifying
     @Query("UPDATE users u SET u.password = ?2 WHERE u.username = ?1")
