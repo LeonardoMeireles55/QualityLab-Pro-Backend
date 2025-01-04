@@ -25,25 +25,21 @@ public class UserService {
     }
 
     public void updateUserPassword(
-        String name,
-        String email,
-        String password,
-        String newPassword,
-        UserRoles userRoles
-    ) {
+            String name,
+            String email,
+            String password,
+            String newPassword,
+            UserRoles userRoles) {
         var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
 
-        if (
-            !BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
-            BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())
-        ) {
+        if (!BCryptEncoderComponent.decrypt(password, oldPass.getPassword()) ||
+                BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
             log.error("PasswordNotMatches. {}, {}", name, email);
             throw new CustomGlobalErrorHandling.PasswordNotMatchesException();
         } else {
             userRepository.setPasswordWhereByUsername(
-                oldPass.getUsername(),
-                BCryptEncoderComponent.encrypt(newPassword)
-            );
+                    oldPass.getUsername(),
+                    BCryptEncoderComponent.encrypt(newPassword));
         }
     }
 }

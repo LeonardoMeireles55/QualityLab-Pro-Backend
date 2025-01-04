@@ -19,31 +19,18 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2")
     List<GenericValuesRecord> findAllByNameAndLevel(Pageable pageable, String name, String level);
 
-    @Query(
-        "SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3"
-    )
-    List<GenericValuesRecord> findAllByNameInAndDateBetween(
-        List<String> names,
-        LocalDateTime startDate,
-        LocalDateTime endDate
-    );
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3")
+    List<GenericValuesRecord> findAllByNameInAndDateBetween(List<String> names,
+            LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query(
-        "SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4 ORDER BY ga.date ASC"
-    )
-    List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween(
-        String name,
-        String level,
-        LocalDateTime startDate,
-        LocalDateTime endDate,
-        Pageable pageable
-    );
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.date BETWEEN ?3 AND ?4 ORDER BY ga.date ASC")
+    List<GenericValuesRecord> findAllByNameAndLevelAndDateBetween(String name, String level,
+            LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 
-    @Query(
-        "SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 ORDER BY ga.date DESC"
-    )
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.date BETWEEN ?1 AND ?2 ORDER BY ga.date DESC")
     List<GenericValuesRecord> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-     @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.date BETWEEN ?2 AND ?3 GROUP BY ga.level, ga.id ORDER BY ga.date ASC")
-     List<GenericValuesRecord> findAllByNameAndDateBetweenGroupByLevel(String name, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.date BETWEEN ?2 AND ?3 GROUP BY ga.level, ga.id ORDER BY ga.date ASC")
+    List<GenericValuesRecord> findAllByNameAndDateBetweenGroupByLevel(String name,
+            LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 }

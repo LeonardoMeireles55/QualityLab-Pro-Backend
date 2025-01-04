@@ -25,72 +25,60 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
     private final BiochemistryAnalyticsService biochemistryAnalyticsService;
 
     public BiochemistryAnalyticsController(
-        BiochemistryAnalyticsService biochemistryAnalyticsService
-    ) {
+            BiochemistryAnalyticsService biochemistryAnalyticsService) {
         super(biochemistryAnalyticsService);
         this.biochemistryAnalyticsService = biochemistryAnalyticsService;
     }
 
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         AvailableBiochemistryAnalytics names = new AvailableBiochemistryAnalytics();
-        List<GenericValuesRecord> resultsList =
-            biochemistryAnalyticsService.getAllByNameInAndDateBetween(
+        List<GenericValuesRecord> resultsList = biochemistryAnalyticsService.getAllByNameInAndDateBetween(
                 names.availableBioAnalytics(),
                 startDate,
-                endDate
-            );
+                endDate);
         return ResponseEntity.ok(resultsList);
     }
 
     @Override
     @GetMapping("/results/search/name/level")
     public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
-        Pageable pageable,
-        String name,
-        String level
-    ) {
+            Pageable pageable,
+            String name,
+            String level) {
         return ResponseEntity.ok(
-            biochemistryAnalyticsService.findAllAnalyticsByNameAndLevel(pageable, name, level)
-        );
+                biochemistryAnalyticsService.findAllAnalyticsByNameAndLevel(pageable, name, level));
     }
 
     @Override
     @GetMapping("/results/search/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
-        @RequestParam String name,
-        @RequestParam String level,
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(
-            biochemistryAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
-                name,
-                level,
-                startDate,
-                endDate
-            )
-        );
+                biochemistryAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
+                        name,
+                        level,
+                        startDate,
+                        endDate));
     }
 
     @Override
     @GetMapping("/results/mean-standard-deviation")
     public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
-        @RequestParam String name,
-        @RequestParam String level,
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(
-            biochemistryAnalyticsService.generateMeanAndStandardDeviation(
-                name,
-                level,
-                startDate,
-                endDate
-            )
-        );
+                biochemistryAnalyticsService.generateMeanAndStandardDeviation(
+                        name,
+                        level,
+                        startDate,
+                        endDate));
     }
 }

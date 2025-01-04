@@ -31,7 +31,6 @@ public class ApiError {
     }
 
     public void addValidationErrors(Map<String, String> validationErrors) {
-        validationErrors.forEach((field, message) ->
-            this.details.add(field + ": " + message));
+        validationErrors.forEach((field, message) -> this.details.add(field + ": " + message));
     }
 }

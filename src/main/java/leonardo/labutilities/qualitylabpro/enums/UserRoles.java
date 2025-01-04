@@ -1,8 +1,7 @@
 package leonardo.labutilities.qualitylabpro.enums;
 
 public enum UserRoles {
-    USER("USER"),
-    ADMIN("ADMIN");
+    USER("USER"), ADMIN("ADMIN");
 
     private final String role;
 

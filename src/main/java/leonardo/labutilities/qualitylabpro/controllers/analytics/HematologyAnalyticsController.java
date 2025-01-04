@@ -29,63 +29,52 @@ public class HematologyAnalyticsController extends GenericAnalyticsController {
     @Override
     @GetMapping("/results/search/name/level")
     public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
-        Pageable pageable,
-        String name,
-        String level
-    ) {
+            Pageable pageable,
+            String name,
+            String level) {
         return ResponseEntity.ok(
-            hematologyAnalyticsService.findAllAnalyticsByNameAndLevel(pageable, name, level)
-        );
+                hematologyAnalyticsService.findAllAnalyticsByNameAndLevel(pageable, name, level));
     }
 
     @GetMapping("/results/names/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         AvailableHematologyAnalytics names = new AvailableHematologyAnalytics();
-        List<GenericValuesRecord> resultsList =
-            hematologyAnalyticsService.getAllByNameInAndDateBetween(
+        List<GenericValuesRecord> resultsList = hematologyAnalyticsService.getAllByNameInAndDateBetween(
                 names.availableHematologyAnalytics(),
                 startDate,
-                endDate
-            );
+                endDate);
         return ResponseEntity.ok(resultsList);
     }
 
     @Override
     @GetMapping("/results/search/date-range")
     public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
-        @RequestParam String name,
-        @RequestParam String level,
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(
-            hematologyAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
-                name,
-                level,
-                startDate,
-                endDate
-            )
-        );
+                hematologyAnalyticsService.findAllAnalyticsByNameAndLevelAndDate(
+                        name,
+                        level,
+                        startDate,
+                        endDate));
     }
 
     @Override
     @GetMapping("/results/mean-standard-deviation")
     public ResponseEntity<MeanAndStandardDeviationRecord> getMeanAndStandardDeviation(
-        @RequestParam String name,
-        @RequestParam String level,
-        @RequestParam("startDate") LocalDateTime startDate,
-        @RequestParam("endDate") LocalDateTime endDate
-    ) {
+            @RequestParam String name,
+            @RequestParam String level,
+            @RequestParam("startDate") LocalDateTime startDate,
+            @RequestParam("endDate") LocalDateTime endDate) {
         return ResponseEntity.ok(
-            hematologyAnalyticsService.generateMeanAndStandardDeviation(
-                name,
-                level,
-                startDate,
-                endDate
-            )
-        );
+                hematologyAnalyticsService.generateMeanAndStandardDeviation(
+                        name,
+                        level,
+                        startDate,
+                        endDate));
     }
 }

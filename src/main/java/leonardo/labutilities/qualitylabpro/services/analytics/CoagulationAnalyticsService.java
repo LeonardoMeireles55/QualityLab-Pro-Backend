@@ -16,46 +16,40 @@ import org.springframework.stereotype.Service;
 public class CoagulationAnalyticsService extends AbstractAnalyticsService {
 
     public CoagulationAnalyticsService(
-        GenericAnalyticsRepository genericAnalyticsRepository,
-        RulesValidatorComponent rulesValidatorComponent
-    ) {
+            GenericAnalyticsRepository genericAnalyticsRepository,
+            RulesValidatorComponent rulesValidatorComponent) {
         super(genericAnalyticsRepository, rulesValidatorComponent);
     }
 
-
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevel(
-        Pageable pageable,
-        String name,
-        String level
-    ) {
+            Pageable pageable,
+            String name,
+            String level) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevel(pageable, name, this.convertLevel(level));
     }
 
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(
-        String name,
-        String level,
-        LocalDateTime dateStart,
-        LocalDateTime dateEnd
-    ) {
+            String name,
+            String level,
+            LocalDateTime dateStart,
+            LocalDateTime dateEnd) {
         this.ensureNameExists(name);
         return this.findAllGenericAnalyticsByNameAndLevelAndDate(
                 name.toUpperCase(),
                 this.convertLevel(level),
                 dateStart,
-                dateEnd
-            );
+                dateEnd);
     }
 
     @Override
     public MeanAndStandardDeviationRecord generateMeanAndStandardDeviation(
-        String name,
-        String level,
-        LocalDateTime dateStart,
-        LocalDateTime dateEnd
-    ) {
+            String name,
+            String level,
+            LocalDateTime dateStart,
+            LocalDateTime dateEnd) {
         var filteredResult = findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd);
 
         double sum = filteredResult.stream().mapToDouble(GenericValuesRecord::value).sum();
@@ -73,8 +67,7 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsService {
             case "1" -> "Normal C. Assayed";
             case "2" -> "Low Abn C. Assayed";
             default -> throw new CustomGlobalErrorHandling.ResourceNotFoundException(
-                "Level not found."
-            );
+                    "Level not found.");
         };
     }
 }

@@ -27,10 +27,9 @@ public class UserController {
     private final TokenService tokenService;
 
     public UserController(
-        UserService userService,
-        AuthenticationManager authenticationManager,
-        TokenService tokenService
-    ) {
+            UserService userService,
+            AuthenticationManager authenticationManager,
+            TokenService tokenService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
@@ -40,15 +39,13 @@ public class UserController {
     @PostMapping
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public ResponseEntity<UserRecord> signUp(
-        @Valid @RequestBody UserRecord UserRecord,
-        UriComponentsBuilder uriComponentsBuilder
-    ) {
+            @Valid @RequestBody UserRecord UserRecord,
+            UriComponentsBuilder uriComponentsBuilder) {
         var user = userService.signUp(
-            UserRecord.username(),
-            UserRecord.password(),
-            UserRecord.email(),
-            UserRoles.USER
-        );
+                UserRecord.username(),
+                UserRecord.password(),
+                UserRecord.email(),
+                UserRoles.USER);
         var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(uri).body(UserRecord);
@@ -57,12 +54,10 @@ public class UserController {
     @PostMapping
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     public ResponseEntity<TokenJwtRecord> singIn(
-        @RequestBody @Valid AuthDataRecord authDataRecord
-    ) {
+            @RequestBody @Valid AuthDataRecord authDataRecord) {
         var authToken = new UsernamePasswordAuthenticationToken(
-            authDataRecord.email(),
-            authDataRecord.password()
-        );
+                authDataRecord.email(),
+                authDataRecord.password());
         var auth = authenticationManager.authenticate(authToken);
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
@@ -73,16 +68,14 @@ public class UserController {
     @PatchMapping
     @RequestMapping(value = "/update/password", method = RequestMethod.PATCH)
     public ResponseEntity<Void> updatePassword(
-        @Valid @RequestBody UserRecord userRecord,
-        String newPass
-    ) {
+            @Valid @RequestBody UserRecord userRecord,
+            String newPass) {
         userService.updateUserPassword(
-            userRecord.username(),
-            userRecord.email(),
-            userRecord.password(),
-            newPass,
-            UserRoles.USER
-        );
+                userRecord.username(),
+                userRecord.email(),
+                userRecord.password(),
+                newPass,
+                UserRoles.USER);
         return ResponseEntity.noContent().build();
     }
 }
