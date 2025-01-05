@@ -22,8 +22,8 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsService {
     @Override
     public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
                                                                  String level) {
-        ensureNameExists(name);
-        return findAnalyticsByNameAndLevelWithPagination(pageable, name, convertLevel(level));
+        this.ensureNameExists(name);
+        return this.findAnalyticsByNameAndLevelWithPagination(pageable, name, this.convertLevel(level));
     }
 
     @Override

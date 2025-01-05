@@ -22,11 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-@RestController("generic-analytics")
-@SecurityRequirement(name = "bearer-key")
-@RequestMapping("generic-analytics")
 @Validated
+@SecurityRequirement(name = "bearer-key")
+@RequestMapping("/generic-analytics")
+@RestController()
 public abstract class GenericAnalyticsController {
 
         private final AnalyticsHelperService analyticsHelperService;
