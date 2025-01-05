@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@RestController("biochemistry-analytics")
-@RequestMapping("biochemistry-analytics")
-@SecurityRequirement(name = "bearer-key")
 @Validated
+@SecurityRequirement(name = "bearer-key")
+@RequestMapping("biochemistry-analytics")
+@RestController()
 public class BiochemistryAnalyticsController extends GenericAnalyticsController {
 
         private final BiochemistryAnalyticsService biochemistryAnalyticsService;

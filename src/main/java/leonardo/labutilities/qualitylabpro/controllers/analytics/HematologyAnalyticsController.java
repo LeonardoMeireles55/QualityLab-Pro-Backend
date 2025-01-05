@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import leonardo.labutilities.qualitylabpro.constants.AvailableBiochemistryAnalytics;
 import leonardo.labutilities.qualitylabpro.constants.AvailableHematologyAnalytics;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
@@ -22,11 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-@RestController("hematology-analytics")
+@Validated
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/hematology-analytics")
-@Validated
+@RestController()
 public class HematologyAnalyticsController extends GenericAnalyticsController {
 
         private final HematologyAnalyticsService hematologyAnalyticsService;

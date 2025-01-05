@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@RestController
 @SecurityRequirement(name = "bearer-key")
 @RequestMapping("/users")
+@RestController
 public class UsersController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
