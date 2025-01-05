@@ -42,7 +42,6 @@ src
 │       │   └── spring.factories
 │       ├── aplication-local.properties
 │       ├── application-dev.properties
-│       ├── application-mariadb.properties
 │       ├── application-prod.properties
 │       ├── application-test.properties
 │       ├── application.properties
@@ -82,7 +81,7 @@ Run the command below in Git Bash or Terminal to clone the repository:
 git clone https://github.com/LeonardoMeireles55/QualityLabPro.git
 ```
 
-#### Step 2. Upload the Docker container to create the MariaDB database
+#### Step 2. Running with docker-compose
 In the project root directory, run the command:
 ```
 docker-compose up or docker compose up
@@ -117,7 +116,8 @@ Manages endpoints for biochemistry analytics.
 ### HematologyAnalyticsController
 Manages endpoints for hematology analytics.
 
-
+## React Recharts.js Front-end
+<img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/4fca9580-c012-48ef-a3d7-bf264593ccf2">
 
 ## Contributing
 
@@ -131,13 +131,3 @@ Manages endpoints for hematology analytics.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## React PlotlyJs Front-end
-<img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/e43c369e-9989-4624-a495-197d09bf2245">
-<img width="1470" alt="Screenshot 2024-12-06 at 18 01 35" src="https://github.com/user-attachments/assets/595fe840-c244-4f24-86f7-3ae191252cc7">
-
-
-
-
-
-
