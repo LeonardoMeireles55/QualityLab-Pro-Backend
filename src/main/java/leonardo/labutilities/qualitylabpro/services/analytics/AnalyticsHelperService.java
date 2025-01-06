@@ -87,7 +87,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return new MeanAndStdDeviationRecord(mean, Math.sqrt(variance));
         }
 
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#records.hashCode()")
         public List<GroupedValuesByLevel> findFilteredGroupedAnalytics(
                         List<GroupedValuesByLevel> records) {
                 return records.stream().filter(this::isGroupedRecordValid)
@@ -99,7 +99,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
         }
 
 
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #startDate.toString() + '-' + #endDate.toString() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
         public List<GroupedValuesByLevel> findGroupedAnalyticsByLevel(String name,
                                                                       LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
@@ -112,7 +112,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                 .map(entry -> new GroupedValuesByLevel(entry.getKey(),
                                                 entry.getValue())).toList();
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #startDate.toString() + '-' + #endDate.toString()")
         public List<GroupedResultsByLevel> findAnalyticsWithGroupedResults(String name,
                                                                            LocalDateTime startDate, LocalDateTime endDate) {
                 List<GroupedValuesByLevel> analytics =
@@ -128,7 +128,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                                 .get(analytic.level())))))
                                 .toList();
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#records.hashCode()")
         public List<GroupedMeanAndStdRecordByLevel> getMeanAndStandardDeviationForGroups(
                         List<GroupedValuesByLevel> records) {
                 return records.stream()
@@ -138,7 +138,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                                 extractRecordValues(group.values())))))
                                 .toList();
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
         public MeanAndStdDeviationRecord calculateMeanAndStandardDeviation(String name,
                                                                            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
                 List<GenericValuesRecord> values = findAllAnalyticsByNameAndLevelAndDate(name,
@@ -147,7 +147,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                 .toList();
                 return computeStatistics(extractRecordValues(values));
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #startDate.toString() + '-' + #endDate.toString()")
         public List<GroupedMeanAndStdRecordByLevel> calculateGroupedMeanAndStandardDeviation(
                         String name, LocalDateTime startDate, LocalDateTime endDate) {
                 List<GenericValuesRecord> records =
@@ -162,14 +162,14 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
                 return getMeanAndStandardDeviationForGroups(values);
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#names.hashCode() + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
         public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names,
                         LocalDateTime dateStart, LocalDateTime dateEnd) {
                 return genericAnalyticsRepository
                                 .findAllByNameInAndDateBetween(names, dateStart, dateEnd).stream()
                                 .toList();
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#names.hashCode() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
         public List<GenericValuesRecord> getAllByNameIn(List<String> names, Pageable pageable) {
                 return genericAnalyticsRepository
                         .findAllByNameIn(names, pageable).stream()
@@ -201,7 +201,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                                                 this::validateAnalyticsNameExists));
         }
 
-        @Cacheable(value = "name")
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
         public List<GenericValuesRecord> findAnalyticsByNameWithPagination(Pageable pageable, String name) {
                 List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
                                 .findAllByName(name.toUpperCase(), pageable);
@@ -209,21 +209,21 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 return analyticsList;
         }
 
-        @Cacheable(value = "id")
+        @Cacheable(cacheNames = "analytics-cache", key = "#id")
         public GenericAnalytics findById(Long id) {
                 return genericAnalyticsRepository.findById(id).orElseThrow(
                                 () -> new CustomGlobalErrorHandling.ResourceNotFoundException(
                                                 "Results not found."));
         }
 
-        List<GenericValuesRecord> findAnalyticsByNameAndLevelWithPagination(Pageable pageable,
-                                                                            String name, String level) {
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #level + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
+        public List<GenericValuesRecord> findAnalyticsByNameAndLevelWithPagination(Pageable pageable, String name, String level) {
                 List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
-                                .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
+                        .findAllByNameAndLevel(pageable, name.toUpperCase(), level);
                 validateResultsNotEmpty(analyticsList, "No analytics found for the given name and level");
                 return analyticsList;
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
         List<GenericValuesRecord> findAnalyticsByNameLevelAndDate(String name,
                                                                   String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
                 List<GenericValuesRecord> results =
@@ -232,7 +232,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
                 validateResultsNotEmpty(results, "No analytics found for the given parameters");
                 return results;
         }
-
+        @Cacheable(cacheNames = "analytics-cache", key = "#dateStart.toString() + '-' + #dateEnd.toString()")
         public List<GenericValuesRecord> findAllAnalyticsByDate(LocalDateTime dateStart,
                         LocalDateTime dateEnd) {
                 List<GenericValuesRecord> results =
