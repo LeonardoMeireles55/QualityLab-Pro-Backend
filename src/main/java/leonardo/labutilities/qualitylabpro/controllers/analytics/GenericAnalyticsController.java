@@ -34,35 +34,6 @@ public abstract class GenericAnalyticsController {
                 this.analyticsHelperService = analyticsHelperService;
         }
 
-        @GetMapping("results/grouped-by-level")
-        public ResponseEntity<List<GroupedResultsByLevel>> getGroupedByLevel(
-                        @RequestParam String name,
-                        @RequestParam("startDate") LocalDateTime startDate,
-                        @RequestParam("endDate") LocalDateTime endDate) {
-                List<GroupedResultsByLevel> groupedData =
-                                analyticsHelperService.findAnalyticsWithGroupedResults(name, startDate, endDate);
-                return ResponseEntity.ok(groupedData);
-        }
-
-        @GetMapping("/results/mean-deviation/grouped-by-level")
-        public ResponseEntity<List<GroupedMeanAndStdRecordByLevel>> getMeanAndDeviationGrouped(
-                        @RequestParam String name,
-                        @RequestParam("startDate") LocalDateTime startDate,
-                        @RequestParam("endDate") LocalDateTime endDate) {
-                List<GroupedMeanAndStdRecordByLevel> groupedData =
-                                analyticsHelperService.calculateGroupedMeanAndStandardDeviation(name,
-                                                startDate, endDate);
-                return ResponseEntity.ok(groupedData);
-        }
-
-        @PostMapping
-        @Transactional
-        public ResponseEntity<List<GenericValuesRecord>> postAnalytics(
-                        @Valid @RequestBody List<@Valid GenericValuesRecord> values) {
-                analyticsHelperService.saveNewAnalyticsRecords(values);
-                return ResponseEntity.status(201).build();
-        }
-
         @DeleteMapping("/{id}")
         @Transactional
         public ResponseEntity<Void> deleteAnalyticsResultById(@PathVariable Long id) {
@@ -76,31 +47,60 @@ public abstract class GenericAnalyticsController {
                 return ResponseEntity.ok(new GenericValuesRecord(genericAnalytics));
         }
 
+        @PostMapping
+        @Transactional
+        public ResponseEntity<List<GenericValuesRecord>> postAnalytics(
+                @Valid @RequestBody List<@Valid GenericValuesRecord> values) {
+                analyticsHelperService.saveNewAnalyticsRecords(values);
+                return ResponseEntity.status(201).build();
+        }
+
         @GetMapping()
-        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsHateoas(
-                        @PageableDefault(sort = "date",
-                                        direction = Sort.Direction.DESC) Pageable pageable) {
+        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalytics(
+                @PageableDefault(sort = "date",
+                        direction = Sort.Direction.DESC) Pageable pageable) {
                 List<GenericValuesRecord> resultsList = analyticsHelperService.findAll(pageable);
 
                 List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
-                                .map(result -> EntityModel.of(result,
-                                                linkTo(getClass()).slash(result.id())
-                                                                .withSelfRel()))
-                                .collect(Collectors.toList());
+                        .map(result -> EntityModel.of(result,
+                                linkTo(getClass()).slash(result.id())
+                                        .withSelfRel()))
+                        .collect(Collectors.toList());
 
                 return ResponseEntity.ok(CollectionModel.of(resultModels,
-                                linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable))
-                                                .withSelfRel()));
+                        linkTo(methodOn(getClass()).getAllAnalytics(pageable))
+                                .withSelfRel()));
         }
 
-        @GetMapping("/results/names/date-range")
-        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
-                        @RequestParam("startDate") LocalDateTime startDate,
-                        @RequestParam("endDate") LocalDateTime endDate);
 
-        @GetMapping("/results/search/{name}")
-        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByNameOrderByDate(
-                        @PathVariable String name, @PageableDefault(sort = "date",
+
+        @GetMapping("/grouped-by-level")
+        public ResponseEntity<List<GroupedResultsByLevel>> getGroupedByLevel(
+                        @RequestParam String name,
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
+                List<GroupedResultsByLevel> groupedData =
+                                analyticsHelperService.findAnalyticsWithGroupedResults(name, startDate, endDate);
+                return ResponseEntity.ok(groupedData);
+        }
+
+        @GetMapping("/grouped-by-level/mean-deviation")
+        public ResponseEntity<List<GroupedMeanAndStdRecordByLevel>> getMeanAndDeviationGrouped(
+                        @RequestParam String name,
+                        @RequestParam("startDate") LocalDateTime startDate,
+                        @RequestParam("endDate") LocalDateTime endDate) {
+                List<GroupedMeanAndStdRecordByLevel> groupedData =
+                                analyticsHelperService.calculateGroupedMeanAndStandardDeviation(name,
+                                                startDate, endDate);
+                return ResponseEntity.ok(groupedData);
+        }
+
+
+
+
+        @GetMapping("/name")
+        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsByName(
+                        @RequestParam String name, @PageableDefault(sort = "date",
                                         direction = Sort.Direction.DESC) Pageable pageable) {
                 List<GenericValuesRecord> resultsList =
                                 analyticsHelperService.findAnalyticsByNameWithPagination(pageable, name);
@@ -111,32 +111,30 @@ public abstract class GenericAnalyticsController {
                                                                 .getAnalyticsById(result.id()))
                                                                                 .withSelfRel(),
                                                 linkTo(methodOn(getClass())
-                                                                .getAllAnalyticsByNameOrderByDate(
+                                                                .getAllAnalyticsByName(
                                                                                 name, pageable))
                                                                                                 .withRel("search")))
                                 .collect(Collectors.toList());
 
                 return ResponseEntity.ok(CollectionModel.of(resultModels,
-                                linkTo(methodOn(getClass()).getAllAnalyticsByNameOrderByDate(name,
+                                linkTo(methodOn(getClass()).getAllAnalyticsByName(name,
                                                 pageable)).withSelfRel()));
         }
+        @GetMapping("date-range")
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
+                @RequestParam("startDate") LocalDateTime startDate,
+                @RequestParam("endDate") LocalDateTime endDate);
 
-        @GetMapping("/results/date-range")
-        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateBetween(
-                        @RequestParam("startDate") LocalDateTime startDate,
-                        @RequestParam("endDate") LocalDateTime endDate) {
-                return ResponseEntity.ok(
-                                analyticsHelperService.findAllAnalyticsByDate(startDate, endDate));
-        }
 
-        public abstract ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(
+        @GetMapping("name-and-level")
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevel(
                         Pageable pageable, @RequestParam String name, @RequestParam String level);
-
-        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
+        @GetMapping("name-and-level-date-range")
+        public abstract ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevelDateRange(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate);
-
+        @GetMapping("/mean-standard-deviation")
         public abstract ResponseEntity<MeanAndStdDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,

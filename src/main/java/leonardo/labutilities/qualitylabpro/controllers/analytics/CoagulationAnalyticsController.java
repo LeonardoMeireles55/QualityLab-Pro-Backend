@@ -41,14 +41,14 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         }
 
         @Override
-        @GetMapping("/results/search/name/level")
-        public ResponseEntity<List<GenericValuesRecord>> getAnalyticsByLevel(Pageable pageable,
-                        String name, String level) {
+        @GetMapping("/name-and-level")
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevel(Pageable pageable,
+                                                                                       String name, String level) {
                 return ResponseEntity.ok(coagulationAnalyticsService
                                 .findAnalyticsByNameAndLevel(pageable, name, level));
         }
 
-        @GetMapping("/results/names/date-range")
+        @GetMapping("/date-range")
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
@@ -59,8 +59,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         }
 
         @Override
-        @GetMapping("/results/search/date-range")
-        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByDateRange(
+        @GetMapping("name-and-level-date-range")
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevelDateRange(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
@@ -71,7 +71,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         @Override
         @GetMapping()
-        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalyticsHateoas(
+        public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalytics(
                 @PageableDefault(sort = "date",
                         direction = Sort.Direction.DESC) Pageable pageable) {
                 List<GenericValuesRecord> resultsList = coagulationAnalyticsService.getAllByNameIn(names,pageable);
@@ -83,12 +83,12 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
                         .collect(Collectors.toList());
 
                 return ResponseEntity.ok(CollectionModel.of(resultModels,
-                        linkTo(methodOn(getClass()).getAllAnalyticsHateoas(pageable))
+                        linkTo(methodOn(getClass()).getAllAnalytics(pageable))
                                 .withSelfRel()));
         }
 
         @Override
-        @GetMapping("/results/mean-standard-deviation")
+        @GetMapping("/mean-standard-deviation")
         public ResponseEntity<MeanAndStdDeviationRecord> getMeanAndStandardDeviation(
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,

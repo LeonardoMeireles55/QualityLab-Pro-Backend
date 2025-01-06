@@ -93,7 +93,7 @@ public class CoagulationAnalyticsControllerTest {
         when(coagulationAnalyticsService.findAnalyticsByNameAndLevel(any(), any(), any()))
                 .thenReturn(records);
 
-        mockMvc.perform(get("/coagulation-analytics/results/search/name/level")
+        mockMvc.perform(get("/coagulation-analytics/name-and-level")
                         .param("name", "Glucose")
                         .param("level", "Normal")
                         .param("page", "0")
@@ -111,7 +111,7 @@ public class CoagulationAnalyticsControllerTest {
         when(coagulationAnalyticsService.getAllByNameInAndDateBetween(anyList(), any(), any()))
                 .thenReturn(records);
 
-        mockMvc.perform(get("/coagulation-analytics/results/names/date-range")
+        mockMvc.perform(get("/coagulation-analytics/date-range")
                         .param("startDate", "2025-01-01 00:00:00")
                         .param("endDate", "2025-01-05 00:00:00"))
                 .andExpect(status().isOk());
@@ -126,7 +126,7 @@ public class CoagulationAnalyticsControllerTest {
         when(coagulationAnalyticsService.calculateMeanAndStandardDeviation(any(), any(), any(), any()))
                 .thenReturn(result);
 
-        mockMvc.perform(get("/coagulation-analytics/results/mean-standard-deviation")
+        mockMvc.perform(get("/coagulation-analytics/mean-standard-deviation")
                         .param("name", "Hemoglobin")
                         .param("level", "High")
                         .param("startDate", "2025-01-01 00:00:00")

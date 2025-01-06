@@ -1,17 +1,24 @@
 package leonardo.labutilities.qualitylabpro.controllers;
 
+import leonardo.labutilities.qualitylabpro.configs.TestSecurityConfig;
+import leonardo.labutilities.qualitylabpro.controllers.analytics.BiochemistryAnalyticsController;
+import leonardo.labutilities.qualitylabpro.controllers.analytics.CoagulationAnalyticsController;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
+import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.analytics.BiochemistryAnalyticsService;
+import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,12 +34,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@WebMvcTest(BiochemistryAnalyticsController.class)
+@Import(TestSecurityConfig.class)
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 public class BiochemistryAnalyticsControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private TokenService tokenService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @MockBean
     private BiochemistryAnalyticsService biochemistryAnalyticsService;
@@ -47,7 +61,6 @@ public class BiochemistryAnalyticsControllerTest {
 
     @Test
     @DisplayName("It should return HTTP code 201 when analytics records are saved")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void analytics_post_return_201() throws Exception {
         List<GenericValuesRecord> records = createSampleRecordList();
         mockMvc.perform(post("/biochemistry-analytics")
@@ -59,7 +72,6 @@ public class BiochemistryAnalyticsControllerTest {
 
     @Test
     @DisplayName("It should return a list of all analytics with pagination")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void getAllAnalytics_return_list() throws Exception {
         List<GenericValuesRecord> records = createSampleRecordList();
         when(biochemistryAnalyticsService.getAllByNameIn(anyList(), any()))
@@ -79,13 +91,12 @@ public class BiochemistryAnalyticsControllerTest {
 
     @Test
     @DisplayName("It should return analytics records by level and name")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void getAnalyticsByLevel_return_analytics() throws Exception {
         List<GenericValuesRecord> records = createSampleRecordList();
         when(biochemistryAnalyticsService.findAnalyticsByNameAndLevel(any(), any(), any()))
                 .thenReturn(records);
 
-        mockMvc.perform(get("/biochemistry-analytics/results/search/name/level")
+        mockMvc.perform(get("/biochemistry-analytics/name-and-level")
                         .param("name", "Glucose")
                         .param("level", "Normal")
                         .param("page", "0")
@@ -104,7 +115,7 @@ public class BiochemistryAnalyticsControllerTest {
         when(biochemistryAnalyticsService.getAllByNameInAndDateBetween(anyList(), any(), any()))
                 .thenReturn(records);
 
-        mockMvc.perform(get("/biochemistry-analytics/results/names/date-range")
+        mockMvc.perform(get("/biochemistry-analytics/date-range")
                         .param("startDate", "2025-01-01 00:00:00")
                         .param("endDate", "2025-01-05 00:00:00"))
                 .andExpect(status().isOk());
@@ -120,7 +131,7 @@ public class BiochemistryAnalyticsControllerTest {
         when(biochemistryAnalyticsService.calculateMeanAndStandardDeviation(any(), any(), any(), any()))
                 .thenReturn(result);
 
-        mockMvc.perform(get("/biochemistry-analytics/results/mean-standard-deviation")
+        mockMvc.perform(get("/biochemistry-analytics/mean-standard-deviation")
                         .param("name", "Hemoglobin")
                         .param("level", "High")
                         .param("startDate", "2025-01-01 00:00:00")
