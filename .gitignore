@@ -1,6 +1,8 @@
 HELP.md
 lab.log
 *.log
+*.7z
+*.gz
 *.env
 target/
 !.mvn/wrapper/maven-wrapper.jar
