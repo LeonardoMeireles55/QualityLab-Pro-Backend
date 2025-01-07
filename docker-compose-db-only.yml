@@ -4,8 +4,8 @@ services:
     restart: always
     env_file: ./.env
     environment:
-      MARIADB_DATABASE: lab_db_test
-      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - ${DB_LOCAL_PORT}:${DB_DOCKER_PORT}
     volumes:
