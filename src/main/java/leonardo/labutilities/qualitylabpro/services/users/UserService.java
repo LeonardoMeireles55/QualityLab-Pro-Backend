@@ -50,7 +50,7 @@ public class UserService {
 		if (!passwordRecoveryTokenManager.isRecoveryTokenValid(temporaryPassword, email)) {
 			throw new CustomGlobalErrorHandling.ResourceNotFoundException("Invalid recovery token");
 		}
-		userRepository.setPasswordWhereByUsername(email,
+		userRepository.setPasswordWhereByEmail(email,
 				BCryptEncoderComponent.encrypt(newPassword));
 	};
 

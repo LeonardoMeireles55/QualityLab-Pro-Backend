@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 @Component
 public class PasswordRecoveryTokenManager {
-	static HashMap<String, String> passwords = new HashMap<>();
+	static HashMap<String, String> stringHashMap = new HashMap<>();
 
 	public String generateTemporaryPassword() {
 		return java.util.UUID.randomUUID().toString();
@@ -14,15 +14,15 @@ public class PasswordRecoveryTokenManager {
 
 	public void generateAndStoreToken(String email, String password) {
 		String hashedPassword = generateRecoveryToken(email, password);
-		passwords.put(hashedPassword, email);
+		stringHashMap.put(hashedPassword, email);
 	}
 
 	public String retrieveEmailFromToken(String hashedPassword) {
-		return passwords.get(hashedPassword);
+		return stringHashMap.get(hashedPassword);
 	}
 
 	public boolean isRecoveryTokenValid(String Token, String email) {
-		return passwords.get(Token).equals(email);
+		return stringHashMap.get(Token).equals(email);
 	}
 
 	private String generateRecoveryToken(String email, String password) {

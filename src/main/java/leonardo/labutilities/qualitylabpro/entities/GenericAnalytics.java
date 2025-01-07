@@ -1,6 +1,7 @@
 package leonardo.labutilities.qualitylabpro.entities;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
@@ -8,8 +9,8 @@ import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorCompon
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
 
-@Entity(name = "generic_analytics")
 @Getter
+@Entity(name = "generic_analytics")
 public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
 
 	@Id

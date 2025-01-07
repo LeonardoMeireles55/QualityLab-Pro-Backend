@@ -1,13 +1,11 @@
 package leonardo.labutilities.qualitylabpro.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+
+import jakarta.persistence.*;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import lombok.Getter;
 import org.hibernate.proxy.HibernateProxy;

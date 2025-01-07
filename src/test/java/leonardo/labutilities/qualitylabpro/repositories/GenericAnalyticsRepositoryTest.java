@@ -1,7 +1,14 @@
 package leonardo.labutilities.qualitylabpro.repositories;
 
+import static leonardo.labutilities.qualitylabpro.utils.AnalyticsHelperMocks.createSampleRecord;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import jakarta.persistence.Transient;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
 import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
+
 import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,15 +19,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,152 +29,127 @@ import static org.junit.jupiter.api.Assertions.*;
 class GenericAnalyticsRepositoryTest {
 
 	@Autowired
-	private GenericAnalyticsRepository repository;
+	GenericAnalyticsRepository repository;
 
 	@Transient
-	private RulesValidatorComponent rulesValidatorComponent;
+	RulesValidatorComponent rulesValidatorComponent = new RulesValidatorComponent();
 
-	private LocalDateTime testDate;
-
+	@Transient
+	LocalDateTime testDate = LocalDateTime.of(2024, 12, 16, 7, 53);
 	@BeforeEach
 	void clearDatabase(@Autowired Flyway flyway) {
 		flyway.clean();
 		flyway.migrate();
 	}
-
 	void setupTestData() {
-		testDate = LocalDateTime.now();
-		GenericAnalytics testAnalytics = new GenericAnalytics(1L, // id
-				testDate, // date
-				"LEVEL_LOT_1", // levelLot
-				"TEST_LOT_1", // testLot
-				"TEST_NAME", // name
-				"TEST_LEVEL", // level
-				1.0, // value
-				1.0, // mean
-				1.0, // sd
-				"UNIT_1", // unitValue
-				"RULE_1", // rules
-				"average", // description
-				rulesValidatorComponent);
 
-		repository.save(testAnalytics);
+		GenericAnalytics analytics = new GenericAnalytics(createSampleRecord(), rulesValidatorComponent);
+
+		repository.save(analytics);
 	}
 
 	@Test
 	@DisplayName("Should find analytics by name when exists")
-	@Transactional
 	void testExistsByName() {
 		setupTestData();
-		assertTrue(repository.existsByName("TEST_NAME"));
+		assertTrue(repository.existsByName("ALB2"));
 		assertFalse(repository.existsByName("NONEXISTENT"));
 	}
 
 	@Test
 	@DisplayName("Should find all analytics by name with pagination")
-	@Transactional
 	void testFindAllByName() {
 		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
-		List<GenericValuesRecord> results = repository.findAllByName("TEST_NAME", pageable);
+		List<GenericValuesRecord> results = repository.findAllByName("ALB2", pageable);
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
 	}
 
 	@Test
 	@DisplayName("Should verify existence by date, level and name")
-	@Transactional
 	void testExistsByDateAndLevelAndName() {
 		setupTestData();
-
 		boolean exists =
-				repository.existsByDateAndLevelAndName(testDate, "TEST_LEVEL", "TEST_NAME");
+				repository.existsByDateAndLevelAndName(testDate, "PCCC1", "ALB2");
 
 		assertTrue(exists);
 	}
 
 	@Test
 	@DisplayName("Should find all by name and level with pagination")
-	@Transactional
 	void testFindAllByNameAndLevel() {
 		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
 
 		List<GenericValuesRecord> results =
-				repository.findAllByNameAndLevel(pageable, "TEST_NAME", "TEST_LEVEL");
+				repository.findAllByNameAndLevel(pageable, "ALB2", "PCCC1");
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
-		assertThat(results.get(0).level()).isEqualTo("TEST_LEVEL");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
+		assertThat(results.getFirst().level()).isEqualTo("PCCC1");
 	}
 
 	@Test
 	@DisplayName("Should find all by names in list and date range")
-	@Transactional
 	void testFindAllByNameInAndDateBetween() {
 		setupTestData();
-		List<String> names = Arrays.asList("TEST_NAME");
+		List<String> names = List.of("ALB2");
 
 		List<GenericValuesRecord> results = repository.findAllByNameInAndDateBetween(names,
 				testDate.minusDays(1), testDate.plusDays(1));
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
 	}
 
 	@Test
 	@DisplayName("Should find all by names in list with pagination")
-	@Transactional
 	void testFindAllByNameIn() {
 		setupTestData();
-		List<String> names = Arrays.asList("TEST_NAME");
+		List<String> names = List.of("ALB2");
 		PageRequest pageable = PageRequest.of(0, 10);
 
 		List<GenericValuesRecord> results = repository.findAllByNameIn(names, pageable);
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
 	}
 
 	@Test
 	@DisplayName("Should find all by name, level and date range with pagination")
-	@Transactional
 	void testFindAllByNameAndLevelAndDateBetween() {
 		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
 
 		List<GenericValuesRecord> results = repository.findAllByNameAndLevelAndDateBetween(
-				"TEST_NAME", "TEST_LEVEL", testDate.minusDays(1), testDate.plusDays(1), pageable);
+				"ALB2", "PCCC1", testDate.minusDays(1), testDate.plusDays(1), pageable);
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
-		assertThat(results.get(0).level()).isEqualTo("TEST_LEVEL");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
+		assertThat(results.getFirst().level()).isEqualTo("PCCC1");
 	}
 
 	@Test
 	@DisplayName("Should find all by date range")
-	@Transactional
 	void testFindAllByDateBetween() {
 		setupTestData();
-
 		List<GenericValuesRecord> results =
 				repository.findAllByDateBetween(testDate.minusDays(1), testDate.plusDays(1));
-
 		assertThat(results).isNotEmpty();
 	}
 
 	@Test
 	@DisplayName("Should find all by name and date range grouped by level")
-	@Transactional
 	void testFindAllByNameAndDateBetweenGroupByLevel() {
 		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
 
 		List<GenericValuesRecord> results = repository.findAllByNameAndDateBetweenGroupByLevel(
-				"TEST_NAME", testDate.minusDays(1), testDate.plusDays(1), pageable);
+				"ALB2", testDate.minusDays(1), testDate.plusDays(1), pageable);
 
 		assertThat(results).isNotEmpty();
-		assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
+		assertThat(results.getFirst().name()).isEqualTo("ALB2");
 	}
 }
