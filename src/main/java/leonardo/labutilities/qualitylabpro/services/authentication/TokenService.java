@@ -22,11 +22,8 @@ public class TokenService {
     public String generateToken(User user) {
         try {
             var algorithm = Algorithm.HMAC256(SECRET);
-            return JWT.create()
-                    .withIssuer(ISSUER)
-                    .withSubject(user.getEmail())
-                    .withExpiresAt(dateExp())
-                    .sign(algorithm);
+            return JWT.create().withIssuer(ISSUER).withSubject(user.getEmail())
+                    .withExpiresAt(dateExp()).sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Error generating token", exception);
         }
@@ -35,13 +32,10 @@ public class TokenService {
     public String getSubject(String tokenJWT) {
         try {
             var algorithm = Algorithm.HMAC256(SECRET);
-            return JWT.require(algorithm)
-                    .withIssuer(ISSUER)
-                    .build()
-                    .verify(tokenJWT)
-                    .getSubject();
+            return JWT.require(algorithm).withIssuer(ISSUER).build().verify(tokenJWT).getSubject();
         } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException("Invalid token: " + exception.getMessage(), exception);
+            throw new JWTVerificationException("Invalid token: " + exception.getMessage(),
+                    exception);
         }
     }
 

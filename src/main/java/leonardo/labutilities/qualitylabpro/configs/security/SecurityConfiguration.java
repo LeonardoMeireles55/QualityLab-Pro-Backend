@@ -21,47 +21,55 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final SecurityFilter securityFilter;
+        private final SecurityFilter securityFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> {
-                    // Public endpoints
-                    req.requestMatchers(HttpMethod.POST, "/users/sign-in").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/users/sign-up").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/hematology-analytics/**").permitAll();
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                return http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
+                                .sessionManagement(sm -> sm.sessionCreationPolicy(
+                                                SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(req -> {
+                                        // Public endpoints
+                                        req.requestMatchers(HttpMethod.POST, "/users/sign-in")
+                                                        .permitAll();
+                                        req.requestMatchers(HttpMethod.POST, "/users/sign-up")
+                                                        .permitAll();
+                                        req.requestMatchers(HttpMethod.POST,
+                                                        "/hematology-analytics/**").permitAll();
 
-                    // Swagger/OpenAPI endpoints
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**")
-                            .permitAll();
+                                        // Swagger/OpenAPI endpoints
+                                        req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html",
+                                                        "/swagger-ui/**").permitAll();
 
-                    // Admin-only endpoints
-                    req.requestMatchers(HttpMethod.DELETE, "/generic-analytics/**")
-                            .hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/biochemistry-analytics/**")
-                            .hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/hematology-analytics/**")
-                            .hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/coagulation-analytics/**")
-                            .hasRole("ADMIN");
-                    req.requestMatchers(HttpMethod.DELETE, "/users/**");
+                                        // Admin-only endpoints
+                                        req.requestMatchers(HttpMethod.DELETE,
+                                                        "/generic-analytics/**").hasRole("ADMIN");
+                                        req.requestMatchers(HttpMethod.DELETE,
+                                                        "/biochemistry-analytics/**")
+                                                        .hasRole("ADMIN");
+                                        req.requestMatchers(HttpMethod.DELETE,
+                                                        "/hematology-analytics/**")
+                                                        .hasRole("ADMIN");
+                                        req.requestMatchers(HttpMethod.DELETE,
+                                                        "/coagulation-analytics/**")
+                                                        .hasRole("ADMIN");
+                                        req.requestMatchers(HttpMethod.DELETE, "/users/**");
 
-                    // All other endpoints require authentication
-                    req.anyRequest().authenticated();
-                }).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+                                        // All other endpoints require authentication
+                                        req.anyRequest().authenticated();
+                                }).addFilterBefore(securityFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
+                                .build();
+        }
 
-    @Bean
-    public AuthenticationManager authMenager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+        @Bean
+        public AuthenticationManager authMenager(AuthenticationConfiguration configuration)
+                        throws Exception {
+                return configuration.getAuthenticationManager();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }

@@ -21,18 +21,20 @@ public class CoagulationAnalyticsService extends AbstractAnalyticsService {
 
     @Override
     public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
-                                                                 String level) {
+            String level) {
         this.ensureNameExists(name);
-        return this.findAnalyticsByNameAndLevelWithPagination(pageable, name, this.convertLevel(level));
+        return this.findAnalyticsByNameAndLevelWithPagination(pageable, name,
+                this.convertLevel(level));
     }
 
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
             String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         this.ensureNameExists(name);
-        return this.findAnalyticsByNameLevelAndDate(name.toUpperCase(),
-                this.convertLevel(level), dateStart, dateEnd);
+        return this.findAnalyticsByNameLevelAndDate(name.toUpperCase(), this.convertLevel(level),
+                dateStart, dateEnd);
     }
+
     @Override
     public String convertLevel(String inputLevel) {
         return switch (inputLevel) {

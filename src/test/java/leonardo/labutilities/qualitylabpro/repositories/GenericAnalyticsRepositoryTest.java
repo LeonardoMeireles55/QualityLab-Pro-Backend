@@ -43,21 +43,19 @@ class GenericAnalyticsRepositoryTest {
 
     void setupTestData() {
         testDate = LocalDateTime.now();
-        GenericAnalytics testAnalytics = new GenericAnalytics(
-                1L,            // id
-                testDate,        // date
-                "LEVEL_LOT_1",   // levelLot
-                "TEST_LOT_1",    // testLot
-                "TEST_NAME",     // name
-                "TEST_LEVEL",    // level
-                1.0,            // value
-                1.0,            // mean
-                1.0,            // sd
-                "UNIT_1",       // unitValue
-                "RULE_1",       // rules
+        GenericAnalytics testAnalytics = new GenericAnalytics(1L, // id
+                testDate, // date
+                "LEVEL_LOT_1", // levelLot
+                "TEST_LOT_1", // testLot
+                "TEST_NAME", // name
+                "TEST_LEVEL", // level
+                1.0, // value
+                1.0, // mean
+                1.0, // sd
+                "UNIT_1", // unitValue
+                "RULE_1", // rules
                 "average", // description
-                rulesValidatorComponent
-        );
+                rulesValidatorComponent);
 
         repository.save(testAnalytics);
     }
@@ -77,7 +75,7 @@ class GenericAnalyticsRepositoryTest {
     void testFindAllByName() {
         setupTestData();
         PageRequest pageable = PageRequest.of(0, 10);
-        List<GenericValuesRecord> results = repository.findAllByName("TEST_NAME",pageable);
+        List<GenericValuesRecord> results = repository.findAllByName("TEST_NAME", pageable);
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
@@ -89,11 +87,8 @@ class GenericAnalyticsRepositoryTest {
     void testExistsByDateAndLevelAndName() {
         setupTestData();
 
-        boolean exists = repository.existsByDateAndLevelAndName(
-                testDate,
-                "TEST_LEVEL",
-                "TEST_NAME"
-        );
+        boolean exists =
+                repository.existsByDateAndLevelAndName(testDate, "TEST_LEVEL", "TEST_NAME");
 
         assertTrue(exists);
     }
@@ -105,11 +100,8 @@ class GenericAnalyticsRepositoryTest {
         setupTestData();
         PageRequest pageable = PageRequest.of(0, 10);
 
-        List<GenericValuesRecord> results = repository.findAllByNameAndLevel(
-                pageable,
-                "TEST_NAME",
-                "TEST_LEVEL"
-        );
+        List<GenericValuesRecord> results =
+                repository.findAllByNameAndLevel(pageable, "TEST_NAME", "TEST_LEVEL");
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
@@ -123,11 +115,8 @@ class GenericAnalyticsRepositoryTest {
         setupTestData();
         List<String> names = Arrays.asList("TEST_NAME");
 
-        List<GenericValuesRecord> results = repository.findAllByNameInAndDateBetween(
-                names,
-                testDate.minusDays(1),
-                testDate.plusDays(1)
-        );
+        List<GenericValuesRecord> results = repository.findAllByNameInAndDateBetween(names,
+                testDate.minusDays(1), testDate.plusDays(1));
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
@@ -155,12 +144,7 @@ class GenericAnalyticsRepositoryTest {
         PageRequest pageable = PageRequest.of(0, 10);
 
         List<GenericValuesRecord> results = repository.findAllByNameAndLevelAndDateBetween(
-                "TEST_NAME",
-                "TEST_LEVEL",
-                testDate.minusDays(1),
-                testDate.plusDays(1),
-                pageable
-        );
+                "TEST_NAME", "TEST_LEVEL", testDate.minusDays(1), testDate.plusDays(1), pageable);
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).name()).isEqualTo("TEST_NAME");
@@ -173,10 +157,8 @@ class GenericAnalyticsRepositoryTest {
     void testFindAllByDateBetween() {
         setupTestData();
 
-        List<GenericValuesRecord> results = repository.findAllByDateBetween(
-                testDate.minusDays(1),
-                testDate.plusDays(1)
-        );
+        List<GenericValuesRecord> results =
+                repository.findAllByDateBetween(testDate.minusDays(1), testDate.plusDays(1));
 
         assertThat(results).isNotEmpty();
     }
@@ -189,11 +171,7 @@ class GenericAnalyticsRepositoryTest {
         PageRequest pageable = PageRequest.of(0, 10);
 
         List<GenericValuesRecord> results = repository.findAllByNameAndDateBetweenGroupByLevel(
-                "TEST_NAME",
-                testDate.minusDays(1),
-                testDate.plusDays(1),
-                pageable
-        );
+                "TEST_NAME", testDate.minusDays(1), testDate.plusDays(1), pageable);
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).name()).isEqualTo("TEST_NAME");

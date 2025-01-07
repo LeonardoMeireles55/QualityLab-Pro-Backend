@@ -30,8 +30,7 @@ public class User implements UserDetails {
     @Column(name = "user_roles")
     private UserRoles userRoles;
 
-    protected User() {
-    }
+    protected User() {}
 
     public User(String username, String password) {
         this.username = username;
@@ -48,10 +47,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(UserRoles.values())
-                .filter(role -> getUserRoles() == role)
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
-                .toList();
+        return Arrays.stream(UserRoles.values()).filter(role -> getUserRoles() == role)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole())).toList();
     }
 
     @Override
@@ -105,7 +102,8 @@ public class User implements UserDetails {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+                        .hashCode()
                 : getClass().hashCode();
     }
 }

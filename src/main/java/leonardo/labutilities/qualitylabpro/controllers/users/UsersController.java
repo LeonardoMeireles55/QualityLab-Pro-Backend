@@ -29,44 +29,47 @@ public class UsersController {
     private final TokenService tokenService;
 
     public UsersController(UserService userService, AuthenticationManager authenticationManager,
-                           TokenService tokenService) {
+            TokenService tokenService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
     }
 
     @Transactional
-    @PatchMapping( "/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRecord updatePasswordRecord) {
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+            @RequestBody UpdatePasswordRecord updatePasswordRecord) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             var user = (User) authentication.getPrincipal();
-            userService
-                    .updateUserPassword(user.getUsername(), user.getEmail(), updatePasswordRecord.oldPassword(),
-                            updatePasswordRecord.newPassword());
+            userService.updateUserPassword(user.getUsername(), user.getEmail(),
+                    updatePasswordRecord.oldPassword(), updatePasswordRecord.newPassword());
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
     @PostMapping("/password/forgot-password")
     public ResponseEntity<Void> forgotPassword(@Valid @RequestBody UsersRecord usersRecord) {
         userService.recoverPassword(usersRecord.username(), usersRecord.email());
         return ResponseEntity.noContent().build();
     }
+
     @Transactional
     @PatchMapping("/password/recover")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody RecoverPasswordRecord recoverPasswordRecord) {
-        userService
-                .changePassword(recoverPasswordRecord.email(), recoverPasswordRecord.temporaryPassword(),
-                        recoverPasswordRecord.newPassword());
+    public ResponseEntity<Void> changePassword(
+            @Valid @RequestBody RecoverPasswordRecord recoverPasswordRecord) {
+        userService.changePassword(recoverPasswordRecord.email(),
+                recoverPasswordRecord.temporaryPassword(), recoverPasswordRecord.newPassword());
         return ResponseEntity.noContent().build();
     }
+
     @Transactional
     @PostMapping("/sign-up")
     public ResponseEntity<UsersRecord> signUp(@Valid @RequestBody UsersRecord UsersRecord,
-                                              UriComponentsBuilder uriComponentsBuilder) {
+            UriComponentsBuilder uriComponentsBuilder) {
         var user = userService.signUp(UsersRecord.username(), UsersRecord.password(),
                 UsersRecord.email());
         var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();

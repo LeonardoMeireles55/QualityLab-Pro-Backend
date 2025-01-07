@@ -33,46 +33,48 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
 
         private final BiochemistryAnalyticsService biochemistryAnalyticsService;
 
-        private static final List<String> names = new AvailableBiochemistryAnalytics().availableBioAnalytics();
+        private static final List<String> names =
+                        new AvailableBiochemistryAnalytics().availableBioAnalytics();
 
         public BiochemistryAnalyticsController(
                         BiochemistryAnalyticsService biochemistryAnalyticsService) {
                 super(biochemistryAnalyticsService);
                 this.biochemistryAnalyticsService = biochemistryAnalyticsService;
         }
+
         @Override
         @GetMapping()
         public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalytics(
-                @PageableDefault(sort = "date",
-                        direction = Sort.Direction.DESC) Pageable pageable) {
-                List<GenericValuesRecord> resultsList = biochemistryAnalyticsService.getAllByNameIn(names,pageable);
+                        @PageableDefault(sort = "date",
+                                        direction = Sort.Direction.DESC) Pageable pageable) {
+                List<GenericValuesRecord> resultsList =
+                                biochemistryAnalyticsService.getAllByNameIn(names, pageable);
 
                 List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
-                        .map(result -> EntityModel.of(result,
-                                linkTo(getClass()).slash(result.id())
-                                        .withSelfRel()))
-                        .collect(Collectors.toList());
+                                .map(result -> EntityModel.of(result,
+                                                linkTo(getClass()).slash(result.id())
+                                                                .withSelfRel()))
+                                .collect(Collectors.toList());
 
                 return ResponseEntity.ok(CollectionModel.of(resultModels,
-                        linkTo(methodOn(getClass()).getAllAnalytics(pageable))
-                                .withSelfRel()));
+                                linkTo(methodOn(getClass()).getAllAnalytics(pageable))
+                                                .withSelfRel()));
         }
+
         @GetMapping("date-range")
         public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsDateBetween(
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                List<GenericValuesRecord> resultsList =
-                                biochemistryAnalyticsService.getAllByNameInAndDateBetween(
-                                                names, startDate, endDate);
+                List<GenericValuesRecord> resultsList = biochemistryAnalyticsService
+                                .getAllByNameInAndDateBetween(names, startDate, endDate);
                 return ResponseEntity.ok(resultsList);
         }
 
 
         @Override
         @GetMapping("name-and-level")
-        public ResponseEntity<List<GenericValuesRecord>>
-        getAllAnalyticsByNameAndLevel(Pageable pageable,
-                                      @RequestParam String name, @RequestParam String level) {
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevel(
+                        Pageable pageable, @RequestParam String name, @RequestParam String level) {
                 return ResponseEntity.ok(biochemistryAnalyticsService
                                 .findAnalyticsByNameAndLevel(pageable, name, level));
         }
@@ -94,7 +96,8 @@ public class BiochemistryAnalyticsController extends GenericAnalyticsController 
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                return ResponseEntity.ok(biochemistryAnalyticsService
-                                .calculateMeanAndStandardDeviation(name, level, startDate, endDate));
+                return ResponseEntity.ok(
+                                biochemistryAnalyticsService.calculateMeanAndStandardDeviation(name,
+                                                level, startDate, endDate));
         }
 }

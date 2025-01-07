@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalytics, Long> {
         boolean existsByName(String name);
+
         @Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1")
         List<GenericValuesRecord> findAllByName(String name, Pageable pageable);
 
@@ -23,6 +24,7 @@ public interface GenericAnalyticsRepository extends JpaRepository<GenericAnalyti
         @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3")
         List<GenericValuesRecord> findAllByNameInAndDateBetween(List<String> names,
                         LocalDateTime startDate, LocalDateTime endDate);
+
         @Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) ORDER BY ga.date ASC")
         List<GenericValuesRecord> findAllByNameIn(List<String> names, Pageable pageable);
 

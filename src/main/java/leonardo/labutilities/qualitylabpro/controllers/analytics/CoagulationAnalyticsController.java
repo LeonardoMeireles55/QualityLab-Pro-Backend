@@ -32,7 +32,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         private final CoagulationAnalyticsService coagulationAnalyticsService;
-        private static final List<String> names = new AvailableCoagulationAnalytics().availableCoagulationAnalytics();
+        private static final List<String> names =
+                        new AvailableCoagulationAnalytics().availableCoagulationAnalytics();
 
         public CoagulationAnalyticsController(
                         CoagulationAnalyticsService coagulationAnalyticsService) {
@@ -42,8 +43,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
 
         @Override
         @GetMapping("/name-and-level")
-        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevel(Pageable pageable,
-                                                                                       String name, String level) {
+        public ResponseEntity<List<GenericValuesRecord>> getAllAnalyticsByNameAndLevel(
+                        Pageable pageable, String name, String level) {
                 return ResponseEntity.ok(coagulationAnalyticsService
                                 .findAnalyticsByNameAndLevel(pageable, name, level));
         }
@@ -53,8 +54,7 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
                 List<GenericValuesRecord> resultsList = coagulationAnalyticsService
-                                .getAllByNameInAndDateBetween(names,
-                                                startDate, endDate);
+                                .getAllByNameInAndDateBetween(names, startDate, endDate);
                 return ResponseEntity.ok(resultsList);
         }
 
@@ -72,19 +72,20 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
         @Override
         @GetMapping()
         public ResponseEntity<CollectionModel<EntityModel<GenericValuesRecord>>> getAllAnalytics(
-                @PageableDefault(sort = "date",
-                        direction = Sort.Direction.DESC) Pageable pageable) {
-                List<GenericValuesRecord> resultsList = coagulationAnalyticsService.getAllByNameIn(names,pageable);
+                        @PageableDefault(sort = "date",
+                                        direction = Sort.Direction.DESC) Pageable pageable) {
+                List<GenericValuesRecord> resultsList =
+                                coagulationAnalyticsService.getAllByNameIn(names, pageable);
 
                 List<EntityModel<GenericValuesRecord>> resultModels = resultsList.stream()
-                        .map(result -> EntityModel.of(result,
-                                linkTo(getClass()).slash(result.id())
-                                        .withSelfRel()))
-                        .collect(Collectors.toList());
+                                .map(result -> EntityModel.of(result,
+                                                linkTo(getClass()).slash(result.id())
+                                                                .withSelfRel()))
+                                .collect(Collectors.toList());
 
                 return ResponseEntity.ok(CollectionModel.of(resultModels,
-                        linkTo(methodOn(getClass()).getAllAnalytics(pageable))
-                                .withSelfRel()));
+                                linkTo(methodOn(getClass()).getAllAnalytics(pageable))
+                                                .withSelfRel()));
         }
 
         @Override
@@ -93,7 +94,8 @@ public class CoagulationAnalyticsController extends GenericAnalyticsController {
                         @RequestParam String name, @RequestParam String level,
                         @RequestParam("startDate") LocalDateTime startDate,
                         @RequestParam("endDate") LocalDateTime endDate) {
-                return ResponseEntity.ok(coagulationAnalyticsService
-                                .calculateMeanAndStandardDeviation(name, level, startDate, endDate));
+                return ResponseEntity.ok(
+                                coagulationAnalyticsService.calculateMeanAndStandardDeviation(name,
+                                                level, startDate, endDate));
         }
 }

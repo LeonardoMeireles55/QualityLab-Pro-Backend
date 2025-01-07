@@ -12,13 +12,12 @@ import org.springframework.data.domain.Pageable;
 public interface IAnalyticsHelperService {
 
         List<GroupedValuesByLevel> findGroupedAnalyticsByLevel(String name, LocalDateTime startDate,
-                                                               LocalDateTime endDate);
+                        LocalDateTime endDate);
 
         List<GroupedMeanAndStdRecordByLevel> getMeanAndStandardDeviationForGroups(
                         List<GroupedValuesByLevel> records);
 
-        List<GroupedValuesByLevel> findFilteredGroupedAnalytics(
-                        List<GroupedValuesByLevel> records);
+        List<GroupedValuesByLevel> findFilteredGroupedAnalytics(List<GroupedValuesByLevel> records);
 
         boolean isGroupedRecordValid(GroupedValuesByLevel record);
 
@@ -39,7 +38,7 @@ public interface IAnalyticsHelperService {
                         LocalDateTime startDate, LocalDateTime endDate);
 
         List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
-                                                              String level);
+                        String level);
 
         List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name, String level,
                         LocalDateTime dateStart, LocalDateTime dateEnd);

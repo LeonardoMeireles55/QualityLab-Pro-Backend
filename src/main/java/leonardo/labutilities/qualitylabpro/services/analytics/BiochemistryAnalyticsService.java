@@ -21,17 +21,17 @@ public class BiochemistryAnalyticsService extends AbstractAnalyticsService {
 
     @Override
     public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
-                                                                 String level) {
+            String level) {
         this.ensureNameExists(name);
-        return this.findAnalyticsByNameAndLevelWithPagination(pageable, name, this.convertLevel(level));
+        return this.findAnalyticsByNameAndLevelWithPagination(pageable, name,
+                this.convertLevel(level));
     }
 
     @Override
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
             String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         ensureNameExists(name);
-        return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart,
-                dateEnd);
+        return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart, dateEnd);
     }
 
     @Override

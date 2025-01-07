@@ -17,7 +17,7 @@ public abstract class AbstractAnalyticsService extends AnalyticsHelperService {
         }
 
         public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
-                                                                              String name, String level);
+                        String name, String level);
 
         public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
                         String level, LocalDateTime dateStart, LocalDateTime dateEnd);

@@ -1,8 +1,4 @@
 package leonardo.labutilities.qualitylabpro.dtos.email;
 
-public record EmailRecord(
-        String to,
-        String subject,
-        String body
-) {
+public record EmailRecord(String to, String subject, String body) {
 }

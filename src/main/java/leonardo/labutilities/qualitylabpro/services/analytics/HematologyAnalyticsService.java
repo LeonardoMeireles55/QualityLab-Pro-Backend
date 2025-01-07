@@ -21,7 +21,7 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
 
     @Override
     public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
-                                                                 String level) {
+            String level) {
         ensureNameExists(name);
         return findAnalyticsByNameAndLevelWithPagination(pageable, name, convertLevel(level));
     }
@@ -30,8 +30,7 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
     public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
             String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
         ensureNameExists(name);
-        return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart,
-                dateEnd);
+        return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart, dateEnd);
     }
 
     @Override

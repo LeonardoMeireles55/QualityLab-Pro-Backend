@@ -42,8 +42,8 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
     public GenericAnalytics() {}
 
     public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot,
-                            String name, String level, double value, double mean, double sd, String unitValue,
-                            String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
+            String name, String level, double value, double mean, double sd, String unitValue,
+            String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
         this.id = id;
         this.date = date;
         this.levelLot = levelLot;
@@ -60,7 +60,7 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
     }
 
     public GenericAnalytics(GenericValuesRecord values,
-                            RulesValidatorComponent rulesValidatorComponent) {
+            RulesValidatorComponent rulesValidatorComponent) {
         this.date = values.date();
         this.levelLot = values.level_lot();
         this.testLot = values.test_lot();

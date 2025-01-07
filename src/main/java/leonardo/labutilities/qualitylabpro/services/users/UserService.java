@@ -27,15 +27,17 @@ public class UserService {
         String message = String.format(
                 "Dear user,\n\nUse the following temporary password to recover your account: %s\n\nBest regards,\nYour Team",
                 recoveryEmailRecord.temporaryPassword());
-         log.info("Sending recovery email to: {}", recoveryEmailRecord.email());
-         emailService.sendEmail(new EmailRecord(recoveryEmailRecord.email(), subject, message));
+        log.info("Sending recovery email to: {}", recoveryEmailRecord.email());
+        emailService.sendEmail(new EmailRecord(recoveryEmailRecord.email(), subject, message));
     }
+
     public void recoverPassword(String username, String email) {
 
         var user = userRepository.existsByUsernameAndEmail(username, email);
 
         if (!user) {
-            throw new CustomGlobalErrorHandling.ResourceNotFoundException("User not or invalid arguments");
+            throw new CustomGlobalErrorHandling.ResourceNotFoundException(
+                    "User not or invalid arguments");
         }
 
         String temporaryPassword = passwordRecoveryTokenManager.generateTemporaryPassword();
@@ -43,12 +45,15 @@ public class UserService {
 
         sendRecoveryEmail(new RecoveryEmailRecord(email, temporaryPassword));
     }
+
     public void changePassword(String email, String temporaryPassword, String newPassword) {
         if (!passwordRecoveryTokenManager.isRecoveryTokenValid(temporaryPassword, email)) {
             throw new CustomGlobalErrorHandling.ResourceNotFoundException("Invalid recovery token");
         }
-        userRepository.setPasswordWhereByUsername(email, BCryptEncoderComponent.encrypt(newPassword));
+        userRepository.setPasswordWhereByUsername(email,
+                BCryptEncoderComponent.encrypt(newPassword));
     };
+
     public User signUp(String login, String password, String email) {
 
         var user = new User(login, BCryptEncoderComponent.encrypt(password), email, UserRoles.USER);
