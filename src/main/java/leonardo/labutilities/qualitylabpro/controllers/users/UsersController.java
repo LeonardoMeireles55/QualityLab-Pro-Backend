@@ -24,71 +24,71 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/users")
 @RestController
 public class UsersController {
-    private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-    private final TokenService tokenService;
+	private final UserService userService;
+	private final AuthenticationManager authenticationManager;
+	private final TokenService tokenService;
 
-    public UsersController(UserService userService, AuthenticationManager authenticationManager,
-            TokenService tokenService) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.tokenService = tokenService;
-    }
+	public UsersController(final UserService userService,
+			final AuthenticationManager authenticationManager, final TokenService tokenService) {
+		this.userService = userService;
+		this.authenticationManager = authenticationManager;
+		this.tokenService = tokenService;
+	}
 
-    @Transactional
-    @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(
-            @RequestBody UpdatePasswordRecord updatePasswordRecord) {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
+	@Transactional
+	@PatchMapping("/password")
+	public ResponseEntity<Void> updatePassword(
+			@RequestBody final UpdatePasswordRecord updatePasswordRecord) {
+		final var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            var user = (User) authentication.getPrincipal();
-            userService.updateUserPassword(user.getUsername(), user.getEmail(),
-                    updatePasswordRecord.oldPassword(), updatePasswordRecord.newPassword());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+		if (authentication != null && authentication.isAuthenticated()) {
+			final var user = (User) authentication.getPrincipal();
+			userService.updateUserPassword(user.getUsername(), user.getEmail(),
+					updatePasswordRecord.oldPassword(), updatePasswordRecord.newPassword());
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+	}
 
-    @PostMapping("/password/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody UsersRecord usersRecord) {
-        userService.recoverPassword(usersRecord.username(), usersRecord.email());
-        return ResponseEntity.noContent().build();
-    }
+	@PostMapping("/password/forgot-password")
+	public ResponseEntity<Void> forgotPassword(@Valid @RequestBody final UsersRecord usersRecord) {
+		userService.recoverPassword(usersRecord.username(), usersRecord.email());
+		return ResponseEntity.noContent().build();
+	}
 
-    @Transactional
-    @PatchMapping("/password/recover")
-    public ResponseEntity<Void> changePassword(
-            @Valid @RequestBody RecoverPasswordRecord recoverPasswordRecord) {
-        userService.changePassword(recoverPasswordRecord.email(),
-                recoverPasswordRecord.temporaryPassword(), recoverPasswordRecord.newPassword());
-        return ResponseEntity.noContent().build();
-    }
+	@Transactional
+	@PatchMapping("/password/recover")
+	public ResponseEntity<Void> changePassword(
+			@Valid @RequestBody final RecoverPasswordRecord recoverPasswordRecord) {
+		userService.changePassword(recoverPasswordRecord.email(),
+				recoverPasswordRecord.temporaryPassword(), recoverPasswordRecord.newPassword());
+		return ResponseEntity.noContent().build();
+	}
 
-    @Transactional
-    @PostMapping("/sign-up")
-    public ResponseEntity<UsersRecord> signUp(@Valid @RequestBody UsersRecord UsersRecord,
-            UriComponentsBuilder uriComponentsBuilder) {
-        var user = userService.signUp(UsersRecord.username(), UsersRecord.password(),
-                UsersRecord.email());
-        var uri = uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
+	@Transactional
+	@PostMapping("/sign-up")
+	public ResponseEntity<UsersRecord> signUp(@Valid @RequestBody final UsersRecord UsersRecord,
+			final UriComponentsBuilder uriComponentsBuilder) {
+		final var user = userService.signUp(UsersRecord.username(), UsersRecord.password(),
+				UsersRecord.email());
+		final var uri =
+				uriComponentsBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(UsersRecord);
-    }
+		return ResponseEntity.created(uri).body(UsersRecord);
+	}
 
-    @PostMapping
-    @RequestMapping(value = "/sign-in", method = RequestMethod.POST)
-    public ResponseEntity<TokenJwtRecord> singIn(
-            @RequestBody @Valid LoginUserRecord loginUserRecord) {
-        var authToken = new UsernamePasswordAuthenticationToken(loginUserRecord.email(),
-                loginUserRecord.password());
-        var auth = authenticationManager.authenticate(authToken);
-        var user = (User) auth.getPrincipal();
-        var token = tokenService.generateToken(user);
+	@PostMapping("/sign-in")
+	public ResponseEntity<TokenJwtRecord> singIn(
+			@RequestBody @Valid final LoginUserRecord loginUserRecord) {
+		final var authToken = new UsernamePasswordAuthenticationToken(loginUserRecord.email(),
+				loginUserRecord.password());
+		final var auth = authenticationManager.authenticate(authToken);
+		final var user = (User) auth.getPrincipal();
+		final var token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new TokenJwtRecord(token));
-    }
+		return ResponseEntity.ok(new TokenJwtRecord(token));
+	}
 
 
 }
