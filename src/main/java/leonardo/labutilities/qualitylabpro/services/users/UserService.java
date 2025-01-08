@@ -1,16 +1,20 @@
 package leonardo.labutilities.qualitylabpro.services.users;
 
+import leonardo.labutilities.qualitylabpro.dtos.authentication.TokenJwtRecord;
 import leonardo.labutilities.qualitylabpro.dtos.email.EmailRecord;
 import leonardo.labutilities.qualitylabpro.dtos.email.RecoveryEmailRecord;
 import leonardo.labutilities.qualitylabpro.entities.User;
 import leonardo.labutilities.qualitylabpro.enums.UserRoles;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
+import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
 import leonardo.labutilities.qualitylabpro.services.email.EmailService;
 import leonardo.labutilities.qualitylabpro.utils.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.utils.components.PasswordRecoveryTokenManager;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -21,6 +25,8 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordRecoveryTokenManager passwordRecoveryTokenManager;
 	private final EmailService emailService;
+	private final AuthenticationManager authenticationManager;
+	private final TokenService tokenService;
 
 	private void sendRecoveryEmail(RecoveryEmailRecord recoveryEmailRecord) {
 		String subject = "Password Recovery";
@@ -62,6 +68,18 @@ public class UserService {
 			throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
 		}
 		return userRepository.save(user);
+	}
+
+	public TokenJwtRecord signIn(String email, String password) {
+
+		final var authToken = new UsernamePasswordAuthenticationToken(email,
+				password);
+
+		final var auth = authenticationManager.authenticate(authToken);
+		final var user = (User) auth.getPrincipal();
+		final var token = tokenService.generateToken(user);
+
+		return new TokenJwtRecord(tokenService.generateToken(user));
 	}
 
 	public void updateUserPassword(String name, String email, String password, String newPassword) {

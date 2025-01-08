@@ -15,9 +15,9 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -39,22 +39,17 @@ public class CoagulationAnalyticsControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@MockitoBean
 	private TokenService tokenService;
 
-	@MockBean
+	@MockitoBean
 	private UserRepository userRepository;
 
-	@MockBean
+	@MockitoBean
 	private CoagulationAnalyticsService coagulationAnalyticsService;
 
 	@Autowired
 	private JacksonTester<List<GenericValuesRecord>> jacksonGenericValuesRecord;
-
-	@BeforeEach
-	public void setup() {
-		doNothing().when(coagulationAnalyticsService).saveNewAnalyticsRecords(anyList());
-	}
 
 	@Test
 	@DisplayName("It should return HTTP code 201 when analytics records are saved")

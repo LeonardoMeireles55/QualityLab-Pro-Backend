@@ -23,8 +23,10 @@ public class CustomGlobalErrorHandling extends RuntimeException {
 			HttpServletRequest request) {
 		Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
 				.collect(Collectors.toMap(FieldError::getField,
-						error -> error.getDefaultMessage() != null ? error.getDefaultMessage()
-								: "Invalid value"));
+						error -> {
+                            error.getDefaultMessage();
+                            return error.getDefaultMessage();
+                        }));
 
 		ApiError apiError =
 				new ApiError(HttpStatus.BAD_REQUEST, "Validation failed", request.getRequestURI());

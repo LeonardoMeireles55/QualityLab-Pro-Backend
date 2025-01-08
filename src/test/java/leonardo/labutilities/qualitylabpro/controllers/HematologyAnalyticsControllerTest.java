@@ -7,7 +7,6 @@ import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRec
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.analytics.HematologyAnalyticsService;
 import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,9 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -36,25 +35,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureJsonTesters
 public class HematologyAnalyticsControllerTest {
 
-	@MockBean
+	@MockitoBean
 	private TokenService tokenService;
 
-	@MockBean
+	@MockitoBean
 	private UserRepository userRepository;
 
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@MockitoBean
 	private HematologyAnalyticsService hematologyAnalyticsService;
 
 	@Autowired
 	private JacksonTester<List<GenericValuesRecord>> jacksonGenericValuesRecord;
 
-	@BeforeEach
-	public void setup() {
-		doNothing().when(hematologyAnalyticsService).saveNewAnalyticsRecords(anyList());
-	}
 
 	@Test
 	@DisplayName("It should return HTTP code 201 when analytics records are saved")

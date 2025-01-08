@@ -25,14 +25,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 public class UsersController {
 	private final UserService userService;
-	private final AuthenticationManager authenticationManager;
-	private final TokenService tokenService;
 
-	public UsersController(final UserService userService,
-			final AuthenticationManager authenticationManager, final TokenService tokenService) {
+	public UsersController(final UserService userService) {
 		this.userService = userService;
-		this.authenticationManager = authenticationManager;
-		this.tokenService = tokenService;
 	}
 
 	@Transactional
@@ -81,14 +76,7 @@ public class UsersController {
 	@PostMapping("/sign-in")
 	public ResponseEntity<TokenJwtRecord> singIn(
 			@RequestBody @Valid final LoginUserRecord loginUserRecord) {
-		final var authToken = new UsernamePasswordAuthenticationToken(loginUserRecord.email(),
-				loginUserRecord.password());
-		final var auth = authenticationManager.authenticate(authToken);
-		final var user = (User) auth.getPrincipal();
-		final var token = tokenService.generateToken(user);
-
-		return ResponseEntity.ok(new TokenJwtRecord(token));
+		final var token = userService.signIn(loginUserRecord.email(), loginUserRecord.password());
+		return ResponseEntity.ok(token);
 	}
-
-
 }

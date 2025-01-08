@@ -36,11 +36,6 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @BeforeEach
-    void setUp() {
-        // Setup code if needed
-    }
-
     @Test
     void testRecoverPassword_UserExists() {
         when(userRepository.existsByUsernameAndEmail(anyString(), anyString())).thenReturn(true);
