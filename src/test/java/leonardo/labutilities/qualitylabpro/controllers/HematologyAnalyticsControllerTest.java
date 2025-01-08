@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HematologyAnalyticsController.class)
@@ -68,10 +70,7 @@ public class HematologyAnalyticsControllerTest {
 		when(hematologyAnalyticsService.getAllByNameIn(anyList(), any())).thenReturn(records);
 
 		mockMvc.perform(get("/hematology-analytics").param("page", "0").param("size", "10"))
-				.andExpect(status().isOk()).andExpect(result -> {
-					// Verify the content of the response if necessary
-					// Example: assert the list size
-				});
+				.andExpect(status().isOk());
 
 		verify(hematologyAnalyticsService, times(1)).getAllByNameIn(anyList(), any());
 	}
@@ -116,10 +115,11 @@ public class HematologyAnalyticsControllerTest {
 
 		mockMvc.perform(get("/hematology-analytics/mean-standard-deviation")
 				.param("name", "Hemoglobin").param("level", "High")
-				.param("startDate", "2025-01-01 00:00:00").param("endDate", "2025-01-05 00:00:00"))
+				.param("startDate", "2025-01-01 00:00:00").param("endDate",
+								"2025-01-05 00:00:00"))
 				.andExpect(status().isOk());
-
-		verify(hematologyAnalyticsService, times(1)).calculateMeanAndStandardDeviation(any(), any(),
+		verify(hematologyAnalyticsService, times(1))
+				.calculateMeanAndStandardDeviation(any(), any(),
 				any(), any());
 	}
 }
