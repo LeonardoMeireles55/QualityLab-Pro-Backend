@@ -2,12 +2,11 @@ package leonardo.labutilities.qualitylabpro.controllers;
 
 import leonardo.labutilities.qualitylabpro.configs.TestSecurityConfig;
 import leonardo.labutilities.qualitylabpro.controllers.analytics.CoagulationAnalyticsController;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.analytics.CoagulationAnalyticsService;
 import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static leonardo.labutilities.qualitylabpro.utils.AnalyticsHelperMocks.createSampleRecordList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,12 +46,12 @@ public class CoagulationAnalyticsControllerTest {
 	private CoagulationAnalyticsService coagulationAnalyticsService;
 
 	@Autowired
-	private JacksonTester<List<GenericValuesRecord>> jacksonGenericValuesRecord;
+	private JacksonTester<List<AnalyticsRecord>> jacksonGenericValuesRecord;
 
 	@Test
 	@DisplayName("It should return HTTP code 201 when analytics records are saved")
 	void analytics_post_return_201() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		mockMvc.perform(post("/coagulation-analytics").contentType(MediaType.APPLICATION_JSON)
 				.content(jacksonGenericValuesRecord.write(records).getJson()))
 				.andExpect(status().isCreated());
@@ -64,7 +61,7 @@ public class CoagulationAnalyticsControllerTest {
 	@Test
 	@DisplayName("It should return a list of all analytics with pagination")
 	void getAllAnalytics_return_list() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		when(coagulationAnalyticsService.getAllByNameIn(anyList(), any())).thenReturn(records);
 
 		mockMvc.perform(get("/coagulation-analytics").param("page", "0").param("size", "10"))
@@ -79,7 +76,7 @@ public class CoagulationAnalyticsControllerTest {
 	@Test
 	@DisplayName("It should return analytics records by level and name")
 	void getAnalyticsByLevel_return_analytics() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		when(coagulationAnalyticsService.findAnalyticsByNameAndLevel(any(), any(), any()))
 				.thenReturn(records);
 
@@ -94,7 +91,7 @@ public class CoagulationAnalyticsControllerTest {
 	@Test
 	@DisplayName("It should return analytics records for a date range")
 	void getAnalyticsByDateRange_return_analytics() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 
 		when(coagulationAnalyticsService.getAllByNameInAndDateBetween(anyList(), any(), any()))
 				.thenReturn(records);

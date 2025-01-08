@@ -8,7 +8,6 @@ import leonardo.labutilities.qualitylabpro.services.users.UserService;
 import leonardo.labutilities.qualitylabpro.utils.components.BCryptEncoderComponent;
 import leonardo.labutilities.qualitylabpro.utils.components.PasswordRecoveryTokenManager;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,9 +49,7 @@ class UserServiceTest {
     void testRecoverPassword_UserDoesNotExist() {
         when(userRepository.existsByUsernameAndEmail(anyString(), anyString())).thenReturn(false);
 
-        assertThrows(CustomGlobalErrorHandling.ResourceNotFoundException.class, () -> {
-            userService.recoverPassword("username", "email@example.com");
-        });
+        assertThrows(CustomGlobalErrorHandling.ResourceNotFoundException.class, () -> userService.recoverPassword("username", "email@example.com"));
     }
 
     @Test
@@ -68,18 +64,14 @@ class UserServiceTest {
     void testChangePassword_InvalidToken() {
         when(passwordRecoveryTokenManager.isRecoveryTokenValid(anyString(), anyString())).thenReturn(false);
 
-        assertThrows(CustomGlobalErrorHandling.ResourceNotFoundException.class, () -> {
-            userService.changePassword("email@example.com", "tempPassword", "newPassword");
-        });
+        assertThrows(CustomGlobalErrorHandling.ResourceNotFoundException.class, () -> userService.changePassword("email@example.com", "tempPassword", "newPassword"));
     }
 
     @Test
     void testSignUp_UserAlreadyExists() {
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
-        assertThrows(CustomGlobalErrorHandling.DataIntegrityViolationException.class, () -> {
-            userService.signUp("username", "password", "email@example.com");
-        });
+        assertThrows(CustomGlobalErrorHandling.DataIntegrityViolationException.class, () -> userService.signUp("username", "password", "email@example.com"));
     }
 
     @Test
@@ -100,9 +92,7 @@ class UserServiceTest {
 
         when(userRepository.getReferenceByUsernameAndEmail(anyString(), anyString())).thenReturn(user);
 
-        assertThrows(CustomGlobalErrorHandling.PasswordNotMatchesException.class, () -> {
-            userService.updateUserPassword("username", "email@example.com", "oldPassword", "newPassword");
-        });
+        assertThrows(CustomGlobalErrorHandling.PasswordNotMatchesException.class, () -> userService.updateUserPassword("username", "email@example.com", "oldPassword", "newPassword"));
         verify(userRepository, never()).setPasswordWhereByUsername(anyString(), anyString());
     }
 
@@ -111,8 +101,6 @@ class UserServiceTest {
         User user = new User("username", BCryptEncoderComponent.encrypt("oldPassword"), "email@example.com", UserRoles.USER);
         when(userRepository.getReferenceByUsernameAndEmail(anyString(), anyString())).thenReturn(user);
 
-        assertThrows(CustomGlobalErrorHandling.PasswordNotMatchesException.class, () -> {
-            userService.updateUserPassword("username", "email@example.com", "wrongPassword", "newPassword");
-        });
+        assertThrows(CustomGlobalErrorHandling.PasswordNotMatchesException.class, () -> userService.updateUserPassword("username", "email@example.com", "wrongPassword", "newPassword"));
     }
 }

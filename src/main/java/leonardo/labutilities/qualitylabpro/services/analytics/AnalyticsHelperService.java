@@ -5,10 +5,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.GenericAnalytics;
-import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
-import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.repositories.AnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
+import leonardo.labutilities.qualitylabpro.utils.mappers.AnalyticsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -19,43 +18,40 @@ import org.springframework.stereotype.Service;
 @Service
 public abstract class AnalyticsHelperService implements IAnalyticsHelperService {
 
-	private final GenericAnalyticsRepository genericAnalyticsRepository;
-	private final RulesValidatorComponent rulesValidatorComponent;
+	private final AnalyticsRepository analyticsRepository;
 	private final Pageable pageable = PageRequest.of(0, 200);
 
-	public AnalyticsHelperService(GenericAnalyticsRepository genericAnalyticsRepository,
-			RulesValidatorComponent rulesValidatorComponent) {
-		this.genericAnalyticsRepository = genericAnalyticsRepository;
-		this.rulesValidatorComponent = rulesValidatorComponent;
+	public AnalyticsHelperService(AnalyticsRepository analyticsRepository) {
+		this.analyticsRepository = analyticsRepository;
 	}
 
 	@Override
 	public void deleteAnalyticsById(Long id) {
-		if (!genericAnalyticsRepository.existsById(id)) {
+		if (!analyticsRepository.existsById(id)) {
 			throw new CustomGlobalErrorHandling.ResourceNotFoundException(
-					"Analytics by id not found");
+					"AnalyticsRecord by id not found");
 		}
-		genericAnalyticsRepository.deleteById(id);
+		analyticsRepository.deleteById(id);
 	}
 
-	private List<Double> extractRecordValues(List<GenericValuesRecord> records) {
-		return records.stream().map(GenericValuesRecord::value).toList();
+	private List<Double> extractRecordValues(List<AnalyticsRecord> records) {
+		return records.stream().map(AnalyticsRecord::value).toList();
 	}
 
 	public void ensureNameExists(String name) {
-		if (!genericAnalyticsRepository.existsByName(name.toUpperCase())) {
+		if (!analyticsRepository.existsByName(name.toUpperCase())) {
 			throw new CustomGlobalErrorHandling.ResourceNotFoundException(
-					"Analytics by name not found");
+					"AnalyticsRecord by name not found");
 		}
 	}
 
-	public boolean isAnalyticsNonExistent(GenericValuesRecord values) {
-		return !genericAnalyticsRepository.existsByDateAndLevelAndName(values.date(),
+	public boolean isAnalyticsNonExistent(AnalyticsRecord values) {
+		return !analyticsRepository.existsByDateAndLevelAndName(values.date(),
 				values.level(), values.name());
 	}
 
-	public List<GenericValuesRecord> validateAnalyticsNameExists(
-			List<GenericValuesRecord> results) {
+	public List<AnalyticsRecord> validateAnalyticsNameExists(
+			List<AnalyticsRecord> results) {
 		if (results.isEmpty()) {
 			throw new CustomGlobalErrorHandling.ResourceNotFoundException("Results not found.");
 		}
@@ -63,7 +59,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 	}
 
 	@Override
-	public boolean isRecordValid(GenericValuesRecord record) {
+	public boolean isRecordValid(AnalyticsRecord record) {
 		String rules = record.rules();
 		return (!Objects.equals(rules, "+3s") && !Objects.equals(rules, "-3s"));
 	}
@@ -96,7 +92,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 			List<GroupedValuesByLevel> records) {
 		return records.stream().filter(this::isGroupedRecordValid)
 				.map((GroupedValuesByLevel record) -> {
-					List<GenericValuesRecord> filteredRecords = record.values();
+					List<AnalyticsRecord> filteredRecords = record.values();
 					return new GroupedValuesByLevel(record.level(), filteredRecords);
 				}).toList();
 	}
@@ -107,11 +103,12 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 			key = "#name + '-' + #startDate.toString() + '-' + #endDate.toString() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
 	public List<GroupedValuesByLevel> findGroupedAnalyticsByLevel(String name,
 			LocalDateTime startDate, LocalDateTime endDate) {
-		List<GenericValuesRecord> records = genericAnalyticsRepository
-				.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable);
+		List<AnalyticsRecord> records = analyticsRepository
+				.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable)
+				.stream().map(AnalyticsMapper::toRecord).toList();
 		validateResultsNotEmpty(records, "No analytics found for the given parameters");
 
-		return records.stream().collect(Collectors.groupingBy(GenericValuesRecord::level))
+		return records.stream().collect(Collectors.groupingBy(AnalyticsRecord::level))
 				.entrySet().stream()
 				.map(entry -> new GroupedValuesByLevel(entry.getKey(), entry.getValue())).toList();
 	}
@@ -147,7 +144,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 			key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
 	public MeanAndStdDeviationRecord calculateMeanAndStandardDeviation(String name, String level,
 			LocalDateTime dateStart, LocalDateTime dateEnd) {
-		List<GenericValuesRecord> values =
+		List<AnalyticsRecord> values =
 				findAllAnalyticsByNameAndLevelAndDate(name, level, dateStart, dateEnd).stream()
 						.filter(this::isRecordValid).toList();
 		return computeStatistics(extractRecordValues(values));
@@ -157,9 +154,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 			key = "#name + '-' + #startDate.toString() + '-' + #endDate.toString()")
 	public List<GroupedMeanAndStdRecordByLevel> calculateGroupedMeanAndStandardDeviation(
 			String name, LocalDateTime startDate, LocalDateTime endDate) {
-		List<GenericValuesRecord> records = genericAnalyticsRepository
-				.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable);
-		var values = records.stream().collect(Collectors.groupingBy(GenericValuesRecord::level))
+		List<AnalyticsRecord> records = analyticsRepository
+				.findAllByNameAndDateBetweenGroupByLevel(name, startDate, endDate, pageable)
+				.stream().map((AnalyticsMapper::toRecord)).toList();
+		var values = records.stream().collect(Collectors.groupingBy(AnalyticsRecord::level))
 				.entrySet().stream()
 				.map(entry -> new GroupedValuesByLevel(entry.getKey(), entry.getValue())).toList();
 
@@ -169,80 +167,80 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 	@Override
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#names.hashCode() + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
-	public List<GenericValuesRecord> getAllByNameInAndDateBetween(List<String> names,
-			LocalDateTime dateStart, LocalDateTime dateEnd) {
-		return genericAnalyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd)
-				.stream().toList();
+	public List<AnalyticsRecord> getAllByNameInAndDateBetween(List<String> names,
+															  LocalDateTime dateStart, LocalDateTime dateEnd) {
+		return analyticsRepository.findAllByNameInAndDateBetween(names, dateStart, dateEnd)
+				.stream().map((AnalyticsMapper::toRecord)).toList();
 	}
 
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#names.hashCode() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
-	public List<GenericValuesRecord> getAllByNameIn(List<String> names, Pageable pageable) {
-		return genericAnalyticsRepository.findAllByNameIn(names, pageable).stream().toList();
+	public List<AnalyticsRecord> getAllByNameIn(List<String> names, Pageable pageable) {
+		return analyticsRepository
+				.findAllByNameIn(names, pageable).stream().map((AnalyticsMapper::toRecord)).toList();
 	}
 
 
 	@Override
-	public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
-			String name, String level);
+	public abstract List<AnalyticsRecord> findAnalyticsByNameAndLevel(Pageable pageable,
+																	  String name, String level);
 
 	@Override
-	public void saveNewAnalyticsRecords(List<GenericValuesRecord> valuesOfLevelsList) {
-		List<GenericAnalytics> newAnalytics =
+	public void saveNewAnalyticsRecords(List<AnalyticsRecord> valuesOfLevelsList) {
+		List<leonardo.labutilities.qualitylabpro.entities.Analytics> newAnalytics =
 				valuesOfLevelsList.stream().filter(this::isAnalyticsNonExistent)
-						.map(values -> new GenericAnalytics(values, rulesValidatorComponent))
+						.map(AnalyticsMapper::toEntity)
 						.collect(Collectors.toList());
 
 		if (newAnalytics.isEmpty()) {
 			throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
 		}
-
-		genericAnalyticsRepository.saveAll(newAnalytics);
+		analyticsRepository.saveAll(newAnalytics);
 	}
 
 	@Override
 	@Cacheable(value = "name")
-	public List<GenericValuesRecord> findAll(Pageable pageable) {
-		return genericAnalyticsRepository.findAll(pageable).map(GenericValuesRecord::new).stream()
-				.collect(Collectors.collectingAndThen(Collectors.toList(),
-						this::validateAnalyticsNameExists));
+	public List<AnalyticsRecord> findAll(Pageable pageable) {
+		return validateAnalyticsNameExists(analyticsRepository
+				.findAll(pageable).stream().map(AnalyticsMapper::toRecord).toList());
 	}
-
 	@Override
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#name + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
-	public List<GenericValuesRecord> findAnalyticsByNameWithPagination(Pageable pageable,
-			String name) {
-		List<GenericValuesRecord> analyticsList =
-				genericAnalyticsRepository.findAllByName(name.toUpperCase(), pageable);
+	public List<AnalyticsRecord> findAnalyticsByNameWithPagination(Pageable pageable,
+																   String name) {
+		List<AnalyticsRecord> analyticsList =
+				analyticsRepository
+						.findAllByName(name.toUpperCase(), pageable).stream().map(AnalyticsMapper::toRecord).toList();
 		validateResultsNotEmpty(analyticsList, "No analytics found with the given name");
 		return analyticsList;
 	}
 
 	@Override
 	@Cacheable(cacheNames = "analytics-cache", key = "#id")
-	public GenericAnalytics findById(Long id) {
-		return genericAnalyticsRepository.findById(id)
+	public AnalyticsRecord findById(Long id) {
+		return AnalyticsMapper.toRecord(analyticsRepository.findById(id)
 				.orElseThrow(() -> new CustomGlobalErrorHandling.ResourceNotFoundException(
-						"Results not found."));
+						"AnalyticsRecord by id not found")));
 	}
 
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#name + '-' + #level + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
-	public List<GenericValuesRecord> findAnalyticsByNameAndLevelWithPagination(Pageable pageable,
-			String name, String level) {
-		List<GenericValuesRecord> analyticsList = genericAnalyticsRepository
-				.findAllByNameAndLevel(pageable, name.toUpperCase(), level);
+	public List<AnalyticsRecord> findAnalyticsByNameAndLevelWithPagination(Pageable pageable, String name, String level) {
+		List<AnalyticsRecord> analyticsList = analyticsRepository
+				.findAllByNameAndLevel(pageable, name.toUpperCase(), level)
+				.stream().map(AnalyticsMapper::toRecord).toList();
 		validateResultsNotEmpty(analyticsList, "No analytics found for the given name and level");
 		return analyticsList;
 	}
 
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
-	List<GenericValuesRecord> findAnalyticsByNameLevelAndDate(String name, String level,
-			LocalDateTime dateStart, LocalDateTime dateEnd) {
-		List<GenericValuesRecord> results = genericAnalyticsRepository
-				.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable);
+	List<AnalyticsRecord> findAnalyticsByNameLevelAndDate(String name, String level,
+														  LocalDateTime dateStart, LocalDateTime dateEnd) {
+		List<AnalyticsRecord> results = analyticsRepository
+				.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable)
+				.stream().map(AnalyticsMapper::toRecord).toList();
 		validateResultsNotEmpty(results, "No analytics found for the given parameters");
 		return results;
 	}
@@ -250,10 +248,10 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 	@Override
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#dateStart.toString() + '-' + #dateEnd.toString()")
-	public List<GenericValuesRecord> findAllAnalyticsByDate(LocalDateTime dateStart,
-			LocalDateTime dateEnd) {
-		List<GenericValuesRecord> results =
-				genericAnalyticsRepository.findAllByDateBetween(dateStart, dateEnd);
+	public List<AnalyticsRecord> findAllAnalyticsByDate(LocalDateTime dateStart, LocalDateTime dateEnd) {
+		List<AnalyticsRecord> results =
+				analyticsRepository.findAllByDateBetween(dateStart, dateEnd)
+						.stream().map(AnalyticsMapper::toRecord).toList();
 		validateResultsNotEmpty(results, "No analytics found for the given date range");
 		return results;
 	}

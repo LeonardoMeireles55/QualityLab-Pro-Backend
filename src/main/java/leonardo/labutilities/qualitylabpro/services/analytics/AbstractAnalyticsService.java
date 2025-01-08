@@ -3,26 +3,25 @@ package leonardo.labutilities.qualitylabpro.services.analytics;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
-import leonardo.labutilities.qualitylabpro.repositories.GenericAnalyticsRepository;
-import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
+import leonardo.labutilities.qualitylabpro.repositories.AnalyticsRepository;
 
 import org.springframework.data.domain.Pageable;
 
 public abstract class AbstractAnalyticsService extends AnalyticsHelperService {
 
-	public AbstractAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
-			RulesValidatorComponent rulesValidatorComponent) {
-		super(genericAnalyticsRepository, rulesValidatorComponent);
+	public AbstractAnalyticsService(AnalyticsRepository analyticsRepository) {
+		super(analyticsRepository);
 	}
 
 	@Override
-	public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
-			String name, String level);
+	public abstract List<AnalyticsRecord> findAnalyticsByNameAndLevel(Pageable pageable,
+																	  String name, String level);
 
 	@Override
-	public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
-			String level, LocalDateTime dateStart, LocalDateTime dateEnd);
+	public abstract List<AnalyticsRecord>
+	findAllAnalyticsByNameAndLevelAndDate(String name,
+										  String level, LocalDateTime dateStart, LocalDateTime dateEnd);
 
 	public abstract String convertLevel(String level);
 }

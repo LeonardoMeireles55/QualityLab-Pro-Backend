@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 @Getter
+@Setter
 @Entity(name = "generic_analytics")
-public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
+public class Analytics extends RepresentationModel<Analytics> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,11 +42,11 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
 	@Transient
 	RulesValidatorComponent rulesValidatorComponent;
 
-	public GenericAnalytics() {}
+	public Analytics() {}
 
-	public GenericAnalytics(Long id, LocalDateTime date, String levelLot, String testLot,
-			String name, String level, double value, double mean, double sd, String unitValue,
-			String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
+	public Analytics(Long id, LocalDateTime date, String levelLot, String testLot,
+					 String name, String level, double value, double mean, double sd, String unitValue,
+					 String rules, String description, RulesValidatorComponent rulesValidatorComponent) {
 		this.id = id;
 		this.date = date;
 		this.levelLot = levelLot;
@@ -60,8 +62,8 @@ public class GenericAnalytics extends RepresentationModel<GenericAnalytics> {
 		this.rulesValidatorComponent = rulesValidatorComponent;
 	}
 
-	public GenericAnalytics(GenericValuesRecord values,
-			RulesValidatorComponent rulesValidatorComponent) {
+	public Analytics(AnalyticsRecord values,
+					 RulesValidatorComponent rulesValidatorComponent) {
 		this.date = values.date();
 		this.levelLot = values.level_lot();
 		this.testLot = values.test_lot();

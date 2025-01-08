@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 @Component
 public class PasswordRecoveryTokenManager {
-	static HashMap<String, String> stringHashMap = new HashMap<>();
+	static final HashMap<String, String> stringHashMap = new HashMap<>();
 
 	public String generateTemporaryPassword() {
 		return java.util.UUID.randomUUID().toString();

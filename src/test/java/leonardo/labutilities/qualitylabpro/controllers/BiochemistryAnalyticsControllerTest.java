@@ -2,12 +2,11 @@ package leonardo.labutilities.qualitylabpro.controllers;
 
 import leonardo.labutilities.qualitylabpro.configs.TestSecurityConfig;
 import leonardo.labutilities.qualitylabpro.controllers.analytics.BiochemistryAnalyticsController;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GenericValuesRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.analytics.BiochemistryAnalyticsService;
 import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static leonardo.labutilities.qualitylabpro.utils.AnalyticsHelperMocks.createSampleRecordList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,12 +46,12 @@ public class BiochemistryAnalyticsControllerTest {
 	private BiochemistryAnalyticsService biochemistryAnalyticsService;
 
 	@Autowired
-	private JacksonTester<List<GenericValuesRecord>> jacksonGenericValuesRecord;
+	private JacksonTester<List<AnalyticsRecord>> jacksonGenericValuesRecord;
 
 	@Test
 	@DisplayName("It should return HTTP code 201 when analytics records are saved")
 	void analytics_post_return_201() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		mockMvc.perform(post("/biochemistry-analytics").contentType(MediaType.APPLICATION_JSON)
 				.content(jacksonGenericValuesRecord.write(records).getJson()))
 				.andExpect(status().isCreated());
@@ -64,7 +61,7 @@ public class BiochemistryAnalyticsControllerTest {
 	@Test
 	@DisplayName("It should return a list of all analytics with pagination")
 	void getAllAnalytics_return_list() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		when(biochemistryAnalyticsService.getAllByNameIn(anyList(), any())).thenReturn(records);
 
 		mockMvc.perform(get("/biochemistry-analytics").param("page", "0").param("size", "10"))
@@ -79,7 +76,7 @@ public class BiochemistryAnalyticsControllerTest {
 	@Test
 	@DisplayName("It should return analytics records by level and name")
 	void getAnalyticsByLevel_return_analytics() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 		when(biochemistryAnalyticsService.findAnalyticsByNameAndLevel(any(), any(), any()))
 				.thenReturn(records);
 
@@ -95,7 +92,7 @@ public class BiochemistryAnalyticsControllerTest {
 	@DisplayName("It should return analytics records for a date range")
 	@WithMockUser(username = "admin", roles = {"ADMIN"})
 	void getAnalyticsByDateRange_return_analytics() throws Exception {
-		List<GenericValuesRecord> records = createSampleRecordList();
+		List<AnalyticsRecord> records = createSampleRecordList();
 
 		when(biochemistryAnalyticsService.getAllByNameInAndDateBetween(anyList(), any(), any()))
 				.thenReturn(records);

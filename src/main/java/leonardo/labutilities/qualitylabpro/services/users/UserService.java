@@ -58,9 +58,9 @@ public class UserService {
 		}
 		userRepository.setPasswordWhereByEmail(email,
 				BCryptEncoderComponent.encrypt(newPassword));
-	};
+	}
 
-	public User signUp(String login, String password, String email) {
+    public User signUp(String login, String password, String email) {
 
 		var user = new User(login, BCryptEncoderComponent.encrypt(password), email, UserRoles.USER);
 
@@ -74,10 +74,8 @@ public class UserService {
 
 		final var authToken = new UsernamePasswordAuthenticationToken(email,
 				password);
-
 		final var auth = authenticationManager.authenticate(authToken);
 		final var user = (User) auth.getPrincipal();
-		final var token = tokenService.generateToken(user);
 
 		return new TokenJwtRecord(tokenService.generateToken(user));
 	}

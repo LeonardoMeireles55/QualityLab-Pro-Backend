@@ -1,5 +1,8 @@
 package leonardo.labutilities.qualitylabpro.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRoles {
 	USER("USER"), ADMIN("ADMIN");
 
@@ -9,7 +12,4 @@ public enum UserRoles {
 		this.role = role;
 	}
 
-	public String getRole() {
-		return role;
-	}
 }
