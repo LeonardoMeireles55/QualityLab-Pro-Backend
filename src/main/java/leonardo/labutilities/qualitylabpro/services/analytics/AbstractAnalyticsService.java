@@ -11,16 +11,18 @@ import org.springframework.data.domain.Pageable;
 
 public abstract class AbstractAnalyticsService extends AnalyticsHelperService {
 
-        public AbstractAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
-                        RulesValidatorComponent rulesValidatorComponent) {
-                super(genericAnalyticsRepository, rulesValidatorComponent);
-        }
+	public AbstractAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
+			RulesValidatorComponent rulesValidatorComponent) {
+		super(genericAnalyticsRepository, rulesValidatorComponent);
+	}
 
-        public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
-                        String name, String level);
+	@Override
+	public abstract List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable,
+			String name, String level);
 
-        public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
-                        String level, LocalDateTime dateStart, LocalDateTime dateEnd);
+	@Override
+	public abstract List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
+			String level, LocalDateTime dateStart, LocalDateTime dateEnd);
 
-        public abstract String convertLevel(String level);
+	public abstract String convertLevel(String level);
 }

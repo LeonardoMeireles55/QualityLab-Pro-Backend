@@ -19,36 +19,36 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private final TokenService tokenService;
-    private final UserRepository userRepository;
+	private final TokenService tokenService;
+	private final UserRepository userRepository;
 
-    @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        try {
-            var tokenJWT = getToken(request);
-            if (tokenJWT != null) {
-                var subject = tokenService.getSubject(tokenJWT);
-                var users = userRepository.findByUsername(subject);
-                var authentication = new UsernamePasswordAuthenticationToken(users, null,
-                        users.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            filterChain.doFilter(request, response);
-        } catch (Exception exception) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().println(exception.getLocalizedMessage());
-        }
-    }
+	@Override
+	protected void doFilterInternal(@NonNull HttpServletRequest request,
+			@NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+			throws ServletException, IOException {
+		try {
+			var tokenJWT = getToken(request);
+			if (tokenJWT != null) {
+				var subject = tokenService.getSubject(tokenJWT);
+				var users = userRepository.findByUsername(subject);
+				var authentication = new UsernamePasswordAuthenticationToken(users, null,
+						users.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+			filterChain.doFilter(request, response);
+		} catch (Exception exception) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().println(exception.getLocalizedMessage());
+		}
+	}
 
-    private String getToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
+	private String getToken(HttpServletRequest request) {
+		var authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null) {
-            return authHeader.replace("Bearer ", "");
-        }
-        return null;
-    }
+		if (authHeader != null) {
+			return authHeader.replace("Bearer ", "");
+		}
+		return null;
+	}
 }

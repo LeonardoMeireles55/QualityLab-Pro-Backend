@@ -18,61 +18,61 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordRecoveryTokenManager passwordRecoveryTokenManager;
-    private final EmailService emailService;
+	private final UserRepository userRepository;
+	private final PasswordRecoveryTokenManager passwordRecoveryTokenManager;
+	private final EmailService emailService;
 
-    private void sendRecoveryEmail(RecoveryEmailRecord recoveryEmailRecord) {
-        String subject = "Password Recovery";
-        String message = String.format(
-                "Dear user,\n\nUse the following temporary password to recover your account: %s\n\nBest regards,\nYour Team",
-                recoveryEmailRecord.temporaryPassword());
-        log.info("Sending recovery email to: {}", recoveryEmailRecord.email());
-        emailService.sendEmail(new EmailRecord(recoveryEmailRecord.email(), subject, message));
-    }
+	private void sendRecoveryEmail(RecoveryEmailRecord recoveryEmailRecord) {
+		String subject = "Password Recovery";
+		String message = String.format(
+				"Dear user,\n\nUse the following temporary password to recover your account: %s\n\nBest regards,\nYour Team",
+				recoveryEmailRecord.temporaryPassword());
+		log.info("Sending recovery email to: {}", recoveryEmailRecord.email());
+		emailService.sendEmail(new EmailRecord(recoveryEmailRecord.email(), subject, message));
+	}
 
-    public void recoverPassword(String username, String email) {
+	public void recoverPassword(String username, String email) {
 
-        var user = userRepository.existsByUsernameAndEmail(username, email);
+		var user = userRepository.existsByUsernameAndEmail(username, email);
 
-        if (!user) {
-            throw new CustomGlobalErrorHandling.ResourceNotFoundException(
-                    "User not or invalid arguments");
-        }
+		if (!user) {
+			throw new CustomGlobalErrorHandling.ResourceNotFoundException(
+					"User not or invalid arguments");
+		}
 
-        String temporaryPassword = passwordRecoveryTokenManager.generateTemporaryPassword();
-        passwordRecoveryTokenManager.generateAndStoreToken(email, temporaryPassword);
+		String temporaryPassword = passwordRecoveryTokenManager.generateTemporaryPassword();
+		passwordRecoveryTokenManager.generateAndStoreToken(email, temporaryPassword);
 
-        sendRecoveryEmail(new RecoveryEmailRecord(email, temporaryPassword));
-    }
+		sendRecoveryEmail(new RecoveryEmailRecord(email, temporaryPassword));
+	}
 
-    public void changePassword(String email, String temporaryPassword, String newPassword) {
-        if (!passwordRecoveryTokenManager.isRecoveryTokenValid(temporaryPassword, email)) {
-            throw new CustomGlobalErrorHandling.ResourceNotFoundException("Invalid recovery token");
-        }
-        userRepository.setPasswordWhereByUsername(email,
-                BCryptEncoderComponent.encrypt(newPassword));
-    };
+	public void changePassword(String email, String temporaryPassword, String newPassword) {
+		if (!passwordRecoveryTokenManager.isRecoveryTokenValid(temporaryPassword, email)) {
+			throw new CustomGlobalErrorHandling.ResourceNotFoundException("Invalid recovery token");
+		}
+		userRepository.setPasswordWhereByEmail(email,
+				BCryptEncoderComponent.encrypt(newPassword));
+	};
 
-    public User signUp(String login, String password, String email) {
+	public User signUp(String login, String password, String email) {
 
-        var user = new User(login, BCryptEncoderComponent.encrypt(password), email, UserRoles.USER);
+		var user = new User(login, BCryptEncoderComponent.encrypt(password), email, UserRoles.USER);
 
-        if (userRepository.existsByEmail(email)) {
-            throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
-        }
-        return userRepository.save(user);
-    }
+		if (userRepository.existsByEmail(email)) {
+			throw new CustomGlobalErrorHandling.DataIntegrityViolationException();
+		}
+		return userRepository.save(user);
+	}
 
-    public void updateUserPassword(String name, String email, String password, String newPassword) {
-        var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
-        if (!BCryptEncoderComponent.decrypt(password, oldPass.getPassword())
-                || BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
-            log.error("PasswordNotMatches. {}, {}", name, email);
-            throw new CustomGlobalErrorHandling.PasswordNotMatchesException();
-        } else {
-            userRepository.setPasswordWhereByUsername(oldPass.getUsername(),
-                    BCryptEncoderComponent.encrypt(newPassword));
-        }
-    }
+	public void updateUserPassword(String name, String email, String password, String newPassword) {
+		var oldPass = userRepository.getReferenceByUsernameAndEmail(name, email);
+		if (!BCryptEncoderComponent.decrypt(password, oldPass.getPassword())
+				|| BCryptEncoderComponent.decrypt(newPassword, oldPass.getPassword())) {
+			log.error("PasswordNotMatches. {}, {}", name, email);
+			throw new CustomGlobalErrorHandling.PasswordNotMatchesException();
+		} else {
+			userRepository.setPasswordWhereByUsername(oldPass.getUsername(),
+					BCryptEncoderComponent.encrypt(newPassword));
+		}
+	}
 }

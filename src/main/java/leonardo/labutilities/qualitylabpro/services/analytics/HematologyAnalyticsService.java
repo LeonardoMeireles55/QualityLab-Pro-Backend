@@ -14,33 +14,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class HematologyAnalyticsService extends AbstractAnalyticsService {
 
-    public HematologyAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
-            RulesValidatorComponent rulesValidatorComponent) {
-        super(genericAnalyticsRepository, rulesValidatorComponent);
-    }
+	public HematologyAnalyticsService(GenericAnalyticsRepository genericAnalyticsRepository,
+			RulesValidatorComponent rulesValidatorComponent) {
+		super(genericAnalyticsRepository, rulesValidatorComponent);
+	}
 
-    @Override
-    public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
-            String level) {
-        ensureNameExists(name);
-        return findAnalyticsByNameAndLevelWithPagination(pageable, name, convertLevel(level));
-    }
+	@Override
+	public List<GenericValuesRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
+			String level) {
+		ensureNameExists(name);
+		return findAnalyticsByNameAndLevelWithPagination(pageable, name, convertLevel(level));
+	}
 
-    @Override
-    public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
-            String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
-        ensureNameExists(name);
-        return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart, dateEnd);
-    }
+	@Override
+	public List<GenericValuesRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
+			String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
+		ensureNameExists(name);
+		return findAnalyticsByNameLevelAndDate(name, convertLevel(level), dateStart, dateEnd);
+	}
 
-    @Override
-    public String convertLevel(String inputLevel) {
-        return switch (inputLevel) {
-            case "1" -> "low";
-            case "2" -> "normal";
-            case "3" -> "high";
-            default -> throw new CustomGlobalErrorHandling.ResourceNotFoundException(
-                    "Level not found.");
-        };
-    }
+	@Override
+	public String convertLevel(String inputLevel) {
+		return switch (inputLevel) {
+			case "1" -> "low";
+			case "2" -> "normal";
+			case "3" -> "high";
+			default -> throw new CustomGlobalErrorHandling.ResourceNotFoundException(
+					"Level not found.");
+		};
+	}
 }
