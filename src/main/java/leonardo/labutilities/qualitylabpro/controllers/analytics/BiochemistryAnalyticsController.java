@@ -44,16 +44,7 @@ public class BiochemistryAnalyticsController extends AnalyticsController {
     @GetMapping()
     public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalytics(
             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<AnalyticsRecord> resultsList =
-                biochemistryAnalyticsService.getAllByNameIn(names, pageable);
-
-        List<EntityModel<AnalyticsRecord>> resultModels = resultsList.stream()
-                .map(result -> EntityModel.of(result,
-                        linkTo(getClass()).slash(result.id()).withSelfRel()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(CollectionModel.of(resultModels,
-                linkTo(methodOn(getClass()).getAllAnalytics(pageable)).withSelfRel()));
+               return this.getAllAnalyticsWithLinks(names, pageable);
     }
 
     @Override

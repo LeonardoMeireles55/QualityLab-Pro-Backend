@@ -5,11 +5,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
+import leonardo.labutilities.qualitylabpro.entities.Analytics;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.utils.mappers.AnalyticsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -180,6 +182,13 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 				.findAllByNameIn(names, pageable).stream().map((AnalyticsMapper::toRecord)).toList();
 	}
 
+	@Cacheable(cacheNames = "analytics-cache",
+			key = "#names.hashCode() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
+	public Page<AnalyticsRecord> getAllPagedByNameIn(List<String> names, Pageable pageable) {
+		return analyticsRepository
+				.findAllByNameInPaged(names, pageable);
+	}
+
 
 	@Override
 	public abstract List<AnalyticsRecord> findAnalyticsByNameAndLevel(Pageable pageable,
@@ -200,10 +209,11 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
 	@Override
 	@Cacheable(value = "name")
-	public List<AnalyticsRecord> findAll(Pageable pageable) {
-		return validateAnalyticsNameExists(analyticsRepository
-				.findAll(pageable).stream().map(AnalyticsMapper::toRecord).toList());
+	public Page<AnalyticsRecord> findAll(Pageable pageable) {
+		return analyticsRepository.findAllPaged(pageable);
 	}
+
+
 	@Override
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#name + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
