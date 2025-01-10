@@ -70,7 +70,7 @@ public class CoagulationAnalyticsControllerTest {
 		when(coagulationAnalyticsService.getAllPagedByNameIn(anyList(), any(Pageable.class)))
 				.thenReturn(page);
 
-		mockMvc.perform(get("/hematology-analytics")
+		mockMvc.perform(get("/coagulation-analytics")
 						.param("page", "0")
 						.param("size", "10"))
 				.andExpect(status().isOk());
