@@ -7,15 +7,21 @@ import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedMeanAndStdRecor
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedResultsByLevel;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
 import leonardo.labutilities.qualitylabpro.services.analytics.AnalyticsHelperService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +35,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/generic-analytics")
 @RestController()
 public abstract class AnalyticsController {
-
+    @Autowired
+    private PagedResourcesAssembler<AnalyticsRecord> pagedResourcesAssembler;
     private final AnalyticsHelperService analyticsHelperService;
 
     public AnalyticsController(AnalyticsHelperService analyticsHelperService) {
@@ -56,18 +63,27 @@ public abstract class AnalyticsController {
         return ResponseEntity.status(201).build();
     }
 
+    public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalyticsWithLinks( List<String> names, Pageable pageable) {
+        Page<AnalyticsRecord> resultsList = analyticsHelperService.getAllPagedByNameIn(names, pageable);
+
+        // Create EntityModel for each record with its own self link
+        var entityModels = resultsList.getContent().stream()
+                .map(record -> EntityModel.of(record,
+                        linkTo(methodOn(getClass()).getAnalyticsById(record.id())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        var result = addPaginationLinks(CollectionModel.of(entityModels), resultsList, pageable);
+        return ResponseEntity.ok(result);
+
+    }
+
     @GetMapping()
     public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalytics(
             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<AnalyticsRecord> resultsList = analyticsHelperService.findAll(pageable);
+        Page<AnalyticsRecord> resultsList = analyticsHelperService.findAll(pageable);
+        var model = pagedResourcesAssembler.toModel(resultsList);
 
-        List<EntityModel<AnalyticsRecord>> resultModels = resultsList.stream()
-                .map(result -> EntityModel.of(result,
-                        linkTo(getClass()).slash(result.id()).withSelfRel()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(CollectionModel.of(resultModels,
-                linkTo(methodOn(getClass()).getAllAnalytics(pageable)).withSelfRel()));
+        return ResponseEntity.ok(model);
     }
 
 
@@ -89,23 +105,77 @@ public abstract class AnalyticsController {
         return ResponseEntity.ok(groupedData);
     }
 
+    private EntityModel<AnalyticsRecord> createEntityModel(AnalyticsRecord record, Pageable pageable) {
+        return EntityModel.of(record,
+                linkTo(methodOn(getClass()).getAnalyticsById(record.id())).withSelfRel());
+    }
+
+    private CollectionModel<EntityModel<AnalyticsRecord>> addPaginationLinks(
+            CollectionModel<EntityModel<AnalyticsRecord>> collectionModel,
+            Page<AnalyticsRecord> page,
+            Pageable pageable) {
+
+        UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentRequest();
+
+        // Clear any existing collection-level links to prevent duplication
+        collectionModel.removeLinks();
+
+        // Link for the first page
+        collectionModel.add(Link.of(uriBuilder
+                        .replaceQueryParam("page", 0)
+                        .replaceQueryParam("size", pageable.getPageSize())
+                        .toUriString())
+                .withRel("first"));
+
+        // Link for the previous page if it exists
+        if (page.hasPrevious()) {
+            collectionModel.add(Link.of(uriBuilder
+                            .replaceQueryParam("page", pageable.getPageNumber() - 1)
+                            .replaceQueryParam("size", pageable.getPageSize())
+                            .toUriString())
+                    .withRel("prev"));
+        }
+
+        // Link for the next page if it exists
+        if (page.hasNext()) {
+            collectionModel.add(Link.of(uriBuilder
+                            .replaceQueryParam("page", pageable.getPageNumber() + 1)
+                            .replaceQueryParam("size", pageable.getPageSize())
+                            .toUriString())
+                    .withRel("next"));
+        }
+
+        // Link for the last page
+        collectionModel.add(Link.of(uriBuilder
+                        .replaceQueryParam("page", page.getTotalPages() - 1)
+                        .replaceQueryParam("size", pageable.getPageSize())
+                        .toUriString())
+                .withRel("last"));
+
+        // Add metadata about the current page
+        collectionModel.add(Link.of(uriBuilder
+                        .replaceQueryParam("page", pageable.getPageNumber())
+                        .replaceQueryParam("size", pageable.getPageSize())
+                        .toUriString())
+                .withRel("current-page"));
+
+        return collectionModel;
+    }
+
 
     @GetMapping("/name")
     public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalyticsByName(
-            @RequestParam String name,
-            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<AnalyticsRecord> resultsList =
-                analyticsHelperService.findAnalyticsByNameWithPagination(pageable, name);
+            @RequestParam String name, Pageable pageable) {
+        List<AnalyticsRecord> resultsList = analyticsHelperService.findAnalyticsByNameWithPagination(pageable, name);
 
         List<EntityModel<AnalyticsRecord>> resultModels = resultsList.stream()
-                .map(result -> EntityModel.of(result,
-                        linkTo(methodOn(getClass()).getAnalyticsById(result.id())).withSelfRel(),
-                        linkTo(methodOn(getClass()).getAllAnalyticsByName(name, pageable))
-                                .withRel("search")))
-                .collect(Collectors.toList());
+                .map(result -> createEntityModel(result, pageable))
+                .toList();
 
-        return ResponseEntity.ok(CollectionModel.of(resultModels,
-                linkTo(methodOn(getClass()).getAllAnalyticsByName(name, pageable)).withSelfRel()));
+        CollectionModel<EntityModel<AnalyticsRecord>> collectionModel = CollectionModel.of(resultModels,
+                linkTo(methodOn(getClass()).getAllAnalyticsByName(name, pageable)).withSelfRel());
+
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("date-range")

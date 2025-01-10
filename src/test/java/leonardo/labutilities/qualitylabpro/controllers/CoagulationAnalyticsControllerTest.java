@@ -15,6 +15,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,15 +65,18 @@ public class CoagulationAnalyticsControllerTest {
 	@DisplayName("It should return a list of all analytics with pagination")
 	void getAllAnalytics_return_list() throws Exception {
 		List<AnalyticsRecord> records = createSampleRecordList();
-		when(coagulationAnalyticsService.getAllByNameIn(anyList(), any())).thenReturn(records);
+		Page<AnalyticsRecord> page = new PageImpl<>(records);
 
-		mockMvc.perform(get("/coagulation-analytics").param("page", "0").param("size", "10"))
-				.andExpect(status().isOk()).andExpect(result -> {
-					// Verify the content of the response if necessary
-					// Example: assert the list size
-				});
+		when(coagulationAnalyticsService.getAllPagedByNameIn(anyList(), any(Pageable.class)))
+				.thenReturn(page);
 
-		verify(coagulationAnalyticsService, times(1)).getAllByNameIn(anyList(), any());
+		mockMvc.perform(get("/coagulation-analytics")
+						.param("page", "0")
+						.param("size", "10"))
+				.andExpect(status().isOk());
+
+		verify(coagulationAnalyticsService, times(1))
+				.getAllPagedByNameIn(anyList(), any(Pageable.class));
 	}
 
 	@Test

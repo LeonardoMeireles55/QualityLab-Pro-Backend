@@ -6,6 +6,8 @@ import java.util.List;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedValuesByLevel;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedMeanAndStdRecordByLevel;
+import leonardo.labutilities.qualitylabpro.entities.Analytics;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IAnalyticsHelperService {
@@ -26,7 +28,7 @@ public interface IAnalyticsHelperService {
 
 	void saveNewAnalyticsRecords(List<AnalyticsRecord> valuesOfLevelsList);
 
-	List<AnalyticsRecord> findAll(Pageable pageable);
+	Page<AnalyticsRecord> findAll(Pageable pageable);
 
 	List<AnalyticsRecord> findAnalyticsByNameWithPagination(Pageable pageable, String name);
 
