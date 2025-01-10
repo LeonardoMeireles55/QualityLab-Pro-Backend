@@ -47,7 +47,7 @@ public class HematologyAnalyticsController extends AnalyticsController {
     }
 
     @Override
-    @GetMapping("name-and-level")
+    @GetMapping("/name-and-level")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevel(
             Pageable pageable, @RequestParam() String name, @RequestParam() String level) {
         return ResponseEntity
@@ -65,7 +65,7 @@ public class HematologyAnalyticsController extends AnalyticsController {
     }
 
     @Override
-    @GetMapping("name-and-level-date-range")
+    @GetMapping("/name-and-level-date-range")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevelDateRange(
             @RequestParam String name, @RequestParam String level,
             @RequestParam("startDate") LocalDateTime startDate,

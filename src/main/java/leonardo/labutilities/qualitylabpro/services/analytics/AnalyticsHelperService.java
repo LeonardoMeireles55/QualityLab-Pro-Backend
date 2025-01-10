@@ -36,6 +36,12 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 		analyticsRepository.deleteById(id);
 	}
 
+	public void updateAnalyticsMeanByNameAndLevelAndLevelLot(String name, String level,
+															String levelLot, double mean) {
+		analyticsRepository.updateMeanByNameAndLevelAndLevelLot(name, level, levelLot, mean);
+
+	}
+
 	private List<Double> extractRecordValues(List<AnalyticsRecord> records) {
 		return records.stream().map(AnalyticsRecord::value).toList();
 	}

@@ -3,11 +3,13 @@ package leonardo.labutilities.qualitylabpro.repositories;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.transaction.Transactional;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.entities.Analytics;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface AnalyticsRepository extends JpaRepository<Analytics, Long> {
@@ -17,9 +19,16 @@ public interface AnalyticsRepository extends JpaRepository<Analytics, Long> {
 	List<Analytics> findAllByName(String name, Pageable pageable);
 
 	boolean existsByDateAndLevelAndName(LocalDateTime date, String level, String value);
+	@Transactional
+	@Modifying
+	@Query("UPDATE generic_analytics ga SET ga.mean = ?4 WHERE ga.name = ?1 AND ga.level = ?2 AND ga.levelLot = ?3")
+	void updateMeanByNameAndLevelAndLevelLot(String name, String level, String levelLot, double mean);
 
 	@Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2")
 	List<Analytics> findAllByNameAndLevel(Pageable pageable, String name, String level);
+
+	@Query("SELECT ga FROM generic_analytics ga WHERE ga.name = ?1 AND ga.level = ?2 AND ga.levelLot = ?3")
+	List<Analytics> findAllByNameAndLevelAndLevelLot(Pageable pageable, String name, String level, String levelLot);
 
 	@Query("SELECT ga FROM generic_analytics ga WHERE ga.name IN (?1) AND ga.date BETWEEN ?2 AND ?3")
 	List<Analytics> findAllByNameInAndDateBetween(List<String> names,

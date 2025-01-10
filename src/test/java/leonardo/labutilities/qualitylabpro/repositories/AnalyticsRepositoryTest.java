@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.Transient;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 
@@ -12,6 +13,7 @@ import leonardo.labutilities.qualitylabpro.entities.Analytics;
 import leonardo.labutilities.qualitylabpro.utils.components.RulesValidatorComponent;
 import leonardo.labutilities.qualitylabpro.utils.mappers.AnalyticsMapper;
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,31 +30,43 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class AnalyticsRepositoryTest {
-
 	@Autowired
 	AnalyticsRepository repository;
-
 	@Transient
     final
     RulesValidatorComponent rulesValidatorComponent = new RulesValidatorComponent();
-
 	@Transient
-    final
-    LocalDateTime testDate = LocalDateTime.of(2024, 12, 16, 7, 53);
-	@BeforeEach
-	void clearDatabase(@Autowired Flyway flyway) {
+	@Autowired
+	static Flyway flyway;
+	@Transient
+    final LocalDateTime testDate = LocalDateTime.of(2024, 12, 16, 7, 53);
+	@Autowired
+	private EntityManager entityManager;
+	@BeforeAll
+	static void setupDatabase(@Autowired Flyway flyway) {
 		flyway.clean();
 		flyway.migrate();
 	}
+	@BeforeEach
 	void setupTestData() {
 		Analytics analytics = new Analytics(createSampleRecord(), rulesValidatorComponent);
 		repository.save(analytics);
 	}
 
 	@Test
+	@DisplayName("Should update Analytics.LevelLot by name,level and levelLot and return void")
+	void testUpdateLevelLotByNameAndLevelAndLevelLot() {
+		repository.updateMeanByNameAndLevelAndLevelLot("ALB2", "PCCC1", "0774693", 3.25);
+		entityManager.clear();
+		Analytics analytics = repository
+				.findAllByNameAndLevelAndLevelLot
+						(PageRequest.of(0, 10), "ALB2", "PCCC1", "0774693").get(0);
+		System.out.println(analytics.getMean());
+		assertThat(analytics.getMean()).isEqualTo(3.25);
+	}
+	@Test
 	@DisplayName("Should find analytics by name when exists")
 	void testExistsByName() {
-		setupTestData();
 		assertTrue(repository.existsByName("ALB2"));
 		assertFalse(repository.existsByName("NONEXISTENT"));
 	}
@@ -60,7 +74,6 @@ class AnalyticsRepositoryTest {
 	@Test
 	@DisplayName("Should find all analytics by name with pagination")
 	void testFindAllByName() {
-		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
 		List<AnalyticsRecord> results = repository.findAllByName("ALB2", pageable)
 				.stream().map(AnalyticsMapper::toRecord).toList();
@@ -71,7 +84,6 @@ class AnalyticsRepositoryTest {
 	@Test
 	@DisplayName("Should verify existence by date, level and name")
 	void testExistsByDateAndLevelAndName() {
-		setupTestData();
 		boolean exists =
 				repository.existsByDateAndLevelAndName(testDate, "PCCC1", "ALB2");
 
@@ -81,7 +93,6 @@ class AnalyticsRepositoryTest {
 	@Test
 	@DisplayName("Should find all by name and level with pagination")
 	void testFindAllByNameAndLevel() {
-		setupTestData();
 		PageRequest pageable = PageRequest.of(0, 10);
 
 		List<AnalyticsRecord> results =

@@ -4,6 +4,7 @@ import leonardo.labutilities.qualitylabpro.configs.TestSecurityConfig;
 import leonardo.labutilities.qualitylabpro.controllers.analytics.BiochemistryAnalyticsController;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.UpdateAnalyticsMeanRecord;
 import leonardo.labutilities.qualitylabpro.repositories.UserRepository;
 import leonardo.labutilities.qualitylabpro.services.analytics.BiochemistryAnalyticsService;
 import leonardo.labutilities.qualitylabpro.services.authentication.TokenService;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,14 +29,14 @@ import java.util.List;
 
 import static leonardo.labutilities.qualitylabpro.utils.AnalyticsHelperMocks.createSampleRecordList;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BiochemistryAnalyticsController.class)
 @Import(TestSecurityConfig.class)
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
+@ActiveProfiles("test")
 public class BiochemistryAnalyticsControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -51,6 +53,9 @@ public class BiochemistryAnalyticsControllerTest {
 	@Autowired
 	private JacksonTester<List<AnalyticsRecord>> jacksonGenericValuesRecord;
 
+	@Autowired
+	private JacksonTester<UpdateAnalyticsMeanRecord> jacksonUpdateAnalyticsMeanRecord;
+
 	@Test
 	@DisplayName("It should return HTTP code 201 when analytics records are saved")
 	void analytics_post_return_201() throws Exception {
@@ -59,6 +64,17 @@ public class BiochemistryAnalyticsControllerTest {
 				.content(jacksonGenericValuesRecord.write(records).getJson()))
 				.andExpect(status().isCreated());
 		verify(biochemistryAnalyticsService, times(1)).saveNewAnalyticsRecords(anyList());
+	}
+
+	@Test
+	@DisplayName("It should return HTTP code 204 when analytics records are updated")
+	void analytics_put_return_204() throws Exception {
+		var mockDto = new UpdateAnalyticsMeanRecord("Glucose", "PCCC1", "1234", 10.5);
+		mockMvc.perform(patch("/biochemistry-analytics").contentType(MediaType.APPLICATION_JSON)
+				.content(jacksonUpdateAnalyticsMeanRecord.write(mockDto).getJson()))
+				.andExpect(status().isNoContent());
+		verify(biochemistryAnalyticsService, times(1))
+				.updateAnalyticsMeanByNameAndLevelAndLevelLot("Glucose", "PCCC1", "1234", 10.5);
 	}
 
 	@Test

@@ -48,7 +48,7 @@ public class BiochemistryAnalyticsController extends AnalyticsController {
     }
 
     @Override
-    @GetMapping("date-range")
+    @GetMapping("/date-range")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsDateBetween(
             @RequestParam("startDate") LocalDateTime startDate,
             @RequestParam("endDate") LocalDateTime endDate) {
@@ -59,7 +59,7 @@ public class BiochemistryAnalyticsController extends AnalyticsController {
 
 
     @Override
-    @GetMapping("name-and-level")
+    @GetMapping("/name-and-level")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevel(
             Pageable pageable, @RequestParam String name, @RequestParam String level) {
         return ResponseEntity.ok(
@@ -67,7 +67,7 @@ public class BiochemistryAnalyticsController extends AnalyticsController {
     }
 
     @Override
-    @GetMapping("name-and-level-date-range")
+    @GetMapping("/name-and-level-date-range")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevelDateRange(
             @RequestParam String name, @RequestParam String level,
             @RequestParam("startDate") LocalDateTime startDate,

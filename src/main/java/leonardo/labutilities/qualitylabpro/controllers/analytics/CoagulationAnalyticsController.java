@@ -58,7 +58,7 @@ public class CoagulationAnalyticsController extends AnalyticsController {
     }
 
     @Override
-    @GetMapping("name-and-level-date-range")
+    @GetMapping("/name-and-level-date-range")
     public ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevelDateRange(
             @RequestParam String name, @RequestParam String level,
             @RequestParam("startDate") LocalDateTime startDate,

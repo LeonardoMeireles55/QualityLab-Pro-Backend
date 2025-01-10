@@ -20,6 +20,9 @@ public interface IAnalyticsHelperService {
 
 	List<GroupedValuesByLevel> findFilteredGroupedAnalytics(List<GroupedValuesByLevel> records);
 
+	void updateAnalyticsMeanByNameAndLevelAndLevelLot(String name, String level, String levelLot,
+													  double mean);
+
 	boolean isGroupedRecordValid(GroupedValuesByLevel record);
 
 	boolean isRecordValid(AnalyticsRecord record);
