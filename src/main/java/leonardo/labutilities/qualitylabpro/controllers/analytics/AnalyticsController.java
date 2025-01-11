@@ -2,12 +2,8 @@ package leonardo.labutilities.qualitylabpro.controllers.analytics;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedMeanAndStdRecordByLevel;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.GroupedResultsByLevel;
-import leonardo.labutilities.qualitylabpro.dtos.analytics.MeanAndStdDeviationRecord;
+import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
 import leonardo.labutilities.qualitylabpro.services.analytics.AnalyticsHelperService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,7 +31,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/generic-analytics")
 @RestController()
 public abstract class AnalyticsController {
-    @Autowired
     private PagedResourcesAssembler<AnalyticsRecord> pagedResourcesAssembler;
     private final AnalyticsHelperService analyticsHelperService;
 
@@ -86,11 +81,22 @@ public abstract class AnalyticsController {
         return ResponseEntity.ok(model);
     }
 
+    @PatchMapping()
+    public ResponseEntity<Void> updateAnalyticsMean(@Valid @RequestBody UpdateAnalyticsMeanRecord updateAnalyticsMeanRecord) {
+        analyticsHelperService.updateAnalyticsMeanByNameAndLevelAndLevelLot(
+                updateAnalyticsMeanRecord.name(),
+                updateAnalyticsMeanRecord.level(),
+                updateAnalyticsMeanRecord.levelLot(),
+                updateAnalyticsMeanRecord.mean());
+        return ResponseEntity.status(204).build();
+    }
+
 
     @GetMapping("/grouped-by-level")
-    public ResponseEntity<List<GroupedResultsByLevel>> getGroupedByLevel(@RequestParam String name,
-                                                                         @RequestParam("startDate") LocalDateTime startDate,
-                                                                         @RequestParam("endDate") LocalDateTime endDate) {
+    public ResponseEntity<List<GroupedResultsByLevel>> getGroupedByLevel
+            (@RequestParam String name,
+             @RequestParam("startDate") LocalDateTime startDate,
+             @RequestParam("endDate") LocalDateTime endDate) {
         List<GroupedResultsByLevel> groupedData =
                 analyticsHelperService.findAnalyticsWithGroupedResults(name, startDate, endDate);
         return ResponseEntity.ok(groupedData);
@@ -178,17 +184,17 @@ public abstract class AnalyticsController {
         return ResponseEntity.ok(collectionModel);
     }
 
-    @GetMapping("date-range")
+    @GetMapping("/date-range")
     public abstract ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsDateBetween(
             @RequestParam("startDate") LocalDateTime startDate,
             @RequestParam("endDate") LocalDateTime endDate);
 
 
-    @GetMapping("name-and-level")
+    @GetMapping("/name-and-level")
     public abstract ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevel(
             Pageable pageable, @RequestParam String name, @RequestParam String level);
 
-    @GetMapping("name-and-level-date-range")
+    @GetMapping("/name-and-level-date-range")
     public abstract ResponseEntity<List<AnalyticsRecord>> getAllAnalyticsByNameAndLevelDateRange(
             @RequestParam String name, @RequestParam String level,
             @RequestParam("startDate") LocalDateTime startDate,
