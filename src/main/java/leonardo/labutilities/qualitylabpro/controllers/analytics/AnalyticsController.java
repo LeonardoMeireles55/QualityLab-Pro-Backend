@@ -31,8 +31,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/generic-analytics")
 @RestController()
 public abstract class AnalyticsController {
-    private PagedResourcesAssembler<AnalyticsRecord> pagedResourcesAssembler;
     private final AnalyticsHelperService analyticsHelperService;
+    private PagedResourcesAssembler<AnalyticsRecord> pagedResourcesAssembler;
 
     public AnalyticsController(AnalyticsHelperService analyticsHelperService) {
         this.analyticsHelperService = analyticsHelperService;
@@ -58,7 +58,7 @@ public abstract class AnalyticsController {
         return ResponseEntity.status(201).build();
     }
 
-    public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalyticsWithLinks( List<String> names, Pageable pageable) {
+    public ResponseEntity<CollectionModel<EntityModel<AnalyticsRecord>>> getAllAnalyticsWithLinks(List<String> names, Pageable pageable) {
         Page<AnalyticsRecord> resultsList = analyticsHelperService.getAllPagedByNameIn(names, pageable);
 
         // Create EntityModel for each record with its own self link
