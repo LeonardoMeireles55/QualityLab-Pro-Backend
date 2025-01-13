@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import leonardo.labutilities.qualitylabpro.dtos.analytics.*;
-import leonardo.labutilities.qualitylabpro.entities.Analytics;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 import leonardo.labutilities.qualitylabpro.utils.mappers.AnalyticsMapper;
@@ -252,7 +251,7 @@ public abstract class AnalyticsHelperService implements IAnalyticsHelperService 
 
 	@Cacheable(cacheNames = "analytics-cache",
 			key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
-	List<AnalyticsRecord> findAnalyticsByNameLevelAndDate(String name, String level,
+	public List<AnalyticsRecord> findAnalyticsByNameLevelAndDate(String name, String level,
 														  LocalDateTime dateStart, LocalDateTime dateEnd) {
 		List<AnalyticsRecord> results = analyticsRepository
 				.findAllByNameAndLevelAndDateBetween(name, level, dateStart, dateEnd, pageable)

@@ -20,13 +20,10 @@ public class CustomGlobalErrorHandling extends RuntimeException {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex,
-			HttpServletRequest request) {
+															   HttpServletRequest request) {
 		Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
 				.collect(Collectors.toMap(FieldError::getField,
-						error -> {
-                            error.getDefaultMessage();
-                            return error.getDefaultMessage();
-                        }));
+						error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "invalid args"));
 
 		ApiError apiError =
 				new ApiError(HttpStatus.BAD_REQUEST, "Validation failed", request.getRequestURI());

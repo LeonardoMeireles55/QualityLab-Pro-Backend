@@ -36,7 +36,6 @@ class AnalyticsRepositoryTest {
     final
     RulesValidatorComponent rulesValidatorComponent = new RulesValidatorComponent();
 	@Transient
-	@Autowired
 	static Flyway flyway;
 	@Transient
     final LocalDateTime testDate = LocalDateTime.of(2024, 12, 16, 7, 53);

@@ -9,6 +9,6 @@ RUN mvn clean package -DskipTests -U
 FROM openjdk:21
 WORKDIR /usr/src/app
 
-COPY --from=build app/target/QualityLabPro-0.0.1-beta.jar app.jar
+COPY --from=build app/target/QualityLabPro-0.7.jar app.jar
 
 CMD ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]

@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,26 +37,30 @@ class AnalyticsHelperServiceTests {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.openMocks(this);
-		analyticsHelperService =
-				new AnalyticsHelperService(analyticsRepository) {
-					@Override
-					public List<AnalyticsRecord> findAnalyticsByNameAndLevel
-							(Pageable pageable, String name, String level) {
-						return analyticsRepository.findAllByNameAndLevel(pageable, name,
-								level).stream().map(AnalyticsMapper::toRecord).toList();
-					}
+		try (AutoCloseable closeable = MockitoAnnotations.openMocks(this)) {
+			analyticsHelperService =
+					new AnalyticsHelperService(analyticsRepository) {
+						@Override
+						public List<AnalyticsRecord> findAnalyticsByNameAndLevel
+								(Pageable pageable, String name, String level) {
+							return analyticsRepository.findAllByNameAndLevel(pageable, name,
+									level).stream().map(AnalyticsMapper::toRecord).toList();
+						}
 
-					@Override
-					public List<AnalyticsRecord> findAllAnalyticsByNameAndLevelAndDate(
-							String name, String level, LocalDateTime dateStart,
-							LocalDateTime dateEnd) {
-						return analyticsRepository.findAllByNameAndLevelAndDateBetween(name,
-								level, dateStart, dateEnd, PageRequest.of(0, 200))
-								.stream().map(AnalyticsMapper::toRecord).toList();
-					}
-				};
+						@Override
+						public List<AnalyticsRecord> findAllAnalyticsByNameAndLevelAndDate(
+								String name, String level, LocalDateTime dateStart,
+								LocalDateTime dateEnd) {
+							return analyticsRepository.findAllByNameAndLevelAndDateBetween(name,
+											level, dateStart, dateEnd, PageRequest.of(0, 200))
+									.stream().map(AnalyticsMapper::toRecord).toList();
+						}
+					};
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to initialize mocks", e);
+		}
 	}
+
 	@Test
 	public void updateAnalyticsMean() {
 		var mockDto = new UpdateAnalyticsMeanRecord("Glucose", "PCCC1", "076587", 1.0);

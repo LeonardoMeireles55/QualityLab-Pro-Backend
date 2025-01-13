@@ -125,7 +125,7 @@ public class AnalyticsHelperMocks {
 				"608384", "ALB2", "PCCC1", 3.45, 3.35, 0.2, "g/dL", "Average", "Approved"));
 
 		// ALTL record
-		records.add(new AnalyticsRecord(2L, LocalDateTime.of(2024, 12, 16, 9, 02), "0774693",
+		records.add(new AnalyticsRecord(2L, LocalDateTime.of(2024, 12, 16, 9, 2), "0774693",
 				"608384", "ALTL", "PCCC1", 48.1, 46.8, 2.8, "U/L", "Average", "Approved"));
 
 		// CHOL2 record

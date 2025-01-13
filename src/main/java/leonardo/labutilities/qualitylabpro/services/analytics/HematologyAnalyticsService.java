@@ -7,6 +7,7 @@ import leonardo.labutilities.qualitylabpro.dtos.analytics.AnalyticsRecord;
 import leonardo.labutilities.qualitylabpro.repositories.AnalyticsRepository;
 import leonardo.labutilities.qualitylabpro.utils.exception.CustomGlobalErrorHandling;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "analytics-cache",
+			key = "#name + '-' + #level + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
 	public List<AnalyticsRecord> findAnalyticsByNameAndLevel(Pageable pageable, String name,
 															 String level) {
 		ensureNameExists(name);
@@ -25,6 +28,8 @@ public class HematologyAnalyticsService extends AbstractAnalyticsService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "analytics-cache",
+			key = "#name + '-' + #level + '-' + #dateStart.toString() + '-' + #dateEnd.toString()")
 	public List<AnalyticsRecord> findAllAnalyticsByNameAndLevelAndDate(String name,
 																	   String level, LocalDateTime dateStart, LocalDateTime dateEnd) {
 		ensureNameExists(name);
