@@ -11,43 +11,18 @@ public class RulesValidatorComponent {
 	String rules;
 
 	public void validator(Double value, Double mean, Double sd) {
-		double positive1sRuleNormal = mean + (sd * 1);
-		double positive2sRuleNormal = mean + (sd * 2);
-		double positive3sRuleNormal = mean + (sd * 3);
+		double[] thresholds = {mean + sd, mean + 2 * sd, mean + 3 * sd, mean - sd, mean - 2 * sd, mean - 3 * sd};
+		String[] descriptions = {"Approved", "Approved", "Failed", "Approved", "Approved", "Failed"};
+		String[] rules = {"+1s", "+2s", "+3s", "-1s", "-2s", "-3s"};
 
-		double negative1sRuleNormal = mean - (sd * 1);
-		double negative2sRuleNormal = mean - (sd * 2);
-		double negative3sRuleNormal = mean - (sd * 3);
-
-		if (value >= positive1sRuleNormal || value <= negative1sRuleNormal) {
-			if (value >= positive3sRuleNormal || value <= negative3sRuleNormal) {
-				if (value <= negative3sRuleNormal) {
-					this.description = "Failed";
-					this.rules = "-3s";
-				} else {
-					this.description = "Failed";
-					this.rules = "+3s";
-				}
-			} else if (value >= positive2sRuleNormal || value <= negative2sRuleNormal) {
-				if (value <= negative2sRuleNormal) {
-					this.description = "Approved";
-					this.rules = "-2s";
-				} else {
-					this.description = "Approved";
-					this.rules = "+2s";
-				}
-			} else {
-				if (value >= positive1sRuleNormal) {
-					this.description = "Approved";
-					this.rules = "+1s";
-				} else {
-					this.description = "Approved";
-					this.rules = "-1s";
-				}
+		for (int i = 2; i >= 0; i--) {
+			if (value >= thresholds[i] || value <= thresholds[i + 3]) {
+				this.description = descriptions[i];
+				this.rules = value >= thresholds[i] ? rules[i] : rules[i + 3];
+				return;
 			}
-		} else {
-			this.description = "Approved";
-			this.rules = "Average";
 		}
+		this.description = "Approved";
+		this.rules = "Average";
 	}
 }
