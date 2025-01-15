@@ -130,4 +130,9 @@ Manages endpoints for hematology analytics.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - see the [LICENSE](LICENSE) file for details.
+
+The GPL-3.0 ensures that:
+- The software remains open source
+- Any modifications or derived works must also be released under GPL-3.0
+- Source code must be made available when distributing the software
